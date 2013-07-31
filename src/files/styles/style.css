@@ -99,6 +99,7 @@ a:hover {
     font-family: Monaco;
     line-height: 1.5;
     font-size: 0.8rem;
+    overflow: auto;
 }
 
 .post p code {

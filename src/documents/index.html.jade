@@ -3,7 +3,10 @@ layout: default
 title: A hint of chaos
 ---
 
-- var posts = getFilesAtPath("posts").toJSON().reverse();
+- var posts = getFilesAtPath("posts").toJSON().sort(function(p1, p2) {
+-   return p2.date.getTime() - p1.date.getTime()
+- });
+
 each post in posts.slice(0,5)
     .post
         h1
