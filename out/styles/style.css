@@ -7,21 +7,7 @@ body, html {
     color: #000;
 }
 
-.first {
-    text-align:left;
-    font-size:2.5em;
-    text-shadow: 0 0 1px #000, 1px 2px 4px #fff, 2px 3px 4px #aaa;
-    margin-bottom: 0;    
-}
-.first a { color: #000; }
 
-.subtitle {
-    font-style: italic;
-    color: #60686f;
-    text-align: left;
-    margin-top:0.5rem;
-    margin-bottom: 4rem;
-}
 
 
 .post > h1 { 
@@ -44,6 +30,45 @@ h2, h3, h4 {
     max-width: 71ex;
     margin:2rem auto;
 }
+
+@media screen and (max-width: 1320px) {
+    .info {
+        display:none;
+    }
+}
+
+.info {
+    position:absolute;
+    top:4rem;
+    left:50%;
+    margin-left: -62ex;
+    width: 20ex;
+    right: 2rem;
+    text-align: right;
+}
+.info img {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 10em;
+}
+
+.first {
+    font-size:1.5em;
+    text-shadow: 0 0 1px #000, 1px 2px 4px #fff, 2px 3px 4px #aaa;
+    margin-bottom: 0;    
+}
+.first a { color: #000; }
+
+.subtitle {
+    font-style: italic;
+    color: #60686f;
+    margin-top:0.5rem;
+    margin-bottom:0.5rem;
+}
+
+
+
+
 
 .post > .content {
     padding-bottom: 0.5rem;
