@@ -36,6 +36,19 @@ h2, h3, h4 {
         display:none;
     }
 }
+@media screen and (min-width: 1321px) {
+    .info-tiny {
+        display:none;
+    }    
+}
+
+.info-tiny img {
+    float:left;
+    height: 4em;
+    width: 4em;
+    border-radius: 3em;
+    margin-right: 1.5em;
+}
 
 .info {
     position:absolute;
