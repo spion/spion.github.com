@@ -1,38 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Intuitive JavaScript array filtering function pt1</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-  </head>
-  <body>
-    <div class="main">
-      <div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-      </div>
-      <div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"> <a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-        <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
-      </div>
-      <div class="rest">
-<div class="post">
-  <h1>Intuitive JavaScript array filtering function pt1</h1>
-  <div class="date">Sat Jul 07 2012</div>
-  <div class="content"><p>When dealing with large JSON arrays on the client side or in <br /><a href="http://nodejs.org/">node.js</a>, one of our tasks might be to filter <br />them on the client side before displaying them. <br /><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/filter" title="Array.filter">Array.filter</a> <br />exists since JavaScript 1.6, however it seems kinda dry: all filters must be <br />functions, even some really common filters such as matching text with a regular<br />expression, checking if a number is within a range, checking if an enumeration <br />has a certain value. Consider the following:</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Intuitive JavaScript array filtering function pt1</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></head><body><div class="main"><div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></div><div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"> <a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><div class="rest"><div class="post"><h1>Intuitive JavaScript array filtering function pt1</h1><div class="date">Sat Jul 07 2012</div><div class="content"><p>When dealing with large JSON arrays on the client side or in 
+<a href="http://nodejs.org/">node.js</a>, one of our tasks might be to filter 
+them on the client side before displaying them. 
+<a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/filter" title="Array.filter">Array.filter</a> 
+exists since JavaScript 1.6, however it seems kinda dry: all filters must be 
+functions, even some really common filters such as matching text with a regular
+expression, checking if a number is within a range, checking if an enumeration 
+has a certain value. Consider the following:</p>
 
 <pre><code>var testArray = [
-        {name:"John",  age: 40, children: 2,
-            company: { name: "MegaCorp", employees: 200}},
-        {name:"Sue",   age: 30, children: 1,
-            company:{ name: "MegaCorp", employees: 200}},
-        {name:"Mary",  age: 55, children: 3,
-            company:{ name: "MegaCorp", employees: 200}},
-        {name:"Jack",  age: 20, children: 0,
-            company:{ name: "MiniCorp", employees: 100}}];
+        {name:&quot;John&quot;,  age: 40, children: 2,
+            company: { name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Sue&quot;,   age: 30, children: 1,
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Mary&quot;,  age: 55, children: 3,
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Jack&quot;,  age: 20, children: 0,
+            company:{ name: &quot;MiniCorp&quot;, employees: 100}}];
 
 // Using a for loop
 var filtered = [];
@@ -44,23 +27,32 @@ for (var k = 0; k &lt; testArray.length; ++k) {
 // Using Array.filter
 testArray.filter(function(item) {
     return item.age == 40 || item.age == 30
-}); // returns John
-</code></pre>
+}); // returns John</code></pre>
 
-<p>The Array.filter variant is around two times shorter than the for loop variant.<br />It also looks much cleaner: the anonymous function is the filter which is <br />called on each item to check if it should get through the filter or not. We can<br />call <code>Array.filter</code> with various kinds of &quot;filter functions&quot;. Should be good <br />enough for all uses, right?</p>
+<p>The Array.filter variant is around two times shorter than the for loop variant.
+It also looks much cleaner: the anonymous function is the filter which is 
+called on each item to check if it should get through the filter or not. We can
+call <code>Array.filter</code> with various kinds of &quot;filter functions&quot;. Should be good 
+enough for all uses, right?</p>
 
-<p>Not so, at least not when you have lots of filters and you want them to be as <br />short as possible to write. Or if you want to combine multiple filter functions<br />from various sources and the items in the data array are fairly complex.</p>
+<p>Not so, at least not when you have lots of filters and you want them to be as 
+short as possible to write. Or if you want to combine multiple filter functions
+from various sources and the items in the data array are fairly complex.</p>
 
-<p>Lets say that we have a complex filter function for the company object and a <br />simple regex name filter from elsewhere and we need to combine them. We would <br />have to write the following:</p>
+<p>Lets say that we have a complex filter function for the company object and a 
+simple regex name filter from elsewhere and we need to combine them. We would 
+have to write the following:</p>
 
 <pre><code>testArray.filter(function(item) { 
     return /^J.+$/.test(item.name)
-        &amp;&amp;  complexFilter(item.company); });
-</code></pre>
+        &amp;&amp;  complexFilter(item.company); });</code></pre>
 
-<p>However, now we cannot easily replace <code>complexFilter</code> for the company with <br /><code>anotherComplexFilter</code>. We have to write code - to write a different anonymous <br />function and use it instead.</p>
+<p>However, now we cannot easily replace <code>complexFilter</code> for the company with 
+<code>anotherComplexFilter</code>. We have to write code - to write a different anonymous 
+function and use it instead.</p>
 
-<p>Now imagine having multiple different <code>complexFilters</code>. Soon enough you will <br />write the following function</p>
+<p>Now imagine having multiple different <code>complexFilters</code>. Soon enough you will 
+write the following function</p>
 
 <pre><code>intiutiveFilterBeta = function(someArray, filters) {
     return someArray.filter(function(item) {
@@ -69,18 +61,35 @@ testArray.filter(function(item) {
         }
         return true;
     }
-}
-</code></pre>
+}</code></pre>
 
-<p>which will enable you to combine different complex filters into a filter array,<br />essentially implementing the <code>and</code> operator.</p>
+<p>which will enable you to combine different complex filters into a filter array,
+essentially implementing the <code>and</code> operator.</p>
 
-<p>At about this point you will probably realize that you are missing the <code>or</code> <br />operator. What if you wish to filter all companies which <code>complexCompanyFilter1<br />or complexCompanyFilter2</code> ? If you are like me, right now you are probably <br />working on a DSL (domain specific language) in your head, a DSL which reminds <br />you of SQL. You might also start thinking that this is going a bit over the top.</p>
+<p>At about this point you will probably realize that you are missing the <code>or</code> 
+operator. What if you wish to filter all companies which <code>complexCompanyFilter1
+or complexCompanyFilter2</code> ? If you are like me, right now you are probably 
+working on a DSL (domain specific language) in your head, a DSL which reminds 
+you of SQL. You might also start thinking that this is going a bit over the top.</p>
 
-<p>However, if you look closely you will notice certain peculiarity about the <br /><code>and</code> operator: you do not really need to use <code>and</code> on two or more filters <br />which are working on the same field. For example, you might want to match <br /><code>1 or 2</code> <em>children</em>, but never both <code>1 and 2</code> <em>children</em> - it just doesnt <br />make sense. You might also want to have a &quot;between&quot; filter for <em>age</em>, but you <br />would not exactly want to <code>and</code> two between filters. Instead of <code>between 30 and<br />50 and between 40 and 60</code> you would simply write a <code>between 40 and 50</code> filter.</p>
+<p>However, if you look closely you will notice certain peculiarity about the 
+<code>and</code> operator: you do not really need to use <code>and</code> on two or more filters 
+which are working on the same field. For example, you might want to match 
+<code>1 or 2</code> <em>children</em>, but never both <code>1 and 2</code> <em>children</em> - it just doesnt 
+make sense. You might also want to have a &quot;between&quot; filter for <em>age</em>, but you 
+would not exactly want to <code>and</code> two between filters. Instead of <code>between 30 and
+50 and between 40 and 60</code> you would simply write a <code>between 40 and 50</code> filter.</p>
 
-<p>This observation seems to hold true for all primitive values except for strings. <br />That doesnt really matter because we can easily filter strings with a tool made<br />to do exactly that: regular expressions.</p>
+<p>This observation seems to hold true for all primitive values except for strings. 
+That doesnt really matter because we can easily filter strings with a tool made
+to do exactly that: regular expressions.</p>
 
-<p>I decided to try and make a hopefully intuitive and readable yet still powerful<br />filter function based on the observations above. It should enable some common <br />primitive tests to be easily written without writing new functions. It should <br />support the AND and OR operators intuitively and without writing functions in <br />the most common cases. Finally, it should still enable writing custom filter <br />functions. I came up with this:</p>
+<p>I decided to try and make a hopefully intuitive and readable yet still powerful
+filter function based on the observations above. It should enable some common 
+primitive tests to be easily written without writing new functions. It should 
+support the AND and OR operators intuitively and without writing functions in 
+the most common cases. Finally, it should still enable writing custom filter 
+functions. I came up with this:</p>
 
 <pre><code>function intuitiveFilter(array, filter) {
     var itemFilter = function (iFilter, item) {
@@ -93,7 +102,7 @@ testArray.filter(function(item) {
             }
             return false;
         }
-        else if (typeof(item) == 'string' &amp;&amp; iFilter 
+        else if (typeof(item) == &#39;string&#39; &amp;&amp; iFilter 
             &amp;&amp; iFilter.test &amp;&amp; iFilter.exec) { 
             return iFilter.test(item);
         }
@@ -101,12 +110,12 @@ testArray.filter(function(item) {
             &amp;&amp; (iFilter.lt || iFilter.gt || iFilter.le
             || iFilter.ge)) {
             // item is number and filter contains min-max
-            return ((!("lt" in iFilter) || item &lt;  iFilter.lt)
-                &amp;&amp;  (!("gt" in iFilter) || item &gt;  iFilter.gt)
-                &amp;&amp;  (!("le" in iFilter) || item &lt;= iFilter.le)
-                &amp;&amp;  (!("ge" in iFilter) || item &gt;= iFilter.ge));
+            return ((!(&quot;lt&quot; in iFilter) || item &lt;  iFilter.lt)
+                &amp;&amp;  (!(&quot;gt&quot; in iFilter) || item &gt;  iFilter.gt)
+                &amp;&amp;  (!(&quot;le&quot; in iFilter) || item &lt;= iFilter.le)
+                &amp;&amp;  (!(&quot;ge&quot; in iFilter) || item &gt;= iFilter.ge));
         }
-        else if (typeof (iFilter) === "object") {
+        else if (typeof (iFilter) === &quot;object&quot;) {
             for (var key in iFilter) {
                 if (!itemFilter(iFilter[key], item[key]))
                     return false;
@@ -121,20 +130,19 @@ testArray.filter(function(item) {
             filtered.push(array[k]);
     }
     return filtered;
-}
-</code></pre>
+}</code></pre>
 
 <p>And here are some neat ways to use it:</p>
 
 <pre><code>var testArray = [
-        {name:"John",  age: 40, children: 2, 
-            company:{ name: "MegaCorp", employees: 200}},
-        {name:"Sue",   age: 30, children: 1,         
-            company:{ name: "MegaCorp", employees: 200}},
-        {name:"Mary",  age: 55, children: 3,        
-            company:{ name: "MegaCorp", employees: 200}},
-        {name:"Jack",  age: 20, children: 0, 
-            company:{ name: "MiniCorp", employees: 100}}
+        {name:&quot;John&quot;,  age: 40, children: 2, 
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Sue&quot;,   age: 30, children: 1,         
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Mary&quot;,  age: 55, children: 3,        
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Jack&quot;,  age: 20, children: 0, 
+            company:{ name: &quot;MiniCorp&quot;, employees: 100}}
 ];
 
 console.log(intuitiveFilter(testArray, 
@@ -145,65 +153,57 @@ console.log(intuitiveFilter(testArray,
     {children: [0,1]})); // Jack, Sue
 
 console.log(intuitiveFilter(testArray, 
-    {company: {name: "MegaCorp"}})) // all except Jack
+    {company: {name: &quot;MegaCorp&quot;}})) // all except Jack
 console.log(intuitiveFilter(testArray, 
     {age: function(a) { return a % 10 == 0 }})); // all except Mary
 console.log(intuitiveFilter(testArray, 
-    [{age: 30 }, {company:{name:"MiniCorp"}}])); // Sue and Jack
-</code></pre>
+    [{age: 30 }, {company:{name:&quot;MiniCorp&quot;}}])); // Sue and Jack</code></pre>
 
-<p>The function is designed to make most filters look like a part of an item from <br />the array that is being filtered. The examples demonstrate some possible uses.</p>
+<p>The function is designed to make most filters look like a part of an item from 
+the array that is being filtered. The examples demonstrate some possible uses.</p>
 
-<p>In the first example-set, the first one is a classic <strong>and</strong> operator with a <br />regex and a numeric operator for age. The second example showcases the simple <br />numeric support. The third example is the purest form of the <strong>or</strong> operator on<br />the number of children. Similar filters could easily be written for the string <br />name with regular expressions, for example: <code>{name:[/M.+/, /S.+/]}</code>. Isnt that<br />concise and lovely?</p>
+<p>In the first example-set, the first one is a classic <strong>and</strong> operator with a 
+regex and a numeric operator for age. The second example showcases the simple 
+numeric support. The third example is the purest form of the <strong>or</strong> operator on
+the number of children. Similar filters could easily be written for the string 
+name with regular expressions, for example: <code>{name:[/M.+/, /S.+/]}</code>. Isnt that
+concise and lovely?</p>
 
-<p>In the second set, the example <code>{company: {name: &quot;MegaCorp&quot;}}</code> showcases the <br />ability of the filter to go deeper in the object. The second example shows the <br />ability of the filter to use custom functions anywhere. The last example <br />demonstrates the ability to use the <strong>or</strong> operator on filters which work on <br />different fields.</p>
+<p>In the second set, the example <code>{company: {name: &quot;MegaCorp&quot;}}</code> showcases the 
+ability of the filter to go deeper in the object. The second example shows the 
+ability of the filter to use custom functions anywhere. The last example 
+demonstrates the ability to use the <strong>or</strong> operator on filters which work on 
+different fields.</p>
 
-<p>The function would&#39;ve been perfect if it wasn&#39;t for a caveat: it cannot check <br />into arrays the same way it can check into an object. For example, if we had <br />the following data:</p>
+<p>The function would&#39;ve been perfect if it wasn&#39;t for a caveat: it cannot check 
+into arrays the same way it can check into an object. For example, if we had 
+the following data:</p>
 
-<pre><code>var arrayArray = [{name:"John",  age: 40, 
-    children: [{name:"Joe", age:12}, {name:"Jane", age:10}], 
-    company:{ name: "MiniCorp", employees: 100}}]
-</code></pre>
+<pre><code>var arrayArray = [{name:&quot;John&quot;,  age: 40, 
+    children: [{name:&quot;Joe&quot;, age:12}, {name:&quot;Jane&quot;, age:10}], 
+    company:{ name: &quot;MiniCorp&quot;, employees: 100}}]</code></pre>
 
-<p>we wouldn&#39;t have a way to test the contents of the sub-array <em>children</em> without<br />writing a function:</p>
+<p>we wouldn&#39;t have a way to test the contents of the sub-array <em>children</em> without
+writing a function:</p>
 
 <pre><code>intuitiveFilter(arrayArray, {children: function(arr) { 
     return childrenArrayFilter(arr, {age:{gt:10}}).length &gt; 0; }
-});
-</code></pre>
+});</code></pre>
 
-<p>This caveat isnt hard to fix. However, I have decided that I will leave it <br />unfixed for now: let the fix be an exercise for the reader. If this code <br />generates some interest I will supply my fix later. The fix can even be added <br />without modifying the original function.</p></div>
-  <div class="social">
-    <script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-    <div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a>
-    <script>
-      (function(d, t) {
-          var g = d.createElement(t),
-              s = d.getElementsByTagName(t)[0];
-          g.src = '//hnbutton.appspot.com/static/hn.min.js';
-          s.parentNode.insertBefore(g, s);
-      }(document, 'script'));
-    </script>
-  </div>
-</div></div>
-    </div>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
-    <script>
-      $('code').addClass('prettyprint');
-      prettyPrint();
-    </script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      
-      ga('create', 'UA-42872676-1', 'spion.github.io');
-      ga('send', 'pageview');
-      
-    </script>
-  </body>
-</html>
+<p>This caveat isnt hard to fix. However, I have decided that I will leave it 
+unfixed for now: let the fix be an exercise for the reader. If this code 
+generates some interest I will supply my fix later. The fix can even be added 
+without modifying the original function.</p></div><div class="social"><script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
+prettyPrint();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-42872676-1', 'spion.github.io');
+ga('send', 'pageview');
+</script></body></html>

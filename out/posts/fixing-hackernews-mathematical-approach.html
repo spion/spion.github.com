@@ -1,50 +1,54 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Fixing Hacker News: A mathematical approach</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-  </head>
-  <body>
-    <div class="main">
-      <div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-      </div>
-      <div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"> <a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-        <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
-      </div>
-      <div class="rest">
-<div class="post">
-  <h1>Fixing Hacker News: A mathematical approach</h1>
-  <div class="date">Tue Aug 21 2012</div>
-  <div class="content"><p>There is a certain phenomenon that seems to happen in almost every online <br />community of user-generated content. A community is created: the initial users <br />define the values of this new community. After a while the community experiences <br />growth in numbers. As a result of that growth, users that joined before it feel <br />like its no longer the same community with the same values. The latest widely <br />discussed example seems to be <br /><a href="http://news.ycombinator.com/item?id=4396747">Hacker News</a>.</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Fixing Hacker News: A mathematical approach</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></head><body><div class="main"><div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></div><div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"> <a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><div class="rest"><div class="post"><h1>Fixing Hacker News: A mathematical approach</h1><div class="date">Tue Aug 21 2012</div><div class="content"><p>There is a certain phenomenon that seems to happen in almost every online 
+community of user-generated content. A community is created: the initial users 
+define the values of this new community. After a while the community experiences 
+growth in numbers. As a result of that growth, users that joined before it feel 
+like its no longer the same community with the same values. The latest widely 
+discussed example seems to be 
+<a href="http://news.ycombinator.com/item?id=4396747">Hacker News</a>.</p>
 
-<p><a href="http://news.ycombinator.com/item?id=4397542">Paul Graham responds</a> that the <br />reasons are mostly: a shift in values, increase of anonymity and the fact that<br />its easier to vote than to contribute content:</p>
+<p><a href="http://news.ycombinator.com/item?id=4397542">Paul Graham responds</a> that the 
+reasons are mostly: a shift in values, increase of anonymity and the fact that
+its easier to vote than to contribute content:</p>
 
 <blockquote>
-  <p><em>It&#39;s a genuine problem and has been growing gradually worse for a while. I think the cause is simply growth. When a good community grows, it becomes worse in two ways: (a) more recent arrivals don&#39;t have as much of whatever quality distinguished the original members, and (b) the large size of the group makes people behave worse, because there is more anonymity in a larger group.</em></p>
-
-  <p><em>I&#39;ve spent many hours over the past several years trying to understand and mitigate such problems. I&#39;ve come up with a bunch of tweaks that worked, and I have hopes I&#39;ll be able to come up with more.</em></p>
-
-  <p><em>The idea I&#39;m currently investigating, in case anyone is curious, is that <br />votes rather than comments may be the easiest place to attack this problem. <br />Although snarky comments themselves are the most obvious symptom, I suspect <br />that voting is on average dumber than commenting, because it requires so much<br />less work. So I&#39;m going to try to see if it&#39;s possible to identify people who<br />consistently upvote nasty comments and if so count their votes less.</em></p>
+<p><em>It&#39;s a genuine problem and has been growing gradually worse for a while. I think the cause is simply growth. When a good community grows, it becomes worse in two ways: (a) more recent arrivals don&#39;t have as much of whatever quality distinguished the original members, and (b) the large size of the group makes people behave worse, because there is more anonymity in a larger group.</em></p>
+<p><em>I&#39;ve spent many hours over the past several years trying to understand and mitigate such problems. I&#39;ve come up with a bunch of tweaks that worked, and I have hopes I&#39;ll be able to come up with more.</em></p>
+<p><em>The idea I&#39;m currently investigating, in case anyone is curious, is that 
+votes rather than comments may be the easiest place to attack this problem. 
+Although snarky comments themselves are the most obvious symptom, I suspect 
+that voting is on average dumber than commenting, because it requires so much
+less work. So I&#39;m going to try to see if it&#39;s possible to identify people who
+consistently upvote nasty comments and if so count their votes less.</em></p>
 </blockquote>
 
-<p>As online communities grow, the values of the group shift. The majority now may <br />or may not hold the same values as the majority before. The question is, how to<br />preserve the old values of the group with minimum side-effects? </p>
+<p>As online communities grow, the values of the group shift. The majority now may 
+or may not hold the same values as the majority before. The question is, how to
+preserve the old values of the group with minimum side-effects? </p>
 
-<p>As it happens, my master&#39;s thesis was an attempt to fix exactly this problem <br />mathematically and implement an improved voting system tailored specifically <br />for communities with user-submitted content. I won&#39;t provide a link to the <br />thesis as its not written in English, but I&#39;ll try to summarize the gist of it.</p>
+<p>As it happens, my master&#39;s thesis was an attempt to fix exactly this problem 
+mathematically and implement an improved voting system tailored specifically 
+for communities with user-submitted content. I won&#39;t provide a link to the 
+thesis as its not written in English, but I&#39;ll try to summarize the gist of it.</p>
 
-<p>The voting system used in most communities today (democratic voting) is the one <br />most susceptible to value shift when significant growth occurs. Its <br />no surprise: democratic systems are designed to measure what the majority <br />values. When significant growth occurs, the majority changes and therefore what <br />they value also changes.</p>
+<p>The voting system used in most communities today (democratic voting) is the one 
+most susceptible to value shift when significant growth occurs. Its 
+no surprise: democratic systems are designed to measure what the majority 
+values. When significant growth occurs, the majority changes and therefore what 
+they value also changes.</p>
 
-<p>In contrast, previous moderator/editor based systems offer a strict filter on <br />content based on the more static values of the current set of editors. However, <br />it has the downside of being limited to what the editors are able to review and <br />publish.</p>
+<p>In contrast, previous moderator/editor based systems offer a strict filter on 
+content based on the more static values of the current set of editors. However, 
+it has the downside of being limited to what the editors are able to review and 
+publish.</p>
 
-<p>I propose a hybrid feedback-loop based system. In this system people have <br />variable voting influence and editor-like individuals are given as a <br />&quot;reference point&quot; or exemplary users with maximum voting influence. The <br />system attempts to find out what they value and recognize it in others.</p>
+<p>I propose a hybrid feedback-loop based system. In this system people have 
+variable voting influence and editor-like individuals are given as a 
+&quot;reference point&quot; or exemplary users with maximum voting influence. The 
+system attempts to find out what they value and recognize it in others.</p>
 
-<p>The system is based on the mathematics described in <br /><a href="http://www.unik.no/people/josang/papers/JI2002-Bled.pdf">the beta reputation system</a>,<br />which is a system for measuring trust in online e-commerce communities.</p>
+<p>The system is based on the mathematics described in 
+<a href="http://www.unik.no/people/josang/papers/JI2002-Bled.pdf">the beta reputation system</a>,
+which is a system for measuring trust in online e-commerce communities.</p>
 
 <p>Here is a short description of the system:</p>
 
@@ -58,19 +62,29 @@ votes that he has received for his submissions.</li>
 <li>Exemplary users always have a static maximum influence.</li>
 </ul>
 
-<p>Suppose we have a content item (C) submitted by the user (U_c). Now a voter <br />(V) comes to vote for it and clicks on the +1 button.</p>
+<p>Suppose we have a content item \(C\) submitted by the user \(U_c\). Now a voter 
+\(V\) comes to vote for it and clicks on the +1 button.</p>
 
-<p>The voter has his own submissions for which he has received a total amount of <br />positive vote (p_V) and a total amount of negative vote (n_V). As a result, <br />his voting influence (i_V) is modified: its not +1 but calculated according to<br />the formula:</p>
+<p>The voter has his own submissions for which he has received a total amount of 
+positive vote \(p_V\) and a total amount of negative vote \(n_V\). As a result, 
+his voting influence \(i_V\) is modified: its not +1 but calculated according to
+the formula:</p>
 
 <p>$$ i_V = f_W(p_V, n_V) $$</p>
 
-<p>where (f_W) is the <br /><a href="http://evanmiller.org/how-not-to-sort-by-average-rating.html">lower bound of Wilson score confidence interval</a>. <br />While a simple average such as:</p>
+<p>where \(f_W\) is the 
+<a href="http://evanmiller.org/how-not-to-sort-by-average-rating.html">lower bound of Wilson score confidence interval</a>. 
+While a simple average such as:</p>
 
 <p>$$ i_V = \frac{p_V}{p_V + n_V} $$</p>
 
-<p>might work when the number of positive and negative votes is large enough, its <br />not good enough when the number of votes is low. The Wilson score confidence <br />interval gives us a better, flexible balance between desired certainty in the <br />result and the result itself.</p>
+<p>might work when the number of positive and negative votes is large enough, its 
+not good enough when the number of votes is low. The Wilson score confidence 
+interval gives us a better, flexible balance between desired certainty in the 
+result and the result itself.</p>
 
-<p>This vote in turn is received by the content item (C). Because its a positive <br />vote, the amount of positive vote (p_C) is changed for this content item</p>
+<p>This vote in turn is received by the content item \(C\). Because its a positive 
+vote, the amount of positive vote \(p_C\) is changed for this content item</p>
 
 <p>$$ p_C \leftarrow p_C + i_V $$</p>
 
@@ -78,86 +92,101 @@ votes that he has received for his submissions.</li>
 
 <p>$$ r_c = f_W(p_c, n_c) $$</p>
 
-<p>but the positive points (p_U) of the creator of the content item are also <br />changed:</p>
+<p>but the positive points \(p_U\) of the creator of the content item are also 
+changed:</p>
 
 <p>$$ p_U \leftarrow p_U + i_V $$</p>
 
-<p>and as a result the voting influence (i_U) of submitter is also changed:</p>
+<p>and as a result the voting influence \(i_U\) of submitter is also changed:</p>
 
 <p>$$ i_U = f_W(p_U, n_U) $$</p>
 
-<p>or in other words, he has &quot;earned&quot; a bigger influence in the voting system by<br />submitting a well-rated content item.</p>
+<p>or in other words, he has &quot;earned&quot; a bigger influence in the voting system by
+submitting a well-rated content item.</p>
 
-<p>This means that new members have no voting influence. As they submit content and<br />receive votes their influence may rise if the existing users with high influence <br />in the system consider their content to be good.</p>
+<p>This means that new members have no voting influence. As they submit content and
+receive votes their influence may rise if the existing users with high influence 
+in the system consider their content to be good.</p>
 
-<p>This is where the reference users (R) come in. Their influence is fixed to <br />always be 1</p>
+<p>This is where the reference users \(R\) come in. Their influence is fixed to 
+always be 1</p>
 
 <p>$$ i_R = 1 $$</p>
 
-<p>Because of this, influence propagates through the system from them to other <br />users who submit content which is deemed high-quality by the reference users. <br />Those users in turn also change influence by voting for others and so forth.</p>
+<p>Because of this, influence propagates through the system from them to other 
+users who submit content which is deemed high-quality by the reference users. 
+Those users in turn also change influence by voting for others and so forth.</p>
 
-<p>Its also possible to scale down votes as they age. The two possible strategies <br />are to scale all (p_X) and (n_X) values daily, for all content items and all<br />users by multiplying them with a certain aging factor (k_a)</p>
+<p>Its also possible to scale down votes as they age. The two possible strategies 
+are to scale all \(p_X\) and \(n_X\) values daily, for all content items and all
+users by multiplying them with a certain aging factor \(k_a\)</p>
 
 <p>$$ p_X \leftarrow k_a p_X $$</p>
 
 <p>$$ n_X \leftarrow k_a n_X $$</p>
 
-<p>or to simply keep all positive and negative votes (V_p) and (V_n) in the <br />database and recalculate (p_X) and (n_X) according to the age of the votes <br />(a_V), for example:</p>
+<p>or to simply keep all positive and negative votes \(V_p\) and \(V_n\) in the 
+database and recalculate \(p_X\) and \(n_X\) according to the age of the votes 
+\(a_V\), for example:</p>
 
-<p>$$ p<em>X = \sum</em>{\forall V_p} { i_V k_a^{a_V} } $$</p>
+<p>$$ p_X = \sum_{\forall V_p} { i_V k_a^{a_V} } $$</p>
 
-<p>$$ n<em>X = \sum</em>{\forall V_n} { i_V k_a^{a_V} } $$</p>
+<p>$$ n_X = \sum_{\forall V_n} { i_V k_a^{a_V} } $$</p>
 
-<p>One of the convenient aspects of this system is that its easy to test-drive. It <br />doesn&#39;t require more user action than simple democratic voting. It only requires<br />an administrator to specify some reference users at the start which seed and <br />then propagate influence throughout the system.</p>
+<p>One of the convenient aspects of this system is that its easy to test-drive. It 
+doesn&#39;t require more user action than simple democratic voting. It only requires
+an administrator to specify some reference users at the start which seed and 
+then propagate influence throughout the system.</p>
 
-<p>I tested this system on a forum dataset (details available on request) and found<br />that the system achieves around 50% reduction of difference from a moderator <br />only system compared to scores of a democratic system, even when the direct <br />voting of reference users is turned off for content items and only the indirect <br />(to other users) influence is counted. ((p &lt; 0.05))</p>
+<p>I tested this system on a forum dataset (details available on request) and found
+that the system achieves around 50% reduction of difference from a moderator 
+only system compared to scores of a democratic system, even when the direct 
+voting of reference users is turned off for content items and only the indirect 
+(to other users) influence is counted. \((p &lt; 0.05)\)</p>
 
-<p>What does a 50% reduction in the difference mean? Let the score of a content <br />item (C) be measured in 3 systems: democratic (D), reference-users-only <br />(R) and hybrid (H) with direct influence of reference users to content items<br />being turned off. By sorting the items according to those scores we can <br />calculate their ranks in the 3 systems: (r<em>D), (r_R) and (r_H) <br />respectively. The value of the rank is in the range (1) to (n), where (n) <br />is total number of content items. The absolute difference between the democratic<br />ranking and the reference ranking (d</em>{DR}) is:</p>
+<p>What does a 50% reduction in the difference mean? Let the score of a content 
+item \(C\) be measured in 3 systems: democratic \(D\), reference-users-only 
+\(R\) and hybrid \(H\) with direct influence of reference users to content items
+being turned off. By sorting the items according to those scores we can 
+calculate their ranks in the 3 systems: \(r_D\), \(r_R\) and \(r_H\) 
+respectively. The value of the rank is in the range \(1\) to \(n\), where \(n\) 
+is total number of content items. The absolute difference between the democratic
+ranking and the reference ranking \(d_{DR}\) is:</p>
 
 <p>$$ d_{DR} = abs(r_D - r_R) $$</p>
 
-<p>while the absolute difference between the hybrid ranking and the reference <br />ranking (d_{HR}) is:</p>
+<p>while the absolute difference between the hybrid ranking and the reference 
+ranking \(d_{HR}\) is:</p>
 
 <p>$$ d_{HR} = abs(r_H - r_R) $$</p>
 
 <p>and it turns out that on average,</p>
 
-<p>$$ d<em>{HR} = 0.5 d</em>{DR} $$</p>
+<p>$$ d_{HR} = 0.5 d_{DR} $$</p>
 
-<p>The important downside of these results is that the people using the system were<br />not aware that points are calculated in a different way. The original votes were<br />given by people who knew that the system is democratic and acted accordingly. It<br />remains to be seen what the results would be if people are aware that their <br />voting influence depends on the way others vote for their submitted content.</p>
+<p>The important downside of these results is that the people using the system were
+not aware that points are calculated in a different way. The original votes were
+given by people who knew that the system is democratic and acted accordingly. It
+remains to be seen what the results would be if people are aware that their 
+voting influence depends on the way others vote for their submitted content.</p>
 
-<p>I pondered starting a website similar to hacker news based on this voting and <br />scoring scheme, however starting a whole new news website is about much more <br />than just scoring algorithms (it requires reputation in the online comminty, <br />popularity and most importantly time, none of which I presently have in <br />sufficient amounts or know how to achieve). But hopefully, pg and the rest of <br />the hacker news team might find this scheme useful enough to somehow incorporate<br />it into the existing scoring system.</p></div>
-  <div class="social">
-    <script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-    <div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a>
-    <script>
-      (function(d, t) {
-          var g = d.createElement(t),
-              s = d.getElementsByTagName(t)[0];
-          g.src = '//hnbutton.appspot.com/static/hn.min.js';
-          s.parentNode.insertBefore(g, s);
-      }(document, 'script'));
-    </script>
-  </div>
-</div></div>
-    </div>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
-    <script>
-      $('code').addClass('prettyprint');
-      prettyPrint();
-    </script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      
-      ga('create', 'UA-42872676-1', 'spion.github.io');
-      ga('send', 'pageview');
-      
-    </script>
-  </body>
-</html>
+<p>I pondered starting a website similar to hacker news based on this voting and 
+scoring scheme, however starting a whole new news website is about much more 
+than just scoring algorithms (it requires reputation in the online comminty, 
+popularity and most importantly time, none of which I presently have in 
+sufficient amounts or know how to achieve). But hopefully, pg and the rest of 
+the hacker news team might find this scheme useful enough to somehow incorporate
+it into the existing scoring system.</p></div><div class="social"><script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
+prettyPrint();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-42872676-1', 'spion.github.io');
+ga('send', 'pageview');
+</script></body></html>

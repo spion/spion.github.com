@@ -103,7 +103,7 @@ h2 + p, h3 + p, h4 + p {
 .post blockquote {
     border-left: solid 1ex #f3ecdf;
     padding-left: 1rem;
-    margin-left: 0;
+    margin-left: 0.05rem;
 }
 .post blockquote small {
     color: #777;

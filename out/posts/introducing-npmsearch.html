@@ -1,28 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Introducing npmsearch</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-  </head>
-  <body>
-    <div class="main">
-      <div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-      </div>
-      <div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"> <a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-        <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
-      </div>
-      <div class="rest">
-<div class="post">
-  <h1>Introducing npmsearch</h1>
-  <div class="date">Tue Nov 27 2012</div>
-  <div class="content"><p>Node&#39;s package manager <a href="https://npmjs.org/">npm</a> is a wonderful tool.</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Introducing npmsearch</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></head><body><div class="main"><div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></div><div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"> <a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><div class="rest"><div class="post"><h1>Introducing npmsearch</h1><div class="date">Tue Nov 27 2012</div><div class="content"><p>Node&#39;s package manager <a href="https://npmjs.org/">npm</a> is a wonderful tool.</p>
 
 <p>It handles dependencies and versions the right way. It requires simple, easy to write package metadata. It uses a central registry (by default) which makes installing modules easier. The central registry is <a href="http://couchdb.apache.org/">CouchDB</a> which basically makes it completely transparent and available to everyone.</p>
 
@@ -44,8 +20,7 @@ activerecord          An ORM that supports multiple database sys..
 addressit             Freeform Street Address Parser
 ...
 [snip]
-...
-</code></pre>
+...</code></pre>
 
 <p>What just happened here?</p>
 
@@ -63,8 +38,7 @@ connect-mysql-session A MySQL session store for node.js ...
 cormo                 ORM framework for Node.js...
 ...
 [snip]
-...
-</code></pre>
+...</code></pre>
 
 <p>Hence one of the common activities to do when researching node modules is to go to the #node.js IRC channel and ask the people there for a <strong>good</strong> library that does X.</p>
 
@@ -72,8 +46,7 @@ cormo                 ORM framework for Node.js...
 
 <p>Install it using npm:</p>
 
-<pre><code>[sudo] npm install -g npmsearch
-</code></pre>
+<pre><code>[sudo] npm install -g npmsearch</code></pre>
 
 <p>then use it from the command line:</p>
 
@@ -108,14 +81,20 @@ cormo                 ORM framework for Node.js...
 
 * sequelize (2 2715)
      Multi dialect ORM for Node.JS
-     by Sascha Depold 
-</code></pre>
+     by Sascha Depold </code></pre>
 
-<p>If you want to try it out without installing it, <br /><a href="http://npmsearch.docucalc.com/">you can try it online</a>, or you can <br /><a href="https://github.com/spion/npmsearch">visit the project page on github</a></p>
+<p>If you want to try it out without installing it, 
+<a href="http://npmsearch.docucalc.com/">you can try it online</a>, or you can 
+<a href="https://github.com/spion/npmsearch">visit the project page on github</a></p>
 
-<p>The implemented keyword search is non-trivial: it applies the <br /><a href="http://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to the keywords and<br />expands the set provided by you with statistically picked commonly co-occuring <br />keywords. (e.g. mongo will expand to mongo mongodb)</p>
+<p>The implemented keyword search is non-trivial: it applies the 
+<a href="http://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to the keywords and
+expands the set provided by you with statistically picked commonly co-occuring 
+keywords. (e.g. mongo will expand to mongo mongodb)</p>
 
-<p>Results are sorted by a combined factor which incorporates keyword relevance <br />and &quot;half-lifed&quot; downloads. You can control the importance of each factor in <br />the sorting process using command-line options - and there are many:</p>
+<p>Results are sorted by a combined factor which incorporates keyword relevance 
+and &quot;half-lifed&quot; downloads. You can control the importance of each factor in 
+the sorting process using command-line options - and there are many:</p>
 
 <ul>
 <li>relevance - how big of a factor should keyword relevance be, default 2</li>
@@ -128,38 +107,17 @@ days old lose half of their value, default 30</li>
 
 <p>I hope this will help fellow nodesters find their next favorite modules</p>
 
-<p>Have fun!</p></div>
-  <div class="social">
-    <script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-    <div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a>
-    <script>
-      (function(d, t) {
-          var g = d.createElement(t),
-              s = d.getElementsByTagName(t)[0];
-          g.src = '//hnbutton.appspot.com/static/hn.min.js';
-          s.parentNode.insertBefore(g, s);
-      }(document, 'script'));
-    </script>
-  </div>
-</div></div>
-    </div>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
-    <script>
-      $('code').addClass('prettyprint');
-      prettyPrint();
-    </script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      
-      ga('create', 'UA-42872676-1', 'spion.github.io');
-      ga('send', 'pageview');
-      
-    </script>
-  </body>
-</html>
+<p>Have fun!</p></div><div class="social"><script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
+prettyPrint();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-42872676-1', 'spion.github.io');
+ga('send', 'pageview');
+</script></body></html>
