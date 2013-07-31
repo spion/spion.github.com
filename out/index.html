@@ -26,61 +26,66 @@
     src="http://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
 
 <p>This is Appser for Google Docs. It allows you to run the full, web version of Google Docs on the iPad. And by that we mean all of it, even editing presentations (a feature which was recently completely disabled on the iPad by Google)</p>
-<p>And its available on the app store, right now, for free. 
-<a href="https://itunes.apple.com/us/app/appser-for-google-docs/id577825348?ls=1&amp;mt=8">Get Appser for Google Docs</a>.</p>
-<p>At this point you&#39;re probably thinking: Wait, isn&#39;t this horribly problematic? 
-Google Docs isn&#39;t optimized for touch input at all - neither the code nor the UI
-elements. Selecting text is weird. Scrolling is incompatible with dragging to 
-select text or to move stuff. Those image boxes have really tiny resizers. The 
-toolbar buttons and menus are not big enough. What about right click?</p>
+
+<p>And its available on the app store, right now, for free. <br /><a href="https://itunes.apple.com/us/app/appser-for-google-docs/id577825348?ls=1&amp;mt=8">Get Appser for Google Docs</a>.</p>
+
+<p>At this point you&#39;re probably thinking: Wait, isn&#39;t this horribly problematic? <br />Google Docs isn&#39;t optimized for touch input at all - neither the code nor the UI<br />elements. Selecting text is weird. Scrolling is incompatible with dragging to <br />select text or to move stuff. Those image boxes have really tiny resizers. The <br />toolbar buttons and menus are not big enough. What about right click?</p>
+
 <p>Is it actually usable?</p>
-<p>Also, can I just connect a bigger monitor, some kind of a touchpad and a 
-keyboard and forget about touch input?</p>
+
+<p>Also, can I just connect a bigger monitor, some kind of a touchpad and a <br />keyboard and forget about touch input?</p>
+
 <p>The answer to all questions is yes.</p>
+
 <h2>Scroll vs drag and text selection</h2>
-<p>When Apple first designed the iPhone, it had a 3.5 inch screen with a resolution
-of 480x320 pixels. While this was quite a lot compared to other phones of the 
-time, it was not even near desktop and laptop displays. Yet it had a browser 
-that provided an experience as close to desktop as possible. How did they 
-achieve this?</p>
-<p>They made scrolling and zooming really easy. This meant that the user was able 
-to quickly zoom to compensate for the lacking resolution, then quickly pan to 
-show more on the limited screen real-estate. And so, web browsing was very 
-usable even on the first iPhone.</p>
-<p>Fast forward to today, on the iPad, we have a 10 inch retina-resolution 
-display... and the same zoom and pan control.</p>
+
+<p>When Apple first designed the iPhone, it had a 3.5 inch screen with a resolution<br />of 480x320 pixels. While this was quite a lot compared to other phones of the <br />time, it was not even near desktop and laptop displays. Yet it had a browser <br />that provided an experience as close to desktop as possible. How did they <br />achieve this?</p>
+
+<p>They made scrolling and zooming really easy. This meant that the user was able <br />to quickly zoom to compensate for the lacking resolution, then quickly pan to <br />show more on the limited screen real-estate. And so, web browsing was very <br />usable even on the first iPhone.</p>
+
+<p>Fast forward to today, on the iPad, we have a 10 inch retina-resolution <br />display... and the same zoom and pan control.</p>
+
 <p>Why?</p>
-<p>Do we really need this? Its very problematic for web apps. They like to assume 
-that drag and drop works. They want to display a static chrome around a 
-scrolling document, so they also like to assume that overflow: scroll works.</p>
-<p>As a result, we decided to make scrolling work by disabling single-finger 
-scrolling. Instead we made single-finger actions behave exactly like mouse 
-actions do in the browser and switched to two-finger scrolling, making it work 
-everywhere. This enables you to quickly select text and drag things around.</p>
-<p>We also disabled zoom - web apps usually have their own document zooming 
-facilities and the iPad screen has plenty of resolution and size.</p>
+
+<p>Do we really need this? Its very problematic for web apps. They like to assume <br />that drag and drop works. They want to display a static chrome around a <br />scrolling document, so they also like to assume that overflow: scroll works.</p>
+
+<p>As a result, we decided to make scrolling work by disabling single-finger <br />scrolling. Instead we made single-finger actions behave exactly like mouse <br />actions do in the browser and switched to two-finger scrolling, making it work <br />everywhere. This enables you to quickly select text and drag things around.</p>
+
+<p>We also disabled zoom - web apps usually have their own document zooming <br />facilities and the iPad screen has plenty of resolution and size.</p>
+
 <h2>What about tiny buttons and controls?</h2>
+
 <p>This is where things got interesting. We knew that even though we enabled drag and drop, the controls were too tiny for touch use. To overcome this we developed a method called Magnet Touch. It automatically enlarges all touch targets. The enlargement is not visual so it simply makes smaller targets easier to hit. Its also smart - it tries very hard to avoid overlap with other targets. Best of all, you don&#39;t have to tell it anything about the targets - not even which elements are targets.</p>
+
 <h2>And right click?</h2>
+
 <p>Long taps are the equivalent of right clicks. At the moment they trigger when you release the finger.</p>
+
 <h2>What happens when I connect an external screen?</h2>
+
 <p>Your iPad becomes a keyboard + touchpad combo and you get a mouse pointer on the screen. Neat huh? If you prefer a physical Bluetooth keyboard you can of course connect one at any time.</p>
+
 <p>There are some limitations when editing text fields (like the username and password on the login screen) - they must be shown on the iPad temporarily while editing. We&#39;re working on that.</p>
+
 <h2>Conclusion</h2>
-<p>What, you&#39;re still reading this? <a href="https://itunes.apple.com/us/app/appser-for-google-docs/id577825348?ls=1&amp;mt=8">Download the app and try it out</a>. We&#39;d also <a href="http://appser.docucalc.com/support">love to hear from you</a>. You can also <a href="http://appser.docucalc.com/">visit the official Appser website</a>, if you&#39;d like to find out more.</p>
-</div>
+
+<p>What, you&#39;re still reading this? <a href="https://itunes.apple.com/us/app/appser-for-google-docs/id577825348?ls=1&amp;mt=8">Download the app and try it out</a>. We&#39;d also <a href="http://appser.docucalc.com/support">love to hear from you</a>. You can also <a href="http://appser.docucalc.com/">visit the official Appser website</a>, if you&#39;d like to find out more.</p></div>
 </div>
 <div class="post">
   <h1><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h1>
   <div class="date">Tue Nov 27 2012</div>
   <div class="content"><p>Node&#39;s package manager <a href="https://npmjs.org/">npm</a> is a wonderful tool.</p>
+
 <p>It handles dependencies and versions the right way. It requires simple, easy to write package metadata. It uses a central registry (by default) which makes installing modules easier. The central registry is <a href="http://couchdb.apache.org/">CouchDB</a> which basically makes it completely transparent and available to everyone.</p>
+
 <p>It does many things right.</p>
+
 <p>But it doesn&#39;t do search that well.</p>
+
 <pre><code>9134 % npm search orm
-npm http GET https://registry.npmjs.org/-
+npm http GET <a href='https://registry.npmjs.org/-'>https://registry.npmjs.org/-</a>
 /all/since?stale=update_after&amp;amp;startkey=1353539108378
-npm http 200 https://registry.npmjs.org/-
+npm http 200 <a href='https://registry.npmjs.org/-'>https://registry.npmjs.org/-</a>
 /all/since?stale=update_after&amp;amp;startkey=1353539108378
 
 NAME                  DESCRIPTION             
@@ -91,10 +96,15 @@ activerecord          An ORM that supports multiple database sys..
 addressit             Freeform Street Address Parser
 ...
 [snip]
-...</code></pre>
+...
+</code></pre>
+
 <p>What just happened here?</p>
+
 <p>Here is what happened: npm search gave us all packages that contain the substring &quot;orm&quot;. Anywhere.</p>
+
 <p>You might argue that this works well with bigger words. Its true that results are slightly better with bigger words but they&#39;re still not sorted in any meaningful way (alphabetically sorting search results isn&#39;t very meaningful)</p>
+
 <pre><code>9144 % npm search mysql
 NAME                  DESCRIPTION            
 Accessor_MySQL        A MySQL database wrapper, provide ...
@@ -105,54 +115,60 @@ connect-mysql-session A MySQL session store for node.js ...
 cormo                 ORM framework for Node.js...
 ...
 [snip]
-...</code></pre>
+...
+</code></pre>
+
 <p>Hence one of the common activities to do when researching node modules is to go to the #node.js IRC channel and ask the people there for a <strong>good</strong> library that does X.</p>
+
 <p>I decided to make a package that helps with this, called npmsearch. Its a command-line tool that allows you to search the npm registry by keywords and it sorts the results using relevance and the number of downloads that the package has.</p>
+
 <p>Install it using npm:</p>
-<pre><code>[sudo] npm install -g npmsearch</code></pre>
+
+<pre><code>[sudo] npm install -g npmsearch
+</code></pre>
+
 <p>then use it from the command line:</p>
+
 <pre><code>9147 % npmsearch mysql
 * mysql (6 15862)
      A node.js driver for mysql. It is written in JavaScript, does 
      not  require compiling, and is 100% MIT licensed.
-     by Felix Geisendörfer &lt;felix@debuggable.com&gt;
+     by Felix Geisendörfer &lt;<a href='mailto:felix@debuggable.com'>felix@debuggable.com</a>&gt;
 
 * mongoose (2 28197)
      Mongoose MongoDB ODM
-     by Guillermo Rauch &lt;guillermo@learnboost.com&gt;
-     http://github.com/LearnBoost/mongoose.git
+     by Guillermo Rauch &lt;<a href='mailto:guillermo@learnboost.com'>guillermo@learnboost.com</a>&gt;
+     <a href='http://github.com/LearnBoost/mongoose.git'>http://github.com/LearnBoost/mongoose.git</a>
 
 * patio (10 174)
      Patio query engine and ORM
      by Doug Martin &lt;undefined&gt;
-     git@github.com:c2fo/patio.git
+     <a href='mailto:git@github.com'>git@github.com</a>:c2fo/patio.git
 
 * mysql-libmysqlclient (5 1019)
      Binary MySQL bindings for Node.JS
-     by Oleg Efimov &lt;efimovov@gmail.com&gt;
-     https://github.com/Sannis/node-mysql-libmysqlclient.git
+     by Oleg Efimov &lt;<a href='mailto:efimovov@gmail.com'>efimovov@gmail.com</a>&gt;
+     <a href='https://github.com/Sannis/node-mysql-libmysqlclient.git'>https://github.com/Sannis/node-mysql-libmysqlclient.git</a>
 
 * db-mysql (3 918)
      MySQL database bindings for Node.JS
 
 * sql (6 51)
      sql builder
-     by brianc &lt;brian.m.carlson@gmail.com&gt;
-     http://github.com/brianc/node-sql.git
+     by brianc &lt;<a href='mailto:brian.m.carlson@gmail.com'>brian.m.carlson@gmail.com</a>&gt;
+     <a href='http://github.com/brianc/node-sql.git'>http://github.com/brianc/node-sql.git</a>
 
 * sequelize (2 2715)
      Multi dialect ORM for Node.JS
-     by Sascha Depold </code></pre>
-<p>If you want to try it out without installing it, 
-<a href="http://npmsearch.docucalc.com/">you can try it online</a>, or you can 
-<a href="https://github.com/spion/npmsearch">visit the project page on github</a></p>
-<p>The implemented keyword search is non-trivial: it applies the 
-<a href="http://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to the keywords and
-expands the set provided by you with statistically picked commonly co-occuring 
-keywords. (e.g. mongo will expand to mongo mongodb)</p>
-<p>Results are sorted by a combined factor which incorporates keyword relevance 
-and &quot;half-lifed&quot; downloads. You can control the importance of each factor in 
-the sorting process using command-line options - and there are many:</p>
+     by Sascha Depold 
+</code></pre>
+
+<p>If you want to try it out without installing it, <br /><a href="http://npmsearch.docucalc.com/">you can try it online</a>, or you can <br /><a href="https://github.com/spion/npmsearch">visit the project page on github</a></p>
+
+<p>The implemented keyword search is non-trivial: it applies the <br /><a href="http://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to the keywords and<br />expands the set provided by you with statistically picked commonly co-occuring <br />keywords. (e.g. mongo will expand to mongo mongodb)</p>
+
+<p>Results are sorted by a combined factor which incorporates keyword relevance <br />and &quot;half-lifed&quot; downloads. You can control the importance of each factor in <br />the sorting process using command-line options - and there are many:</p>
+
 <ul>
 <li>relevance - how big of a factor should keyword relevance be, default 2</li>
 <li>downloads - how big of a factor is the number of downloads, default 0.25</li>
@@ -161,57 +177,40 @@ days old lose half of their value, default 30</li>
 <li>limit     - number of results to display, default 7</li>
 <li>freshness - update the database if older than &quot;freshness&quot; days, default 1.5</li>
 </ul>
+
 <p>I hope this will help fellow nodesters find their next favorite modules</p>
-<p>Have fun!</p>
-</div>
+
+<p>Have fun!</p></div>
 </div>
 <div class="post">
   <h1><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h1>
   <div class="date">Tue Aug 21 2012</div>
-  <div class="content"><p>There is a certain phenomenon that seems to happen in almost every online 
-community of user-generated content. A community is created: the initial users 
-define the values of this new community. After a while the community experiences 
-growth in numbers. As a result of that growth, users that joined before it feel 
-like its no longer the same community with the same values. The latest widely 
-discussed example seems to be 
-<a href="http://news.ycombinator.com/item?id=4396747">Hacker News</a>.</p>
-<p><a href="http://news.ycombinator.com/item?id=4397542">Paul Graham responds</a> that the 
-reasons are mostly: a shift in values, increase of anonymity and the fact that
-its easier to vote than to contribute content:</p>
+  <div class="content"><p>There is a certain phenomenon that seems to happen in almost every online <br />community of user-generated content. A community is created: the initial users <br />define the values of this new community. After a while the community experiences <br />growth in numbers. As a result of that growth, users that joined before it feel <br />like its no longer the same community with the same values. The latest widely <br />discussed example seems to be <br /><a href="http://news.ycombinator.com/item?id=4396747">Hacker News</a>.</p>
+
+<p><a href="http://news.ycombinator.com/item?id=4397542">Paul Graham responds</a> that the <br />reasons are mostly: a shift in values, increase of anonymity and the fact that<br />its easier to vote than to contribute content:</p>
+
 <blockquote>
-<p><em>It&#39;s a genuine problem and has been growing gradually worse for a while. I think the cause is simply growth. When a good community grows, it becomes worse in two ways: (a) more recent arrivals don&#39;t have as much of whatever quality distinguished the original members, and (b) the large size of the group makes people behave worse, because there is more anonymity in a larger group.</em></p>
-<p><em>I&#39;ve spent many hours over the past several years trying to understand and mitigate such problems. I&#39;ve come up with a bunch of tweaks that worked, and I have hopes I&#39;ll be able to come up with more.</em></p>
-<p><em>The idea I&#39;m currently investigating, in case anyone is curious, is that 
-votes rather than comments may be the easiest place to attack this problem. 
-Although snarky comments themselves are the most obvious symptom, I suspect 
-that voting is on average dumber than commenting, because it requires so much
-less work. So I&#39;m going to try to see if it&#39;s possible to identify people who
-consistently upvote nasty comments and if so count their votes less.</em></p>
+  <p><em>It&#39;s a genuine problem and has been growing gradually worse for a while. I think the cause is simply growth. When a good community grows, it becomes worse in two ways: (a) more recent arrivals don&#39;t have as much of whatever quality distinguished the original members, and (b) the large size of the group makes people behave worse, because there is more anonymity in a larger group.</em></p>
+
+  <p><em>I&#39;ve spent many hours over the past several years trying to understand and mitigate such problems. I&#39;ve come up with a bunch of tweaks that worked, and I have hopes I&#39;ll be able to come up with more.</em></p>
+
+  <p><em>The idea I&#39;m currently investigating, in case anyone is curious, is that <br />votes rather than comments may be the easiest place to attack this problem. <br />Although snarky comments themselves are the most obvious symptom, I suspect <br />that voting is on average dumber than commenting, because it requires so much<br />less work. So I&#39;m going to try to see if it&#39;s possible to identify people who<br />consistently upvote nasty comments and if so count their votes less.</em></p>
 </blockquote>
-<p>As online communities grow, the values of the group shift. The majority now may 
-or may not hold the same values as the majority before. The question is, how to
-preserve the old values of the group with minimum side-effects? </p>
-<p>As it happens, my master&#39;s thesis was an attempt to fix exactly this problem 
-mathematically and implement an improved voting system tailored specifically 
-for communities with user-submitted content. I won&#39;t provide a link to the 
-thesis as its not written in English, but I&#39;ll try to summarize the gist of it.</p>
-<p>The voting system used in most communities today (democratic voting) is the one 
-most susceptible to value shift when significant growth occurs. Its 
-no surprise: democratic systems are designed to measure what the majority 
-values. When significant growth occurs, the majority changes and therefore what 
-they value also changes.</p>
-<p>In contrast, previous moderator/editor based systems offer a strict filter on 
-content based on the more static values of the current set of editors. However, 
-it has the downside of being limited to what the editors are able to review and 
-publish.</p>
-<p>I propose a hybrid feedback-loop based system. In this system people have 
-variable voting influence and editor-like individuals are given as a 
-&quot;reference point&quot; or exemplary users with maximum voting influence. The 
-system attempts to find out what they value and recognize it in others.</p>
-<p>The system is based on the mathematics described in 
-<a href="http://www.unik.no/people/josang/papers/JI2002-Bled.pdf">the beta reputation system</a>,
-which is a system for measuring trust in online e-commerce communities.</p>
+
+<p>As online communities grow, the values of the group shift. The majority now may <br />or may not hold the same values as the majority before. The question is, how to<br />preserve the old values of the group with minimum side-effects? </p>
+
+<p>As it happens, my master&#39;s thesis was an attempt to fix exactly this problem <br />mathematically and implement an improved voting system tailored specifically <br />for communities with user-submitted content. I won&#39;t provide a link to the <br />thesis as its not written in English, but I&#39;ll try to summarize the gist of it.</p>
+
+<p>The voting system used in most communities today (democratic voting) is the one <br />most susceptible to value shift when significant growth occurs. Its <br />no surprise: democratic systems are designed to measure what the majority <br />values. When significant growth occurs, the majority changes and therefore what <br />they value also changes.</p>
+
+<p>In contrast, previous moderator/editor based systems offer a strict filter on <br />content based on the more static values of the current set of editors. However, <br />it has the downside of being limited to what the editors are able to review and <br />publish.</p>
+
+<p>I propose a hybrid feedback-loop based system. In this system people have <br />variable voting influence and editor-like individuals are given as a <br />&quot;reference point&quot; or exemplary users with maximum voting influence. The <br />system attempts to find out what they value and recognize it in others.</p>
+
+<p>The system is based on the mathematics described in <br /><a href="http://www.unik.no/people/josang/papers/JI2002-Bled.pdf">the beta reputation system</a>,<br />which is a system for measuring trust in online e-commerce communities.</p>
+
 <p>Here is a short description of the system:</p>
+
 <ul>
 <li>Voting influence is not the same for all users: its not 1 (+1 or -1) for 
 everyone but in the range 0-1.</li>
@@ -221,153 +220,133 @@ submitter) of the content.</li>
 votes that he has received for his submissions.</li>
 <li>Exemplary users always have a static maximum influence.</li>
 </ul>
-<p>Suppose we have a content item \(C\) submitted by the user \(U_c\). Now a voter 
-\(V\) comes to vote for it and clicks on the +1 button.</p>
-<p>The voter has his own submissions for which he has received a total amount of 
-positive vote \(p_V\) and a total amount of negative vote \(n_V\). As a result, 
-his voting influence \(i_V\) is modified: its not +1 but calculated according to
-the formula:</p>
+
+<p>Suppose we have a content item (C) submitted by the user (U_c). Now a voter <br />(V) comes to vote for it and clicks on the +1 button.</p>
+
+<p>The voter has his own submissions for which he has received a total amount of <br />positive vote (p_V) and a total amount of negative vote (n_V). As a result, <br />his voting influence (i_V) is modified: its not +1 but calculated according to<br />the formula:</p>
+
 <p>$$ i_V = f_W(p_V, n_V) $$</p>
-<p>where \(f_W\) is the 
-<a href="http://evanmiller.org/how-not-to-sort-by-average-rating.html">lower bound of Wilson score confidence interval</a>. 
-While a simple average such as:</p>
+
+<p>where (f_W) is the <br /><a href="http://evanmiller.org/how-not-to-sort-by-average-rating.html">lower bound of Wilson score confidence interval</a>. <br />While a simple average such as:</p>
+
 <p>$$ i_V = \frac{p_V}{p_V + n_V} $$</p>
-<p>might work when the number of positive and negative votes is large enough, its 
-not good enough when the number of votes is low. The Wilson score confidence 
-interval gives us a better, flexible balance between desired certainty in the 
-result and the result itself.</p>
-<p>This vote in turn is received by the content item \(C\). Because its a positive 
-vote, the amount of positive vote \(p_C\) is changed for this content item</p>
+
+<p>might work when the number of positive and negative votes is large enough, its <br />not good enough when the number of votes is low. The Wilson score confidence <br />interval gives us a better, flexible balance between desired certainty in the <br />result and the result itself.</p>
+
+<p>This vote in turn is received by the content item (C). Because its a positive <br />vote, the amount of positive vote (p_C) is changed for this content item</p>
+
 <p>$$ p_C \leftarrow p_C + i_V $$</p>
+
 <p>and as a result, it has a new rating</p>
+
 <p>$$ r_c = f_W(p_c, n_c) $$</p>
-<p>but the positive points \(p_U\) of the creator of the content item are also 
-changed:</p>
+
+<p>but the positive points (p_U) of the creator of the content item are also <br />changed:</p>
+
 <p>$$ p_U \leftarrow p_U + i_V $$</p>
-<p>and as a result the voting influence \(i_U\) of submitter is also changed:</p>
+
+<p>and as a result the voting influence (i_U) of submitter is also changed:</p>
+
 <p>$$ i_U = f_W(p_U, n_U) $$</p>
-<p>or in other words, he has &quot;earned&quot; a bigger influence in the voting system by
-submitting a well-rated content item.</p>
-<p>This means that new members have no voting influence. As they submit content and
-receive votes their influence may rise if the existing users with high influence 
-in the system consider their content to be good.</p>
-<p>This is where the reference users \(R\) come in. Their influence is fixed to 
-always be 1</p>
+
+<p>or in other words, he has &quot;earned&quot; a bigger influence in the voting system by<br />submitting a well-rated content item.</p>
+
+<p>This means that new members have no voting influence. As they submit content and<br />receive votes their influence may rise if the existing users with high influence <br />in the system consider their content to be good.</p>
+
+<p>This is where the reference users (R) come in. Their influence is fixed to <br />always be 1</p>
+
 <p>$$ i_R = 1 $$</p>
-<p>Because of this, influence propagates through the system from them to other 
-users who submit content which is deemed high-quality by the reference users. 
-Those users in turn also change influence by voting for others and so forth.</p>
-<p>Its also possible to scale down votes as they age. The two possible strategies 
-are to scale all \(p_X\) and \(n_X\) values daily, for all content items and all
-users by multiplying them with a certain aging factor \(k_a\)</p>
+
+<p>Because of this, influence propagates through the system from them to other <br />users who submit content which is deemed high-quality by the reference users. <br />Those users in turn also change influence by voting for others and so forth.</p>
+
+<p>Its also possible to scale down votes as they age. The two possible strategies <br />are to scale all (p_X) and (n_X) values daily, for all content items and all<br />users by multiplying them with a certain aging factor (k_a)</p>
+
 <p>$$ p_X \leftarrow k_a p_X $$</p>
+
 <p>$$ n_X \leftarrow k_a n_X $$</p>
-<p>or to simply keep all positive and negative votes \(V_p\) and \(V_n\) in the 
-database and recalculate \(p_X\) and \(n_X\) according to the age of the votes 
-\(a_V\), for example:</p>
-<p>$$ p_X = \sum_{\forall V_p} { i_V k_a^{a_V} } $$</p>
-<p>$$ n_X = \sum_{\forall V_n} { i_V k_a^{a_V} } $$</p>
-<p>One of the convenient aspects of this system is that its easy to test-drive. It 
-doesn&#39;t require more user action than simple democratic voting. It only requires
-an administrator to specify some reference users at the start which seed and 
-then propagate influence throughout the system.</p>
-<p>I tested this system on a forum dataset (details available on request) and found
-that the system achieves around 50% reduction of difference from a moderator 
-only system compared to scores of a democratic system, even when the direct 
-voting of reference users is turned off for content items and only the indirect 
-(to other users) influence is counted. \((p &lt; 0.05)\)</p>
-<p>What does a 50% reduction in the difference mean? Let the score of a content 
-item \(C\) be measured in 3 systems: democratic \(D\), reference-users-only 
-\(R\) and hybrid \(H\) with direct influence of reference users to content items
-being turned off. By sorting the items according to those scores we can 
-calculate their ranks in the 3 systems: \(r_D\), \(r_R\) and \(r_H\) 
-respectively. The value of the rank is in the range \(1\) to \(n\), where \(n\) 
-is total number of content items. The absolute difference between the democratic
-ranking and the reference ranking \(d_{DR}\) is:</p>
+
+<p>or to simply keep all positive and negative votes (V_p) and (V_n) in the <br />database and recalculate (p_X) and (n_X) according to the age of the votes <br />(a_V), for example:</p>
+
+<p>$$ p<em>X = \sum</em>{\forall V_p} { i_V k_a^{a_V} } $$</p>
+
+<p>$$ n<em>X = \sum</em>{\forall V_n} { i_V k_a^{a_V} } $$</p>
+
+<p>One of the convenient aspects of this system is that its easy to test-drive. It <br />doesn&#39;t require more user action than simple democratic voting. It only requires<br />an administrator to specify some reference users at the start which seed and <br />then propagate influence throughout the system.</p>
+
+<p>I tested this system on a forum dataset (details available on request) and found<br />that the system achieves around 50% reduction of difference from a moderator <br />only system compared to scores of a democratic system, even when the direct <br />voting of reference users is turned off for content items and only the indirect <br />(to other users) influence is counted. ((p &lt; 0.05))</p>
+
+<p>What does a 50% reduction in the difference mean? Let the score of a content <br />item (C) be measured in 3 systems: democratic (D), reference-users-only <br />(R) and hybrid (H) with direct influence of reference users to content items<br />being turned off. By sorting the items according to those scores we can <br />calculate their ranks in the 3 systems: (r<em>D), (r_R) and (r_H) <br />respectively. The value of the rank is in the range (1) to (n), where (n) <br />is total number of content items. The absolute difference between the democratic<br />ranking and the reference ranking (d</em>{DR}) is:</p>
+
 <p>$$ d_{DR} = abs(r_D - r_R) $$</p>
-<p>while the absolute difference between the hybrid ranking and the reference 
-ranking \(d_{HR}\) is:</p>
+
+<p>while the absolute difference between the hybrid ranking and the reference <br />ranking (d_{HR}) is:</p>
+
 <p>$$ d_{HR} = abs(r_H - r_R) $$</p>
+
 <p>and it turns out that on average,</p>
-<p>$$ d_{HR} = 0.5 d_{DR} $$</p>
-<p>The important downside of these results is that the people using the system were
-not aware that points are calculated in a different way. The original votes were
-given by people who knew that the system is democratic and acted accordingly. It
-remains to be seen what the results would be if people are aware that their 
-voting influence depends on the way others vote for their submitted content.</p>
-<p>I pondered starting a website similar to hacker news based on this voting and 
-scoring scheme, however starting a whole new news website is about much more 
-than just scoring algorithms (it requires reputation in the online comminty, 
-popularity and most importantly time, none of which I presently have in 
-sufficient amounts or know how to achieve). But hopefully, pg and the rest of 
-the hacker news team might find this scheme useful enough to somehow incorporate
-it into the existing scoring system.</p>
-</div>
+
+<p>$$ d<em>{HR} = 0.5 d</em>{DR} $$</p>
+
+<p>The important downside of these results is that the people using the system were<br />not aware that points are calculated in a different way. The original votes were<br />given by people who knew that the system is democratic and acted accordingly. It<br />remains to be seen what the results would be if people are aware that their <br />voting influence depends on the way others vote for their submitted content.</p>
+
+<p>I pondered starting a website similar to hacker news based on this voting and <br />scoring scheme, however starting a whole new news website is about much more <br />than just scoring algorithms (it requires reputation in the online comminty, <br />popularity and most importantly time, none of which I presently have in <br />sufficient amounts or know how to achieve). But hopefully, pg and the rest of <br />the hacker news team might find this scheme useful enough to somehow incorporate<br />it into the existing scoring system.</p></div>
 </div>
 <div class="post">
   <h1><a href="/posts/let-it-snow.html">Let it snow</a></h1>
   <div class="date">Fri Aug 10 2012</div>
   <div class="content"><p>I thought I&#39;d post my javascript snow one-liner. Note that it doesn&#39;t work in firefox due to the new protection mechanisms. In Chrome it does, however you will need to type in the &quot;javascript:&quot; part manually because it automatically strips it off from the pasted text</p>
-<ol>
-<li><p>Open a website</p>
-</li>
-<li><p>Delete the address from the address bar, replace it with &quot;javascript:&quot; (without the quotes)</p>
-</li>
-<li><p>Add this and press enter:</p>
-</li>
-</ol>
-<pre><code>(function(){for(var c=[],d=Math.random,f=document.body.clientWidth-32,b=0;50&gt;b;
-++b){c.push({c:document.createElement(&quot;div&quot;),g:{b:0,a:d()*f,f:2,e:2,d:1}});
-c[b].c.innerHTML=&quot;*&quot;;var e=c[b].c.style;e.position=&quot;absolute&quot;;e[&quot;font-size&quot;]=
-12+12*d()+&quot;px&quot;;e.color=&quot;rgba(255,255,255,0.75)&quot;;e[&quot;text-shadow&quot;]=&quot;0px 0px 5px #aaa&quot;;
-e.zIndex=65535;document.body.appendChild(c[b].c)}setInterval(function(){for(var a,
-b=0;b&lt;c.length;++b)a=c[b].g,a.d=0.1&gt;d()?!a.d:a.d,a.e=0+(1+2*d())*(a.d?1:-1),a.f=
-1+2*d(),a.b+=a.f,a.a+=a.e,512&lt;a.b&amp;&amp;(a.b=0),a.a&gt;f-32&amp;&amp;(a.a=0),0&gt;a.a&amp;&amp;(a.a=f-32),
-c[b].c.style.top=a.b+&quot;px&quot;,c[b].c.style.left=a.a+&quot;px&quot;},33)})();`</code></pre>
-<object width="640" height="360" class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://1.gvt0.com/vi/mN7LW0Y00kE/0.jpg"><param name="movie" value="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" /><param name="bgcolor" value="#FFFFFF" /><param name="allowFullScreen" value="true" /><embed width="640" height="360"  src="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" type="application/x-shockwave-flash" allowfullscreen="true"></embed></object>
 
-<p>:)</p>
-</div>
+<ol>
+<li><p>Open a website</p></li>
+<li><p>Delete the address from the address bar, replace it with &quot;javascript:&quot; (without the quotes)</p></li>
+<li><p>Add this and press enter:</p></li>
+</ol>
+
+<div class="highlight"><pre lang="">(function(){for(var c=[],d=Math.random,f=document.body.clientWidth-32,b=0;50&gt;b;
+++b){c.push({c:document.createElement(&quot;div&quot;),g:{b:0,a:d()<em>f,f:2,e:2,d:1}});
+c[b].c.innerHTML=&quot;</em>&quot;;var e=c[b].c.style;e.position=&quot;absolute&quot;;e[&quot;font-size&quot;]=
+12+12<em>d()+&quot;px&quot;;e.color=&quot;rgba(255,255,255,0.75)&quot;;e[&quot;text-shadow&quot;]=&quot;0px 0px 5px #aaa&quot;;
+e.zIndex=65535;document.body.appendChild(c[b].c)}setInterval(function(){for(var a,
+b=0;b<c.length;++b)a=c[b].g,a.d=0.1>d()?!a.d:a.d,a.e=0+(1+2</em>d())<em>(a.d?1:-1),a.f=
+1+2</em>d(),a.b+=a.f,a.a+=a.e,512<a.b&&(a.b=0),a.a>f-32&amp;&amp;(a.a=0),0&gt;a.a&amp;&amp;(a.a=f-32),
+c[b].c.style.top=a.b+&quot;px&quot;,c[b].c.style.left=a.a+&quot;px&quot;},33)})();`
+</pre></div>
+
+<p><object width="640" height="360" class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://1.gvt0.com/vi/mN7LW0Y00kE/0.jpg"><param name="movie" value="http://www.youtube.com/v/mN7LW0Y00kE&amp;fs=1&amp;source=uds" /><param name="bgcolor" value="#FFFFFF" /><param name="allowFullScreen" value="true" /><embed width="640" height="360"  src="http://www.youtube.com/v/mN7LW0Y00kE&amp;fs=1&amp;source=uds" type="application/x-shockwave-flash" allowfullscreen="true"></embed></object></p>
+
+<p>:)</p></div>
 </div>
 <div class="post">
   <h1><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h1>
   <div class="date">Fri Aug 10 2012</div>
-  <div class="content"><p>Lately, HTML5 mobile app development has received 
-<a href="http://blog.mobtest.com/2012/05/heres-why-the-facebook-ios-app-is-so-bad-uiwebviews-and-no-nitro/">a lot</a> 
-of <a href="http://www.wooga.com/2012/06/woogas-html5-adventure/">bashing</a> all over the 
-<a href="http://www.bgr.com/2012/07/25/html5-native-apps-ios-android/">Internet</a>. Most 
-developers only quickly skim over the benefits and proceed to bash all the 
-downsides. The conclusions they usually arrive at: HTML5 slow, inconsistent, 
-limited and doesn&#39;t have a native look and feel. Therefore, native development 
-is superior.</p>
-<p>I&#39;m not going to go point by point to defend or debunk these claims today. 
-Instead, I&#39;d like to give an example of the benefits of HTML5.</p>
-<p>Here at CreationPal, we make <a href="http://sportypal.com/">SportyPal</a> - a reasonably 
-popular mobile app that tracks your workouts. Its a native non-trivial app 
-implemented for multiple platforms, so we do have some experience with native
-technologies.</p>
-<p>When we were discussing our new product <a href="http://doxout.com/">DoxOut</a>, we 
-concluded that the best way to go is to use HTML5. As a result of this decision,
-it didn&#39;t take much time to port our 
-<a href="http://docucalc.com/app/present-main.html">prototype presentation app</a> to the 
-new Windows 8 UI (formerly codenamed Metro)</p>
+  <div class="content"><p>Lately, HTML5 mobile app development has received <br /><a href="http://blog.mobtest.com/2012/05/heres-why-the-facebook-ios-app-is-so-bad-uiwebviews-and-no-nitro/">a lot</a> <br />of <a href="http://www.wooga.com/2012/06/woogas-html5-adventure/">bashing</a> all over the <br /><a href="http://www.bgr.com/2012/07/25/html5-native-apps-ios-android/">Internet</a>. Most <br />developers only quickly skim over the benefits and proceed to bash all the <br />downsides. The conclusions they usually arrive at: HTML5 slow, inconsistent, <br />limited and doesn&#39;t have a native look and feel. Therefore, native development <br />is superior.</p>
+
+<p>I&#39;m not going to go point by point to defend or debunk these claims today. <br />Instead, I&#39;d like to give an example of the benefits of HTML5.</p>
+
+<p>Here at CreationPal, we make <a href="http://sportypal.com/">SportyPal</a> - a reasonably <br />popular mobile app that tracks your workouts. Its a native non-trivial app <br />implemented for multiple platforms, so we do have some experience with native<br />technologies.</p>
+
+<p>When we were discussing our new product <a href="http://doxout.com/">DoxOut</a>, we <br />concluded that the best way to go is to use HTML5. As a result of this decision,<br />it didn&#39;t take much time to port our <br /><a href="http://docucalc.com/app/present-main.html">prototype presentation app</a> to the <br />new Windows 8 UI (formerly codenamed Metro)</p>
+
 <p>The time needed: <strong>1 hour</strong>.</p>
+
 <p>How is that possible?</p>
+
 <p>To improve experience, we have a thin native layer for each platform. If a component of the layer is not available, a default HTML5 replacement is provided that works well enough in most browsers. The rest of the code and UI is pure HTML5.</p>
+
 <p>The new Windows 8 UI is all about HTML5, CSS and JavaScript. An application has the same structure as a webpage, with a main html file. What is different is that there are extra &quot;native&quot; libraries available in the global JavaScript namespace which you can use to access native functionality. As a result, it was simply a matter of pointing the app to the relevant HTML, CSS and JavaScript.</p>
+
 <p>Well, not quite.</p>
+
 <p>We quickly got the following error:</p>
+
 <blockquote>
-<p>JavaScript runtime error: Unable to add dynamic content. A script attempted 
-to inject dynamic content, or elements previously modified dynamically, that 
-might be unsafe. For example, using the innerHTML property to add script or 
-malformed HTML will generate this exception. Use the toStaticHTML method to 
-filter dynamic content, or explicitly create elements and attributes with a 
-method such as createElement.  For more information, see 
-<a href="http://go.microsoft.com/fwlink/?LinkID=247104"><a href="http://go.microsoft.com/fwlink/?LinkID=247104">http://go.microsoft.com/fwlink/?LinkID=247104</a></a>.</p>
+  <p>JavaScript runtime error: Unable to add dynamic content. A script attempted <br />to inject dynamic content, or elements previously modified dynamically, that <br />might be unsafe. For example, using the innerHTML property to add script or <br />malformed HTML will generate this exception. Use the toStaticHTML method to <br />filter dynamic content, or explicitly create elements and attributes with a <br />method such as createElement.  For more information, see <br /><a href="http://go.microsoft.com/fwlink/?LinkID=247104"><a href='http://go.microsoft.com/fwlink/?LinkID=247104'><a href="http://go.microsoft.com/fwlink/?LinkID=247104">http://go.microsoft.com/fwlink/?LinkID=247104</a></a></a>.</p>
 </blockquote>
+
 <p>The new Windows 8 UI has a strict html security model. Directly inserting potentially-unsafe HTML is not allowed, and since we are using a jQuery-based micro-templating library that does exactly that, we quickly ran into the error.</p>
+
 <p>This was the offending line in the jQuery code</p>
+
 <pre><code>// ... snip ...
 append: function () {
     return this.domManip(arguments, true, function (elem) {
@@ -376,29 +355,39 @@ append: function () {
         }
     });
 },
-// ... snip ...</code></pre>
+// ... snip ...
+</code></pre>
+
 <p>We learned quickly that a potential solution is to wrap unsafe execution using <code>MSApp.execUnsafeLocalFunction</code> :</p>
+
 <pre><code>append: function () {
     return this.domManip(arguments, true, function (elem) {
         if (this.nodeType === 1) {
             var self = this;
             // In Metro, execUnsafeLocalFunction is needed to
             // append a child which contains arbitrary innerHTML
-            if (window[&quot;MSApp&quot;]) MSApp.execUnsafeLocalFunction(function () {
+            if (window["MSApp"]) MSApp.execUnsafeLocalFunction(function () {
                 self.appendChild(elem);
             });
             else this.appendChild(elem);
         }
     });
-},</code></pre>
+},
+</code></pre>
+
 <p>As this circumvents protection for all <code>jQuery.fn.html calls</code>,  its not an ideal solution. However the alternative involves giving up features such as data-attributes which was unacceptable.</p>
+
 <p>The only remaining modification was to add the Microsoft-specific CSS properties (such as <code>-ms-linear-gradient</code>) to our LESS mixin classes and <code>$.fn.css</code> calls</p>
+
 <p>Note: jQuery 1.8 makes the last practice obsolete: the newest $.fn.css automatically transforms the property to a browser-specific version, if needed.</p>
+
 <p>After this modification the entire codebase worked flawlessly.</p>
+
 <p>Now imagine the time it would take to port a native app to a new platform.</p>
+
 <p>Despite all the negative reputation, HTML5 remains the fastest way to develop multi-platform apps. The quick porting of our DoxOut Presentation prototype is to Windows 8 confirms that (though not exactly a fair example as Metro is already heavily HTML5-based),  And with efforts such as <a href="http://appjs.org/">AppJS</a>, the number of OSes that support mixed HTML5-native development keeps growing.</p>
-<p>Switch to HTML5, today!</p>
-</div>
+
+<p>Switch to HTML5, today!</p></div>
 </div>
 <hr/>
 <h1>Older posts</h1>

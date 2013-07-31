@@ -1,0 +1,24 @@
+---
+layout: empty
+---
+var redirects = <%- JSON.stringify(@getFilesAtPath("posts").toJSON().sort((p1, p2) => p1.date.getTime() - p2.date.getTime()).slice(0, 8).map((p) => { words: p.basename.split('-'), url: p.url })) %>
+
+var local = document.location.pathname;
+if (!local.lastIndexOf('/'))
+    document.location = 'http://spion.github.io/'
+else {
+    var urlwords = local.split('/').slice(-1)[0].split('.')[0].split('-')
+
+    var redirects = redirects.map(function(r) {
+        return {
+            url: r.url,
+            score: r.words.reduce(function(acc, w) { 
+                return acc + (urlwords.indexOf(w) >= 0); 
+            }, 0)
+        };
+    }).sort(function(x, y) { 
+        return y.score - x.score;
+    });
+    console.log(redirects);
+    document.location = 'http://spion.github.io' + redirects[0].url;
+}

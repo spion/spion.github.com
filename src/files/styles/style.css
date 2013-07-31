@@ -9,10 +9,12 @@ body, html {
 
 
 
-
+.post:first-child > h1 {
+    margin-top: 4rem;
+}
 .post > h1 { 
     font-size: 2.3636rem; line-height: 2.6969rem; 
-    margin-top: 4rem;
+    margin-top: 5rem;
     margin-bottom: 0.5rem;
 }
 
@@ -82,14 +84,6 @@ h2, h3, h4 {
     margin-bottom:0.25rem;
 }
 
-
-
-
-
-.post > .content {
-    padding-bottom: 0.5rem;
-}
-
 .post p {
     line-height:1.45em;
     
@@ -154,4 +148,8 @@ a:hover {
 
 hr {
     border: solid 1px #f3ecdf;
+}
+
+.social {
+    margin: 2rem 0 4rem 0;
 }
