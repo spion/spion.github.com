@@ -1,0 +1,116 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><title>Intuitive JavaScript array filtering function pt2</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></html><body><div class="main"><h1 class="first"> <a href="/">A hint of chaos</a></h1><p class="subtitle">code, music, math</p><div class="rest"><div class="post"><h1>Intuitive JavaScript array filtering function pt2</h1><div class="date">Thu Jul 12 2012</div><div class="content"><p>Last time I wrote about my JavaScript array filtering function <code>intuitiveFilter</code>. It had one caveat: namely, the way it handles sub-arrays in the data. It doesn&#39;t allow the user to inspect a sub-array without writing a custom filtering function for the sub-array field.</p>
+<p>To inspect an array field, one would need a filtering function which takes an array argument and returns true or false. For example, the function might check the contents of the array and see if the elements match certain rules. Depending on the number of elements matching the rules, it would return true or false.</p>
+<p>We can already filter the contents of an array with <code>intuitiveFilter</code>. That means we can easily use it to inspect the elements of a sub-array. All we need now is to specify how many results we would like to have. The following rules would be useful:</p>
+<ul>
+<li>there are exactly N elements satisfying the conditions</li>
+<li>there are at least / at most N elements satisfying the conditions</li>
+<li>none of the elements satisfy the condition</li>
+<li>all of the elements satisfy the conditon</li>
+</ul>
+<p>Now in order to implement this without modifying the original function, we can use a cool feature of functional languages: a higher order function which returns a function.</p>
+<p>Why would we need to return a function?</p>
+<p>We left only one extension mechanism for our filter: custom functions for fields. They take the field&#39;s value as an argument. They should return true/false depending on it. We called those basic filter functions.</p>
+<p>Because we&#39;ve been given the ability to return a function from another function, we could build a filter function from a rule object and then return it. Lets make a simple example</p>
+<pre><code>function has(rules) {
+    return function(item) {
+        return intuitiveFilter(item, rules).length &gt; 0
+    }
+}</code></pre>
+<p>What just happened here? We return a filter function which applies <code>intiuitiveFilter</code> to the array <code>item</code> and checks if it contains at least one element matching the rules. We&#39;ve returned exactly what intuitiveFilter could use - a filter function that takes an array item and returns a boolean. It looks as if we wrote a shorter alias to replace some boilerplate code.</p>
+<p>Remember the old way to write an array filter?</p>
+<pre><code>intuitiveFilter(arrayArray, {children: function(arr) { 
+    return intuitiveFilter(arr, {age:{gt:10}}).length &gt; 0; }
+});</code></pre>
+<p>We can now write it like so:</p>
+<pre><code>intuitiveFilter(arrayArray, {children: has({age:{gt:10}})});</code></pre>
+<p>Isn&#39;t that beautiful? We&#39;ve removed a lot of boilerplate code and the result is elegant and simple. Admittedly, it has a lot of braces and parentheses, but then again, so does Lisp. Now lets see if we can provide a richer set of filtering rules.</p>
+<p>Lets start with some intuitive syntax ideas:</p>
+<pre><code>checkif(array, [ {has: filter,
+    atLeast: 2, atMost:2}, ...]);</code></pre>
+<p>There are two possible interpretations for the usage of the array here. One of 
+them would be the equivalent of an <code>or</code> operator. For example, 
+<code>[{has: {age: {gt:10}}, atLeast:1}, {has: {age: {lt: 8}}, atLeast: 1}]</code> would 
+mean the following: has at least one child older than 10 or has at least one 
+child younger than 8. This is consistent with the meaning of arrays as they are 
+used in intuitiveFilter. However, in this case, the <code>or</code> operator is a lot less 
+useful to as than the <code>and</code> operator. Using the <code>or</code> operator on a single field 
+is already possible through intuitiveFilter. Using the <code>and</code> operator isn&#39;t, 
+even though that would be useful for array fields.</p>
+<p>We&#39;re going to break consistency for the sake of completeness. The rule array 
+argument of <code>checkif</code> will mean <code>and</code> instead of <code>or</code>, which means that all of 
+the rules must be satisfied. We&#39;re going to have a slightly shaky abstraction 
+this way, but its going to be a more useful one.</p>
+<p>Finally, lets define some shorthand variants:</p>
+<p><code>checkif(array, {has: filter, atLeast:2});</code> - if we only need one rule, the 
+argument can be the rule.</p>
+<p><code>checkif(array, {has: filter});</code> - default meaning is &quot;atLeast: 1&quot;</p>
+<p><code>checkif(array, {none: filter});</code> - shorthand for exactly: 0</p>
+<p><code>checkif(array, {all: filter});</code> - all elements must satisfy the filter</p>
+<p>And here is the code:</p>
+<pre><code>function checkif(rules) {
+    if (!$.isArray(rules)) { rules = [ rules ]; }
+    for (var k = 0; k &lt; rules.length; ++k) {
+        if (rules[k].has &amp;&amp; !(&quot;atLeast&quot; in rules[k] 
+                    || &quot;atMost&quot; in rules[k])) {
+            rules[k].atLeast = 1;
+        }
+    }
+    var checkLimits = function(filtered, rule) {
+        return ((!(&quot;atMost&quot; in rule)
+                    || filtered &lt;= rule.atMost)
+                &amp;&amp; (!(&quot;atLeast&quot; in rule)
+                    || filtered &gt;= rule.atLeast)
+                &amp;&amp; (!(&quot;exactly&quot; in rule)
+                    || filtered == rule.exactly));
+    }
+    var checkRule = function(filtered, total, rule) {
+        return ((rule.has &amp;&amp; checkLimits(filtered, rule))
+                || (rule.none &amp;&amp; !filtered)
+                || (rule.all 
+                    &amp;&amp; filtered == total 
+                    &amp;&amp; checkLimits(filtered, rule)))
+
+    }
+    return function(array) {
+        for (var k = 0; k &lt; rules.length; ++k) {
+            if (!checkRule(intuitiveFilter(array, 
+                    rules[k].has ? rules[k].has 
+                    : rules[k].none ? rules[k].none
+                    : rules[k].all).length, 
+                array.length, rules[k])) return false;
+        }
+        return true;
+    }
+}</code></pre>
+<p>Some fun examples follow:</p>
+<pre><code>var testArray = [
+    {name:&quot;John&quot;,  age: 40, children: [{name:&quot;Merlin&quot;, age:10}],
+  company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+    {name:&quot;Sue&quot;,   age: 30, children: [{name:&quot;Paco&quot;, age: 3}],
+  company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+    {name:&quot;Mary&quot;, age: 55, children: [
+        {name:&quot;Joe&quot;, age: 17}, {name:&quot;Moe&quot;, age:19}],
+        company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+    {name:&quot;Jack&quot;,  age: 20, children: [],
+ company:{ name: &quot;MiniCorp&quot;, employees: 100}}
+];
+console.log(intuitiveFilter(testArray,
+    {children: checkif({has: { age: { gt: 5}}, atLeast: 1})}));
+    // John, Mary
+
+console.log(intuitiveFilter(testArray,
+    {children: checkif({none: { }})})); // Jack
+
+console.log(intuitiveFilter(testArray,
+    {children: checkif({all: { age: {gt: 12}}})})); // Jack and Mary&lt;</code></pre>
+<p>Note: &quot;all&quot; will always return true for empty arrays, as there are no items that 
+don&#39;t satisfy the imposed conditions. This can be modified by adding 
+<code>atLeast: 1</code>:</p>
+<pre><code>// Just Mary
+console.log(intuitiveFilter(testArray,
+    {children: checkif({all: { age: {gt: 12}}, atLeast: 1})}));</code></pre>
+<p>And now we&#39;ve extended our filter language with rich syntax to deal with sub-arrays without touching the original filtering function. Wasn&#39;t that great?</p>
+</div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
+prettyPrint();
+
+</script></body>
