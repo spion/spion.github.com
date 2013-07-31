@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Why native development sucks and HTML5 rocks: porting
+title: Why native sucks and HTML5 rocks: porting
 date: 2012-08-10
 ---
 

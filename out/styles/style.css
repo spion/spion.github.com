@@ -1,7 +1,7 @@
 * { box-sizing: border-box; }
 
 body, html {
-    font-size: 18px;
+    font-size: 20px;
     font-family: Georgia;
     background-color: #fff;
     color: #000;
@@ -41,7 +41,7 @@ h2, h3, h4 {
 }
 
 .main {
-    max-width: 80ex;
+    max-width: 71ex;
     margin:2rem auto;
 }
 
@@ -50,8 +50,8 @@ h2, h3, h4 {
 }
 
 .post p {
-    line-height:1.5em;
-    text-align: justify;
+    line-height:1.45em;
+    
 }
 
 h2 + p, h3 + p, h4 + p {
@@ -59,7 +59,7 @@ h2 + p, h3 + p, h4 + p {
 }
 
 .post li {
-    line-height: 1.5;
+    line-height: 1.45;
     margin-bottom: 0.25rem;
     margin-top: 0.25rem;
     margin-left: 1rem;
@@ -97,15 +97,18 @@ a:hover {
     padding: 0.8rem;
     margin: 1rem 0.2rem;
     font-family: Monaco;
+    font-size: 14px;
     line-height: 1.5;
-    font-size: 0.8rem;
+    
+    overflow: auto;
 }
 
 .post p code {
     background-color: #f3ecdf;
     box-shadow: 0 0 0.2rem #d2c2a2;
     padding: 0.08rem 0.35rem;
-    font-size: 0.8rem;
+    font-family: Monaco;
+    font-size: 15px;
 }
 
 hr {

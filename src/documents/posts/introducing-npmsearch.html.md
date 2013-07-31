@@ -60,13 +60,13 @@ then use it from the command line:
 
     9147 % npmsearch mysql
     * mysql (6 15862)
-         A node.js driver for mysql. It is written in JavaScript, does not 
-         require compiling, and is 100% MIT licensed.
-         by Felix Geisendörfer <felix debuggable.com="debuggable.com">
+         A node.js driver for mysql. It is written in JavaScript, does 
+         not  require compiling, and is 100% MIT licensed.
+         by Felix Geisendörfer <felix@debuggable.com>
 
     * mongoose (2 28197)
          Mongoose MongoDB ODM
-         by Guillermo Rauch <guillermo learnboost.com="learnboost.com">
+         by Guillermo Rauch <guillermo@learnboost.com>
          http://github.com/LearnBoost/mongoose.git
 
     * patio (10 174)
@@ -76,7 +76,7 @@ then use it from the command line:
 
     * mysql-libmysqlclient (5 1019)
          Binary MySQL bindings for Node.JS
-         by Oleg Efimov <efimovov gmail.com="gmail.com">
+         by Oleg Efimov <efimovov@gmail.com>
          https://github.com/Sannis/node-mysql-libmysqlclient.git
 
     * db-mysql (3 918)

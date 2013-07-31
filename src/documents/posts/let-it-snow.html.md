@@ -23,6 +23,6 @@ b=0;b<c.length;++b)a=c[b].g,a.d=0.1>d()?!a.d:a.d,a.e=0+(1+2*d())*(a.d?1:-1),a.f=
 c[b].c.style.top=a.b+"px",c[b].c.style.left=a.a+"px"},33)})();`
 ```
 
-<object width="480" height="320" class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://1.gvt0.com/vi/mN7LW0Y00kE/0.jpg"><param name="movie" value="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" /><param name="bgcolor" value="#FFFFFF" /><param name="allowFullScreen" value="true" /><embed width="480" height="320"  src="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" type="application/x-shockwave-flash" allowfullscreen="true"></embed></object>
+<object width="640" height="360" class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://1.gvt0.com/vi/mN7LW0Y00kE/0.jpg"><param name="movie" value="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" /><param name="bgcolor" value="#FFFFFF" /><param name="allowFullScreen" value="true" /><embed width="640" height="360"  src="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" type="application/x-shockwave-flash" allowfullscreen="true"></embed></object>
 
 :)
