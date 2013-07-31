@@ -1,0 +1,23 @@
+!!! 5
+html
+    head
+        meta(charset='utf-8')
+    title= document.title 
+    link(rel='shortcut icon', href='/ico/favicon.ico')
+    link(rel='stylesheet', href='/styles/style.css')
+    link(rel='stylesheet', href='http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css')
+  body
+      
+      .main
+        h1.first 
+          a(href='/') A hint of chaos
+        p.subtitle code, music, math
+        .rest!=content
+      script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+      script(src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')
+      script(src='http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js')
+      script.
+        $('code').addClass('prettyprint');
+        prettyPrint();
+
+

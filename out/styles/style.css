@@ -1,0 +1,113 @@
+* { box-sizing: border-box; }
+
+body, html {
+    font-size: 18px;
+    font-family: Georgia;
+    background-color: #fff;
+    color: #000;
+}
+
+.first {
+    text-align:left;
+    font-size:2.5em;
+    text-shadow: 0 0 1px #000, 1px 2px 4px #fff, 2px 3px 4px #aaa;
+    margin-bottom: 0;    
+}
+.first a { color: #000; }
+
+.subtitle {
+    font-style: italic;
+    color: #60686f;
+    text-align: left;
+    margin-top:0.5rem;
+    margin-bottom: 4rem;
+}
+
+
+.post > h1 { 
+    font-size: 2.3636rem; line-height: 2.6969rem; 
+    margin-top: 4rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 { font-size: 1.7727rem; line-height: 2.106rem; }
+h3 { font-size: 1.1818rem; line-height: 1.5151rem; }
+h4 { font-size: 1rem; }
+
+h2, h3, h4 {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.main {
+    max-width: 80ex;
+    margin:2rem auto;
+}
+
+.post > .content {
+    padding-bottom: 0.5rem;
+}
+
+.post p {
+    line-height:1.5em;
+    text-align: justify;
+}
+
+h2 + p, h3 + p, h4 + p {
+    margin-top:0;
+}
+
+.post li {
+    line-height: 1.5;
+    margin-bottom: 0.25rem;
+    margin-top: 0.25rem;
+    margin-left: 1rem;
+}
+
+.post blockquote {
+    border-left: solid 1ex #f3ecdf;
+    padding-left: 1rem;
+    margin-left: 0;
+}
+.post blockquote small {
+    color: #777;
+}
+.post blockquote small:before {
+    content: '\2014 \00A0';
+}
+
+a {
+    text-decoration: none;
+    color: #005599;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+.post .date {    
+    margin: 0.5rem 0 1.5rem 0;
+    font-style: italic;
+    font-size: 0.8em;
+    color: #777;
+}
+.post pre {
+    background-color: #f3ecdf;
+    box-shadow: 0 0 0.5rem #d2c2a2;
+    padding: 0.8rem;
+    margin: 1rem 0.2rem;
+    font-family: Monaco;
+    line-height: 1.5;
+    font-size: 0.8rem;
+}
+
+.post p code {
+    background-color: #f3ecdf;
+    box-shadow: 0 0 0.2rem #d2c2a2;
+    padding: 0.08rem 0.35rem;
+    font-size: 0.8rem;
+}
+
+hr {
+    border: solid 1px #f3ecdf;
+}

@@ -1,0 +1,420 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><title>A hint of chaos</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></html><body><div class="main"><h1 class="first"> <a href="/">A hint of chaos</a></h1><p class="subtitle">code, music, math</p><div class="rest"><div class="post"><h1><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native development sucks and HTML5 rocks: porting</a></h1><div class="date">Fri Aug 10 2012</div><div class="content"><p>Lately, HTML5 mobile app development has received 
+<a href="http://blog.mobtest.com/2012/05/heres-why-the-facebook-ios-app-is-so-bad-uiwebviews-and-no-nitro/">a lot</a> 
+of <a href="http://www.wooga.com/2012/06/woogas-html5-adventure/">bashing</a> all over the 
+<a href="http://www.bgr.com/2012/07/25/html5-native-apps-ios-android/">Internet</a>. Most 
+developers only quickly skim over the benefits and proceed to bash all the 
+downsides. The conclusions they usually arrive at: HTML5 slow, inconsistent, 
+limited and doesn&#39;t have a native look and feel. Therefore, native development 
+is superior.</p>
+<p>I&#39;m not going to go point by point to defend or debunk these claims today. 
+Instead, I&#39;d like to give an example of the benefits of HTML5.</p>
+<p>Here at CreationPal, we make <a href="http://sportypal.com/">SportyPal</a> - a reasonably 
+popular mobile app that tracks your workouts. Its a native non-trivial app 
+implemented for multiple platforms, so we do have some experience with native
+technologies.</p>
+<p>When we were discussing our new product <a href="http://doxout.com/">DoxOut</a>, we 
+concluded that the best way to go is to use HTML5. As a result of this decision,
+it didn&#39;t take much time to port our 
+<a href="http://docucalc.com/app/present-main.html">prototype presentation app</a> to the 
+new Windows 8 UI (formerly codenamed Metro)</p>
+<p>The time needed: <strong>1 hour</strong>.</p>
+<p>How is that possible?</p>
+<p>To improve experience, we have a thin native layer for each platform. If a component of the layer is not available, a default HTML5 replacement is provided that works well enough in most browsers. The rest of the code and UI is pure HTML5.</p>
+<p>The new Windows 8 UI is all about HTML5, CSS and JavaScript. An application has the same structure as a webpage, with a main html file. What is different is that there are extra &quot;native&quot; libraries available in the global JavaScript namespace which you can use to access native functionality. As a result, it was simply a matter of pointing the app to the relevant HTML, CSS and JavaScript.</p>
+<p>Well, not quite.</p>
+<p>We quickly got the following error:</p>
+<blockquote>
+<p>JavaScript runtime error: Unable to add dynamic content. A script attempted 
+to inject dynamic content, or elements previously modified dynamically, that 
+might be unsafe. For example, using the innerHTML property to add script or 
+malformed HTML will generate this exception. Use the toStaticHTML method to 
+filter dynamic content, or explicitly create elements and attributes with a 
+method such as createElement.  For more information, see 
+<a href="http://go.microsoft.com/fwlink/?LinkID=247104"><a href="http://go.microsoft.com/fwlink/?LinkID=247104">http://go.microsoft.com/fwlink/?LinkID=247104</a></a>.</p>
+</blockquote>
+<p>The new Windows 8 UI has a strict html security model. Directly inserting potentially-unsafe HTML is not allowed, and since we are using a jQuery-based micro-templating library that does exactly that, we quickly ran into the error.</p>
+<p>This was the offending line in the jQuery code</p>
+<pre><code>// ... snip ...
+append: function () {
+    return this.domManip(arguments, true, function (elem) {
+        if (this.nodeType === 1) {
+            this.appendChild(elem);
+        }
+    });
+},
+// ... snip ...</code></pre>
+<p>We learned quickly that a potential solution is to wrap unsafe execution using <code>MSApp.execUnsafeLocalFunction</code> :</p>
+<pre><code>append: function () {
+    return this.domManip(arguments, true, function (elem) {
+        if (this.nodeType === 1) {
+            var self = this;
+            // In Metro, execUnsafeLocalFunction is needed to
+            // append a child which contains arbitrary innerHTML
+            if (window[&quot;MSApp&quot;]) MSApp.execUnsafeLocalFunction(function () {
+                self.appendChild(elem);
+            });
+            else this.appendChild(elem);
+        }
+    });
+},</code></pre>
+<p>As this circumvents protection for all <code>jQuery.fn.html calls</code>,  its not an ideal solution. However the alternative involves giving up features such as data-attributes which was unacceptable.</p>
+<p>The only remaining modification was to add the Microsoft-specific CSS properties (such as <code>-ms-linear-gradient</code>) to our LESS mixin classes and <code>$.fn.css</code> calls</p>
+<p>Note: jQuery 1.8 makes the last practice obsolete: the newest $.fn.css automatically transforms the property to a browser-specific version, if needed.</p>
+<p>After this modification the entire codebase worked flawlessly.</p>
+<p>Now imagine the time it would take to port a native app to a new platform.</p>
+<p>Despite all the negative reputation, HTML5 remains the fastest way to develop multi-platform apps. The quick porting of our DoxOut Presentation prototype is to Windows 8 confirms that (though not exactly a fair example as Metro is already heavily HTML5-based),  And with efforts such as <a href="http://appjs.org/">AppJS</a>, the number of OSes that support mixed HTML5-native development keeps growing.</p>
+<p>Switch to HTML5, today!</p>
+</div></div><div class="post"><h1><a href="/posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h1><div class="date">Thu Dec 13 2012</div><div class="content"><iframe allowfullscreen="allowfullscreen" frameborder="0" height="360" 
+    src="http://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
+
+<p>This is Appser for Google Docs. It allows you to run the full, web version of Google Docs on the iPad. And by that we mean all of it, even editing presentations (a feature which was recently completely disabled on the iPad by Google)</p>
+<p>And its available on the app store, right now, for free. 
+<a href="https://itunes.apple.com/us/app/appser-for-google-docs/id577825348?ls=1&amp;mt=8">Get Appser for Google Docs</a>.</p>
+<p>At this point you&#39;re probably thinking: Wait, isn&#39;t this horribly problematic? 
+Google Docs isn&#39;t optimized for touch input at all - neither the code nor the UI
+elements. Selecting text is weird. Scrolling is incompatible with dragging to 
+select text or to move stuff. Those image boxes have really tiny resizers. The 
+toolbar buttons and menus are not big enough. What about right click?</p>
+<p>Is it actually usable?</p>
+<p>Also, can I just connect a bigger monitor, some kind of a touchpad and a 
+keyboard and forget about touch input?</p>
+<p>The answer to all questions is yes.</p>
+<h2>Scroll vs drag and text selection</h2>
+<p>When Apple first designed the iPhone, it had a 3.5 inch screen with a resolution
+of 480x320 pixels. While this was quite a lot compared to other phones of the 
+time, it was not even near desktop and laptop displays. Yet it had a browser 
+that provided an experience as close to desktop as possible. How did they 
+achieve this?</p>
+<p>They made scrolling and zooming really easy. This meant that the user was able 
+to quickly zoom to compensate for the lacking resolution, then quickly pan to 
+show more on the limited screen real-estate. And so, web browsing was very 
+usable even on the first iPhone.</p>
+<p>Fast forward to today, on the iPad, we have a 10 inch retina-resolution 
+display... and the same zoom and pan control.</p>
+<p>Why?</p>
+<p>Do we really need this? Its very problematic for web apps. They like to assume 
+that drag and drop works. They want to display a static chrome around a 
+scrolling document, so they also like to assume that overflow: scroll works.</p>
+<p>As a result, we decided to make scrolling work by disabling single-finger 
+scrolling. Instead we made single-finger actions behave exactly like mouse 
+actions do in the browser and switched to two-finger scrolling, making it work 
+everywhere. This enables you to quickly select text and drag things around.</p>
+<p>We also disabled zoom - web apps usually have their own document zooming 
+facilities and the iPad screen has plenty of resolution and size.</p>
+<h2>What about tiny buttons and controls?</h2>
+<p>This is where things got interesting. We knew that even though we enabled drag and drop, the controls were too tiny for touch use. To overcome this we developed a method called Magnet Touch. It automatically enlarges all touch targets. The enlargement is not visual so it simply makes smaller targets easier to hit. Its also smart - it tries very hard to avoid overlap with other targets. Best of all, you don&#39;t have to tell it anything about the targets - not even which elements are targets.</p>
+<h2>And right click?</h2>
+<p>Long taps are the equivalent of right clicks. At the moment they trigger when you release the finger.</p>
+<h2>What happens when I connect an external screen?</h2>
+<p>Your iPad becomes a keyboard + touchpad combo and you get a mouse pointer on the screen. Neat huh? If you prefer a physical Bluetooth keyboard you can of course connect one at any time.</p>
+<p>There are some limitations when editing text fields (like the username and password on the login screen) - they must be shown on the iPad temporarily while editing. We&#39;re working on that.</p>
+<h2>Conclusion</h2>
+<p>What, you&#39;re still reading this? <a href="https://itunes.apple.com/us/app/appser-for-google-docs/id577825348?ls=1&amp;mt=8">Download the app and try it out</a>. We&#39;d also <a href="http://appser.docucalc.com/support">love to hear from you</a>. You can also <a href="http://appser.docucalc.com/">visit the official Appser website</a>, if you&#39;d like to find out more.</p>
+</div></div><div class="post"><h1><a href="/posts/let-it-snow.html">Let it snow</a></h1><div class="date">Fri Aug 10 2012</div><div class="content"><p>I thought I&#39;d post my javascript snow one-liner. Note that it doesn&#39;t work in firefox due to the new protection mechanisms. In Chrome it does, however you will need to type in the &quot;javascript:&quot; part manually because it automatically strips it off from the pasted text</p>
+<ol>
+<li><p>Open a website</p>
+</li>
+<li><p>Delete the address from the address bar, replace it with &quot;javascript:&quot; (without the quotes)</p>
+</li>
+<li><p>Add this and press enter:</p>
+</li>
+</ol>
+<pre><code>(function(){for(var c=[],d=Math.random,f=document.body.clientWidth-32,b=0;50&gt;b;
+++b){c.push({c:document.createElement(&quot;div&quot;),g:{b:0,a:d()*f,f:2,e:2,d:1}});
+c[b].c.innerHTML=&quot;*&quot;;var e=c[b].c.style;e.position=&quot;absolute&quot;;e[&quot;font-size&quot;]=
+12+12*d()+&quot;px&quot;;e.color=&quot;rgba(255,255,255,0.75)&quot;;e[&quot;text-shadow&quot;]=&quot;0px 0px 5px #aaa&quot;;
+e.zIndex=65535;document.body.appendChild(c[b].c)}setInterval(function(){for(var a,
+b=0;b&lt;c.length;++b)a=c[b].g,a.d=0.1&gt;d()?!a.d:a.d,a.e=0+(1+2*d())*(a.d?1:-1),a.f=
+1+2*d(),a.b+=a.f,a.a+=a.e,512&lt;a.b&amp;&amp;(a.b=0),a.a&gt;f-32&amp;&amp;(a.a=0),0&gt;a.a&amp;&amp;(a.a=f-32),
+c[b].c.style.top=a.b+&quot;px&quot;,c[b].c.style.left=a.a+&quot;px&quot;},33)})();`</code></pre>
+<object width="480" height="320" class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://1.gvt0.com/vi/mN7LW0Y00kE/0.jpg"><param name="movie" value="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" /><param name="bgcolor" value="#FFFFFF" /><param name="allowFullScreen" value="true" /><embed width="480" height="320"  src="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" type="application/x-shockwave-flash" allowfullscreen="true"></embed></object>
+
+<p>:)</p>
+</div></div><div class="post"><h1><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h1><div class="date">Sat Jul 07 2012</div><div class="content"><p>When dealing with large JSON arrays on the client side or in 
+<a href="http://nodejs.org/">node.js</a>, one of our tasks might be to filter 
+them on the client side before displaying them. 
+<a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/filter" title="Array.filter">Array.filter</a> 
+exists since JavaScript 1.6, however it seems kinda dry: all filters must be 
+functions, even some really common filters such as matching text with a regular
+expression, checking if a number is within a range, checking if an enumeration 
+has a certain value. Consider the following:</p>
+<pre><code>var testArray = [
+        {name:&quot;John&quot;,  age: 40, children: 2,
+            company: { name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Sue&quot;,   age: 30, children: 1,
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Mary&quot;,  age: 55, children: 3,
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Jack&quot;,  age: 20, children: 0,
+            company:{ name: &quot;MiniCorp&quot;, employees: 100}}];
+
+// Using a for loop
+var filtered = [];
+for (var k = 0; k &lt; testArray.length; ++k) {
+    var item = testArray[k];
+    if (item.age == 40 &amp;&amp; item.age == 30) filtered.push(item); 
+}
+
+// Using Array.filter
+testArray.filter(function(item) {
+    return item.age == 40 || item.age == 30
+}); // returns John</code></pre>
+<p>The Array.filter variant is around two times shorter than the for loop variant.
+It also looks much cleaner: the anonymous function is the filter which is 
+called on each item to check if it should get through the filter or not. We can
+call <code>Array.filter</code> with various kinds of &quot;filter functions&quot;. Should be good 
+enough for all uses, right?</p>
+<p>Not so, at least not when you have lots of filters and you want them to be as 
+short as possible to write. Or if you want to combine multiple filter functions
+from various sources and the items in the data array are fairly complex.</p>
+<p>Lets say that we have a complex filter function for the company object and a 
+simple regex name filter from elsewhere and we need to combine them. We would 
+have to write the following:</p>
+<pre><code>testArray.filter(function(item) { 
+    return /^J.+$/.test(item.name)
+        &amp;&amp;  complexFilter(item.company); });</code></pre>
+<p>However, now we cannot easily replace <code>complexFilter</code> for the company with 
+<code>anotherComplexFilter</code>. We have to write code - to write a different anonymous 
+function and use it instead.</p>
+<p>Now imagine having multiple different <code>complexFilters</code>. Soon enough you will 
+write the following function</p>
+<pre><code>intiutiveFilterBeta = function(someArray, filters) {
+    return someArray.filter(function(item) {
+        for (var k = 0; k &lt; filters.length; ++k) {
+            if (!filters[k](item)) return false;
+        }
+        return true;
+    }
+}</code></pre>
+<p>which will enable you to combine different complex filters into a filter array,
+essentially implementing the <code>and</code> operator.</p>
+<p>At about this point you will probably realize that you are missing the <code>or</code> 
+operator. What if you wish to filter all companies which <code>complexCompanyFilter1
+or complexCompanyFilter2</code> ? If you are like me, right now you are probably 
+working on a DSL (domain specific language) in your head, a DSL which reminds 
+you of SQL. You might also start thinking that this is going a bit over the top.</p>
+<p>However, if you look closely you will notice certain peculiarity about the 
+<code>and</code> operator: you do not really need to use <code>and</code> on two or more filters 
+which are working on the same field. For example, you might want to match 
+<code>1 or 2</code> <em>children</em>, but never both <code>1 and 2</code> <em>children</em> - it just doesnt 
+make sense. You might also want to have a &quot;between&quot; filter for <em>age</em>, but you 
+would not exactly want to <code>and</code> two between filters. Instead of <code>between 30 and
+50 and between 40 and 60</code> you would simply write a <code>between 40 and 50</code> filter.</p>
+<p>This observation seems to hold true for all primitive values except for strings. 
+That doesnt really matter because we can easily filter strings with a tool made
+to do exactly that: regular expressions.</p>
+<p>I decided to try and make a hopefully intuitive and readable yet still powerful
+filter function based on the observations above. It should enable some common 
+primitive tests to be easily written without writing new functions. It should 
+support the AND and OR operators intuitively and without writing functions in 
+the most common cases. Finally, it should still enable writing custom filter 
+functions. I came up with this:</p>
+<pre><code>function intuitiveFilter(array, filter) {
+    var itemFilter = function (iFilter, item) {
+        if (iFilter instanceof Function) {
+            return iFilter(item);
+        }
+        else if (iFilter instanceof Array) {
+            for (var k = 0; k &lt; iFilter.length; ++k) {
+                if (itemFilter(iFilter[k], item)) return true;
+            }
+            return false;
+        }
+        else if (typeof(item) == &#39;string&#39; &amp;&amp; iFilter 
+            &amp;&amp; iFilter.test &amp;&amp; iFilter.exec) { 
+            return iFilter.test(item);
+        }
+        else if (item === item + 0 &amp;&amp; iFilter
+            &amp;&amp; (iFilter.lt || iFilter.gt || iFilter.le
+            || iFilter.ge)) {
+            // item is number and filter contains min-max
+            return ((!(&quot;lt&quot; in iFilter) || item &lt;  iFilter.lt)
+                &amp;&amp;  (!(&quot;gt&quot; in iFilter) || item &gt;  iFilter.gt)
+                &amp;&amp;  (!(&quot;le&quot; in iFilter) || item &lt;= iFilter.le)
+                &amp;&amp;  (!(&quot;ge&quot; in iFilter) || item &gt;= iFilter.ge));
+        }
+        else if (typeof (iFilter) === &quot;object&quot;) {
+            for (var key in iFilter) {
+                if (!itemFilter(iFilter[key], item[key]))
+                    return false;
+            }
+            return true;
+        }
+        return (iFilter == item);
+    };
+    var filtered = [];
+    for (var k = 0; k &lt; array.length; ++k) {
+        if (itemFilter(filter, array[k])) 
+            filtered.push(array[k]);
+    }
+    return filtered;
+}</code></pre>
+<p>And here are some neat ways to use it:</p>
+<pre><code>var testArray = [
+        {name:&quot;John&quot;,  age: 40, children: 2, 
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Sue&quot;,   age: 30, children: 1,         
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Mary&quot;,  age: 55, children: 3,        
+            company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+        {name:&quot;Jack&quot;,  age: 20, children: 0, 
+            company:{ name: &quot;MiniCorp&quot;, employees: 100}}
+];
+
+console.log(intuitiveFilter(testArray, 
+    {name:/J.+/, age: {lt: 30}})); // Jack, but not John
+console.log(intuitiveFilter(testArray, 
+    {age: [{gt: 15, le: 20}, {gt: 50}]})); // Jack and Mary
+console.log(intuitiveFilter(testArray, 
+    {children: [0,1]})); // Jack, Sue
+
+console.log(intuitiveFilter(testArray, 
+    {company: {name: &quot;MegaCorp&quot;}})) // all except Jack
+console.log(intuitiveFilter(testArray, 
+    {age: function(a) { return a % 10 == 0 }})); // all except Mary
+console.log(intuitiveFilter(testArray, 
+    [{age: 30 }, {company:{name:&quot;MiniCorp&quot;}}])); // Sue and Jack</code></pre>
+<p>The function is designed to make most filters look like a part of an item from 
+the array that is being filtered. The examples demonstrate some possible uses.</p>
+<p>In the first example-set, the first one is a classic <strong>and</strong> operator with a 
+regex and a numeric operator for age. The second example showcases the simple 
+numeric support. The third example is the purest form of the <strong>or</strong> operator on
+the number of children. Similar filters could easily be written for the string 
+name with regular expressions, for example: <code>{name:[/M.+/, /S.+/]}</code>. Isnt that
+concise and lovely?</p>
+<p>In the second set, the example <code>{company: {name: &quot;MegaCorp&quot;}}</code> showcases the 
+ability of the filter to go deeper in the object. The second example shows the 
+ability of the filter to use custom functions anywhere. The last example 
+demonstrates the ability to use the <strong>or</strong> operator on filters which work on 
+different fields.</p>
+<p>The function would&#39;ve been perfect if it wasn&#39;t for a caveat: it cannot check 
+into arrays the same way it can check into an object. For example, if we had 
+the following data:</p>
+<pre><code>var arrayArray = [{name:&quot;John&quot;,  age: 40, 
+    children: [{name:&quot;Joe&quot;, age:12}, {name:&quot;Jane&quot;, age:10}], 
+    company:{ name: &quot;MiniCorp&quot;, employees: 100}}]</code></pre>
+<p>we wouldn&#39;t have a way to test the contents of the sub-array <em>children</em> without
+writing a function:</p>
+<pre><code>intuitiveFilter(arrayArray, {children: function(arr) { 
+    return childrenArrayFilter(arr, {age:{gt:10}}).length &gt; 0; }
+});</code></pre>
+<p>This caveat isnt hard to fix. However, I have decided that I will leave it 
+unfixed for now: let the fix be an exercise for the reader. If this code 
+generates some interest I will supply my fix later. The fix can even be added 
+without modifying the original function.</p>
+</div></div><div class="post"><h1><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h1><div class="date">Thu Jul 12 2012</div><div class="content"><p>Last time I wrote about my JavaScript array filtering function <code>intuitiveFilter</code>. It had one caveat: namely, the way it handles sub-arrays in the data. It doesn&#39;t allow the user to inspect a sub-array without writing a custom filtering function for the sub-array field.</p>
+<p>To inspect an array field, one would need a filtering function which takes an array argument and returns true or false. For example, the function might check the contents of the array and see if the elements match certain rules. Depending on the number of elements matching the rules, it would return true or false.</p>
+<p>We can already filter the contents of an array with <code>intuitiveFilter</code>. That means we can easily use it to inspect the elements of a sub-array. All we need now is to specify how many results we would like to have. The following rules would be useful:</p>
+<ul>
+<li>there are exactly N elements satisfying the conditions</li>
+<li>there are at least / at most N elements satisfying the conditions</li>
+<li>none of the elements satisfy the condition</li>
+<li>all of the elements satisfy the conditon</li>
+</ul>
+<p>Now in order to implement this without modifying the original function, we can use a cool feature of functional languages: a higher order function which returns a function.</p>
+<p>Why would we need to return a function?</p>
+<p>We left only one extension mechanism for our filter: custom functions for fields. They take the field&#39;s value as an argument. They should return true/false depending on it. We called those basic filter functions.</p>
+<p>Because we&#39;ve been given the ability to return a function from another function, we could build a filter function from a rule object and then return it. Lets make a simple example</p>
+<pre><code>function has(rules) {
+    return function(item) {
+        return intuitiveFilter(item, rules).length &gt; 0
+    }
+}</code></pre>
+<p>What just happened here? We return a filter function which applies <code>intiuitiveFilter</code> to the array <code>item</code> and checks if it contains at least one element matching the rules. We&#39;ve returned exactly what intuitiveFilter could use - a filter function that takes an array item and returns a boolean. It looks as if we wrote a shorter alias to replace some boilerplate code.</p>
+<p>Remember the old way to write an array filter?</p>
+<pre><code>intuitiveFilter(arrayArray, {children: function(arr) { 
+    return intuitiveFilter(arr, {age:{gt:10}}).length &gt; 0; }
+});</code></pre>
+<p>We can now write it like so:</p>
+<pre><code>intuitiveFilter(arrayArray, {children: has({age:{gt:10}})});</code></pre>
+<p>Isn&#39;t that beautiful? We&#39;ve removed a lot of boilerplate code and the result is elegant and simple. Admittedly, it has a lot of braces and parentheses, but then again, so does Lisp. Now lets see if we can provide a richer set of filtering rules.</p>
+<p>Lets start with some intuitive syntax ideas:</p>
+<pre><code>checkif(array, [ {has: filter,
+    atLeast: 2, atMost:2}, ...]);</code></pre>
+<p>There are two possible interpretations for the usage of the array here. One of 
+them would be the equivalent of an <code>or</code> operator. For example, 
+<code>[{has: {age: {gt:10}}, atLeast:1}, {has: {age: {lt: 8}}, atLeast: 1}]</code> would 
+mean the following: has at least one child older than 10 or has at least one 
+child younger than 8. This is consistent with the meaning of arrays as they are 
+used in intuitiveFilter. However, in this case, the <code>or</code> operator is a lot less 
+useful to as than the <code>and</code> operator. Using the <code>or</code> operator on a single field 
+is already possible through intuitiveFilter. Using the <code>and</code> operator isn&#39;t, 
+even though that would be useful for array fields.</p>
+<p>We&#39;re going to break consistency for the sake of completeness. The rule array 
+argument of <code>checkif</code> will mean <code>and</code> instead of <code>or</code>, which means that all of 
+the rules must be satisfied. We&#39;re going to have a slightly shaky abstraction 
+this way, but its going to be a more useful one.</p>
+<p>Finally, lets define some shorthand variants:</p>
+<p><code>checkif(array, {has: filter, atLeast:2});</code> - if we only need one rule, the 
+argument can be the rule.</p>
+<p><code>checkif(array, {has: filter});</code> - default meaning is &quot;atLeast: 1&quot;</p>
+<p><code>checkif(array, {none: filter});</code> - shorthand for exactly: 0</p>
+<p><code>checkif(array, {all: filter});</code> - all elements must satisfy the filter</p>
+<p>And here is the code:</p>
+<pre><code>function checkif(rules) {
+    if (!$.isArray(rules)) { rules = [ rules ]; }
+    for (var k = 0; k &lt; rules.length; ++k) {
+        if (rules[k].has &amp;&amp; !(&quot;atLeast&quot; in rules[k] 
+                    || &quot;atMost&quot; in rules[k])) {
+            rules[k].atLeast = 1;
+        }
+    }
+    var checkLimits = function(filtered, rule) {
+        return ((!(&quot;atMost&quot; in rule)
+                    || filtered &lt;= rule.atMost)
+                &amp;&amp; (!(&quot;atLeast&quot; in rule)
+                    || filtered &gt;= rule.atLeast)
+                &amp;&amp; (!(&quot;exactly&quot; in rule)
+                    || filtered == rule.exactly));
+    }
+    var checkRule = function(filtered, total, rule) {
+        return ((rule.has &amp;&amp; checkLimits(filtered, rule))
+                || (rule.none &amp;&amp; !filtered)
+                || (rule.all 
+                    &amp;&amp; filtered == total 
+                    &amp;&amp; checkLimits(filtered, rule)))
+
+    }
+    return function(array) {
+        for (var k = 0; k &lt; rules.length; ++k) {
+            if (!checkRule(intuitiveFilter(array, 
+                    rules[k].has ? rules[k].has 
+                    : rules[k].none ? rules[k].none
+                    : rules[k].all).length, 
+                array.length, rules[k])) return false;
+        }
+        return true;
+    }
+}</code></pre>
+<p>Some fun examples follow:</p>
+<pre><code>var testArray = [
+    {name:&quot;John&quot;,  age: 40, children: [{name:&quot;Merlin&quot;, age:10}],
+  company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+    {name:&quot;Sue&quot;,   age: 30, children: [{name:&quot;Paco&quot;, age: 3}],
+  company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+    {name:&quot;Mary&quot;, age: 55, children: [
+        {name:&quot;Joe&quot;, age: 17}, {name:&quot;Moe&quot;, age:19}],
+        company:{ name: &quot;MegaCorp&quot;, employees: 200}},
+    {name:&quot;Jack&quot;,  age: 20, children: [],
+ company:{ name: &quot;MiniCorp&quot;, employees: 100}}
+];
+console.log(intuitiveFilter(testArray,
+    {children: checkif({has: { age: { gt: 5}}, atLeast: 1})}));
+    // John, Mary
+
+console.log(intuitiveFilter(testArray,
+    {children: checkif({none: { }})})); // Jack
+
+console.log(intuitiveFilter(testArray,
+    {children: checkif({all: { age: {gt: 12}}})})); // Jack and Mary&lt;</code></pre>
+<p>Note: &quot;all&quot; will always return true for empty arrays, as there are no items that 
+don&#39;t satisfy the imposed conditions. This can be modified by adding 
+<code>atLeast: 1</code>:</p>
+<pre><code>// Just Mary
+console.log(intuitiveFilter(testArray,
+    {children: checkif({all: { age: {gt: 12}}, atLeast: 1})}));</code></pre>
+<p>And now we&#39;ve extended our filter language with rich syntax to deal with sub-arrays without touching the original filtering function. Wasn&#39;t that great?</p>
+</div></div><hr/><h1>Older posts</h1><h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4><h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h4><h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
+prettyPrint();
+
+</script></body>
