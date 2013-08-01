@@ -41,6 +41,7 @@ h2, h3, h4 {
         margin-top:2ex;
     }
 }
+
 @media screen and (min-width: 1250px) {
     .info-tiny {
         display:none;
