@@ -33,7 +33,7 @@ h2, h3, h4 {
     margin:2rem auto;
 }
 
-@media screen and (max-width: 1320px) {
+@media screen and (max-width: 1249px) {
     .info {
         display:none;
     }
@@ -41,7 +41,7 @@ h2, h3, h4 {
         margin-top:2ex;
     }
 }
-@media screen and (min-width: 1321px) {
+@media screen and (min-width: 1250px) {
     .info-tiny {
         display:none;
     }    
@@ -59,7 +59,7 @@ h2, h3, h4 {
     position:absolute;
     top:4rem;
     left:50%;
-    margin-left: -62ex;
+    margin-left: -61ex;
     width: 20ex;
     right: 2rem;
     text-align: right;
