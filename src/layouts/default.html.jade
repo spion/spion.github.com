@@ -9,7 +9,9 @@ html
     link(rel='shortcut icon', href='/ico/favicon.ico')
     link(rel='stylesheet', href='/styles/style.css')
     link(rel='stylesheet', href='http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css')
+    
   body
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
     .main
       .info-tiny
         a(href='/') 
@@ -26,7 +28,7 @@ html
         p.subtitle.margin
           a(href='http://twitter.com/spion')@spion
       .rest!=content
-    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+
     script(src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')
     script(src='http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js')
     script.

@@ -172,3 +172,35 @@ hr {
 .social {
     margin: 2rem 0 4rem 0;
 }
+
+.post .content > table {
+
+    margin: 1rem 0;
+    border: solid 2px @mainColor;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    td, th {
+        margin: 0;
+        padding: 0.5rem 0.75rem;
+        border: none;
+    }
+    tr {
+        margin:0;
+        padding:0;
+        border:none;
+    }
+    tbody {
+        margin:0;
+        padding:0;
+        border:none;
+    }
+
+    tr:nth-child(odd) > td {
+        background-color:@mainColor;
+    }
+}
+
+.post .tickLabel, .post .legendLabel {
+    font-size: 0.8rem;
+}

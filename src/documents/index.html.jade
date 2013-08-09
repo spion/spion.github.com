@@ -5,7 +5,7 @@ title: A hint of chaos
 
 - var posts = getFilesAtPath("posts").toJSON().sort(function(p1, p2) {
 -   return p2.date.getTime() - p1.date.getTime()
-- }).filter(function(p){ return !p.draft });
+- }).filter(function(p){ return !p.hidden });
 
 each post in posts.slice(0,5)
     .post
