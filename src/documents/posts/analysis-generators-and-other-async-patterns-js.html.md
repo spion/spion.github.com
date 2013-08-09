@@ -1350,27 +1350,28 @@ correct.
 
 ### Conclusion
 
-If this essay left you even more confused then before, you're not alone. Its
+If this essay left you even more confused then before, you're not alone. It
 seems hard to make a decision even with all the data available.
 
 My opinion is biased. I love generators, and I've been 
 [pushing](https://code.google.com/p/v8/issues/detail?id=2355#c2)
 [pretty hard](https://news.ycombinator.com/item?id=5419030) to get them 
-included in V8. And its obvious from the analysis above that they have good 
-characteristics: low code complexity, good performance, acceptable 
-debuggability.
+included in V8 (maybe a bit too hard). And its obvious from the analysis above 
+that they have good characteristics: low code complexity, good performance, 
+acceptable debuggability.
 
 More importantly, they will eventually become a part of everyday JavaScript 
 with no compilation (except for older browsers) or no native modules required, 
 and the yield keyword is in principle as good indicator of async code as 
 callbacks are.
 
-But there are things that can't be measured with benchmarks. How will the 
-community accept them? Will people find it hard to decide whether to use them
-or not? Will they be frowned upon when used in modules published to npm?
+But there are things that cannot be measured. How will the community accept 
+generators? Will people find it hard to decide whether to use them or not? Will 
+they be frowned upon when used in code published to npm?
 
-I don't have the answers to these questions. I only have a hunch. Its a 
-positive one. Generators will play an important role in the future of node.
+I don't have the answers to these questions. I only have hunches. But they are 
+generally positive. Generators will play an important role in the future of 
+node.
 
 
 ---
