@@ -23,7 +23,7 @@ strong feelings and opinions on all the other methods and libraries. Debates
 can be heated: sometimes social pariahs may be declared or grave rolling 
 may be induced.
 
-The reason for this is that JavaScript in V8 never had any continuation 
+The reason for this is that JavaScript in node never had any continuation 
 mechanism to allow code to pause and resume across the event loop boundary. 
 
 Until now.
@@ -178,9 +178,8 @@ easy? What about environments that don't have ES6 support?
 I decided to do a big comparison of all existing node async code patterns and
 find the answers to these questions. 
 
-<a name="skip"></a>
+<a name="skip"></a><a name="the-analysis"></a>
 
-<a name="the-analysis"></a>
 ### The analysis
 
 For the analysis, I took `file.upload`, a typical CRUD method extracted from  
@@ -433,8 +432,8 @@ fibrous(function upload() { ... })
 ```
 
 This felt exactly like the generators version but with `sync` instead of 
-`yield` to indicate the methods that will yield. One benefit is that it 
-feels more natural for chaining - less parenthesis are needed. 
+`yield` to indicate the methods that will yield. The one benefit I can think 
+of is that it feels more natural for chaining - less parenthesis are needed. 
 
 ```
 somefn.sync(arg).split('/')
@@ -726,7 +725,7 @@ which we need to run generators code without the `--harmony` switch or in
 browsers. Is roughly 2-3 times slower, which is great.
 
 Genny is also 2-3 times slower. This is because it adds some protection 
-guarantees: it makes sure that callback-calling function behave and call the 
+guarantees: it makes sure that callback-calling function behaves and calls the 
 callback only once and provides a mechanism to enable better stack traces
 when errors are encountered.
 
@@ -1341,7 +1340,7 @@ This has a couple of levels itself:
 
 Ah yes. A table.
 
-| name                | sourcemaps  | stack traces | total | 
+| name                | source maps | stack traces | total | 
 |---------------------|------------:|-------------:|------:|
 | src-streamline._js  |          4  |            5 |     9 |
 | fibrous.js          |          5  |            5 |    10 |
@@ -1362,7 +1361,7 @@ Here is the report from my automated test script that compares the reported
 error line with the actual error line for those cases where the report is 
 correct.
 
-| file                     | actual-line | rep-line | distance |
+| file                     | actual line | rep line | distance |
 |--------------------------|------------:|---------:|---------:|
 | catcher.js               |          38 |       38 |        0 |
 | qasync.js                |          39 |       39 |        0 |
