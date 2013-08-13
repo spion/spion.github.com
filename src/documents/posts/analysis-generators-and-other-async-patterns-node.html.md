@@ -98,11 +98,12 @@ Let's give things to this generator:
 
 ```js
 var iterator = numbers();
-console.log(iterator.next('present')); // 1
-console.log(iterator.next('cat')); // 2
+// Cant give anything the first time: need to get to a yield first.
+console.log(iterator.next()); // 1
+console.log(iterator.next('present')); // 2
 fs.readFile('file.txt', function(err, resultFromAnAsyncTask) {
     console.log(iterator.next(resultFromAnAsyncTask)); // 3
-})
+});
 ```
 
 Uh-oh.
@@ -124,12 +125,12 @@ We could process those file reading tasks asynchronously:
 
 ```js
 var iterator = files();
-function process(iterator, sendValue) {}
+function process(iterator, sendValue) {
     var fileTask = iterator.next(sendValue);
     fs.readFile(fileTask, function(err, res) {
         if (err) iterator.throw(err);
         else process(iterator, res);
-    })    
+    });
 }
 process(iterator);
 ```
