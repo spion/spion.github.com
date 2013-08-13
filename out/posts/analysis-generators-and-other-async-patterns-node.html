@@ -328,19 +328,17 @@ style functions is to use <code>co.wrap</code> for co and <code>fn.bind</code> f
 what I did.</p>
 <p><strong><a href="//github.com/spion/async-compare/blob/master/examples/suspend.js">suspend.js</a> 
 and <a href="//github.com/spion/async-compare/blob/master/examples/promises.js">genny.js</a></strong></p>
-<p>genny and suspend are generator-based solutions that can work directly with
-node style functions.</p>
-<p>Obviously, I&#39;m biased here since I wrote genny. I still think that this is 
-objectively the best way to use generators in node. Just replace the callback 
-with a placeholder function <code>resume</code>, then yield that. Comes back to you with 
-the value. </p>
+<p><a href="https://github.com/jmar777/suspend">suspend</a> and 
+<a href="http://github.com/spion/genny">genny</a> are generator-based solutions that can 
+work directly with node-style functions.</p>
+<p>I&#39;m biased here since I wrote genny. I still think that this is objectively the 
+best way to use generators in node. Just replace the callback with a placeholder 
+function <code>resume</code>, then yield that. Comes back to you with the value. </p>
 <p>Kudos to <a href="//github.com/jmar777">jmar777</a> for realizing that you don&#39;t need
 to actually yield anything and can resume the generator using the placeholder 
 callback instead.</p>
-<p>Both <a href="https://github.com/jmar777/suspend">suspend</a> and 
-<a href="http://github.com/spion/genny">genny</a> use generators roughly the same way. 
-The resulting code is very clean, very straightforward and completely devoid of 
-callbacks. </p>
+<p>Both suspend and genny use generators roughly the same way. The resulting code 
+is very clean, very straightforward and completely devoid of callbacks. </p>
 <p><strong><a href="//github.com/spion/async-compare/blob/master/examples/fibrous.js">fibrous.js</a></strong></p>
 <p><a href="//github.com/goodeggs/fibrous">Fibrous</a> is a fibers library that creates 
 &quot;sync&quot; methods out of your async ones, which you can then run in a fiber. </p>
@@ -636,9 +634,9 @@ window.addEventListener('load', function() {
 <p>The original and flattened solution are the fastest, as they use vanilla 
 callbacks. </p>
 <p>It seems like catcher adds a slight overhead, making things just a bit slower.</p>
-<p>The generator solution suspend is really fast. It incurred minimal overhead of 
-about 50-80% running time. Its also roughly comparable with streamlinejs (when 
-in raw callbacks mode).</p>
+<p>suspend and gens are the fastest generator based solutions. They incurred minimal 
+overhead of about 50-80% running time. They&#39;re also roughly comparable with 
+streamlinejs (when in raw callbacks mode).</p>
 <p>Next is suspend compiled with 
 <a href="//github.com/google/traceur-compiler/">Google Traceur</a>, an ES6 to ES5 compiler
 which we need to run generators code without the <code>--harmony</code> switch or in 
@@ -647,9 +645,9 @@ browsers. Is roughly 2-3 times slower, which is great.</p>
 guarantees: it makes sure that callback-calling function behaves and calls the 
 callback only once and provides a mechanism to enable better stack traces
 when errors are encountered.</p>
-<p>Gens is in the same ballpark as </p>
-<p>The slowest is co. There is nothing intrinsically slow about it though:
-the slowness is mostly caused by <code>co.wrap</code>.</p>
+<p>The slowest of the bunch is co, but not by much. There is nothing intrinsically 
+slow about it though: the slowness is probably caused by <code>co.wrap</code> which 
+creates a new arguments array on every invocation of the wrapped function.</p>
 <p>Looks great. But isn&#39;t this a bit unrealistic?</p>
 <p>Most async operations take much longer than 1 millisecond to complete, 
 especially when the load is as high as thousands of requests per second.

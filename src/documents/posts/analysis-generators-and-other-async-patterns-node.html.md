@@ -407,22 +407,20 @@ what I did.
 **[suspend.js](//github.com/spion/async-compare/blob/master/examples/suspend.js) 
 and [genny.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
 
-genny and suspend are generator-based solutions that can work directly with
-node style functions.
+[suspend](https://github.com/jmar777/suspend) and 
+[genny](http://github.com/spion/genny) are generator-based solutions that can 
+work directly with node-style functions.
 
-Obviously, I'm biased here since I wrote genny. I still think that this is 
-objectively the best way to use generators in node. Just replace the callback 
-with a placeholder function `resume`, then yield that. Comes back to you with 
-the value. 
+I'm biased here since I wrote genny. I still think that this is objectively the 
+best way to use generators in node. Just replace the callback with a placeholder 
+function `resume`, then yield that. Comes back to you with the value. 
 
 Kudos to [jmar777](//github.com/jmar777) for realizing that you don't need
 to actually yield anything and can resume the generator using the placeholder 
 callback instead.
 
-Both [suspend](https://github.com/jmar777/suspend) and 
-[genny](http://github.com/spion/genny) use generators roughly the same way. 
-The resulting code is very clean, very straightforward and completely devoid of 
-callbacks. 
+Both suspend and genny use generators roughly the same way. The resulting code 
+is very clean, very straightforward and completely devoid of callbacks. 
 
 **[fibrous.js](//github.com/spion/async-compare/blob/master/examples/fibrous.js)**
 
@@ -707,9 +705,9 @@ callbacks.
 
 It seems like catcher adds a slight overhead, making things just a bit slower.
 
-The generator solution suspend is really fast. It incurred minimal overhead of 
-about 50-80% running time. Its also roughly comparable with streamlinejs (when 
-in raw callbacks mode).
+suspend and gens are the fastest generator based solutions. They incurred minimal 
+overhead of about 50-80% running time. They're also roughly comparable with 
+streamlinejs (when in raw callbacks mode).
 
 Next is suspend compiled with 
 [Google Traceur](//github.com/google/traceur-compiler/), an ES6 to ES5 compiler
@@ -721,10 +719,9 @@ guarantees: it makes sure that callback-calling function behaves and calls the
 callback only once and provides a mechanism to enable better stack traces
 when errors are encountered.
 
-Gens is in the same ballpark as 
-
-The slowest is co. There is nothing intrinsically slow about it though:
-the slowness is mostly caused by `co.wrap`.
+The slowest of the bunch is co, but not by much. There is nothing intrinsically 
+slow about it though: the slowness is probably caused by `co.wrap` which 
+creates a new arguments array on every invocation of the wrapped function.
 
 Looks great. But isn't this a bit unrealistic?
 
