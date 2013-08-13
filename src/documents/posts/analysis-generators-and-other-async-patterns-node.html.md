@@ -260,8 +260,8 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
     var blob = blobManager.create(account);
     var tx = db.begin();
     try {
-        var blobId = yield blob.put(stream, resume.t); 
-        var file = yield self.byUuidOrPath(idOrPath).get(resume.t); 
+        var blobId = yield blob.put(stream, resume()); 
+        var file = yield self.byUuidOrPath(idOrPath).get(resume()); 
         var previousId = file ? file.version : null;
         var version = {
             userAccountId: userAccount.id,
@@ -270,7 +270,7 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
             previousId: previousId
         };
         version.id = Version.createHash(version);
-        yield Version.insert(version).execWithin(tx, resume.t);
+        yield Version.insert(version).execWithin(tx, resume());
         if (!file) {
             var splitPath = idOrPath.split('/');
             var fileName = splitPath[splitPath.length - 1];
@@ -281,14 +281,14 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
                 name: fileName,
                 version: version.id
             }
-            var q = yield self.createQuery(idOrPath, file, resume.t);
-            yield q.execWithin(tx, resume.t);
+            var q = yield self.createQuery(idOrPath, file, resume());
+            yield q.execWithin(tx, resume());
         }
         yield FileVersion.insert({fileId: file.id, versionId: version.id})
-            .execWithin(tx, resume.t);
+            .execWithin(tx, resume());
         yield File.whereUpdate({id: file.id}, {version: version.id})
-            .execWithin(tx, resume.t); 
-        yield tx.commit(resume.t);
+            .execWithin(tx, resume()); 
+        yield tx.commit(resume());
     } catch (e) {
         tx.rollback();
         throw e; 
@@ -382,7 +382,8 @@ note: I used [when](//github.com/cujojs/when) because i liked its function
 lifting API better than Q's
 
 
-**[promiseish.js](//github.com/spion/async-compare/blob/master/examples/promises.js) and [promiseishQ.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
+**[promiseish.js](//github.com/spion/async-compare/blob/master/examples/promises.js) 
+and [promiseishQ.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
 
 Nothing fancy here, just some `.then()` chaining. In fact it feels less complex
 than the `promise.js` version, where I felt like I was trying to fight the
@@ -391,8 +392,23 @@ language all the time.
 The second file `promiseishQ.js` uses [Q](//github.com/kriskowal/q) instead of 
 [when](//github.com/cujojs/when).
 
+**[co.js](//github.com/spion/async-compare/blob/master/examples/co.js) 
+and [gens.js](//github.com/spion/async-compare/blob/master/examples/gens.js)**
 
-**[suspend.js](//github.com/spion/async-compare/blob/master/examples/suspend.js) and [genny.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
+[Gens](//github.com/Raynos/gens) and [co](//github.com/visionmedia/co) are 
+generator-based libraries. Both can work by yielding thunk-style functions: 
+that is, functions that take a single argument which is a node style callback 
+in the format `function (err, result)`
+
+The problem is, thunks still require wrapping. The recommended way to wrap node 
+style functions is to use `co.wrap` for co and `fn.bind` for gens - so thats 
+what I did.
+
+**[suspend.js](//github.com/spion/async-compare/blob/master/examples/suspend.js) 
+and [genny.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
+
+genny and suspend are generator-based solutions that can work directly with
+node style functions.
 
 Obviously, I'm biased here since I wrote genny. I still think that this is 
 objectively the best way to use generators in node. Just replace the callback 
@@ -483,25 +499,28 @@ Esprima's lexer (comments excluded). The idea is taken from
 
 Results:
 
-| name               | tokens | complexity |
-|--------------------|-------:|-----------:|
-| src-streamline._js |    297 |       1.00 |
-| fibrous.js         |    312 |       1.05 |
-| qasync.js          |    315 |       1.06 |
-| suspend.js         |    326 |       1.10 |
-| genny.js           |    334 |       1.12 |
-| catcher.js         |    391 |       1.32 |
-| promiseishQ.js     |    397 |       1.34 |
-| promiseish.js      |    410 |       1.38 |
-| original.js        |    420 |       1.41 |
-| promises.js        |    456 |       1.54 |
-| flattened.js       |    472 |       1.59 |
+| name                | tokens | complexity |
+|:--------------------|-------:|-----------:|
+| co.js               |    294 |       1.00 |
+| src-streamline._js  |    297 |       1.01 |
+| fibrous.js          |    312 |       1.06 |
+| qasync.js           |    315 |       1.07 |
+| suspend.js          |    326 |       1.11 |
+| genny.js            |    334 |       1.14 |
+| gens.js             |    339 |       1.15 |
+| catcher.js          |    387 |       1.32 |
+| promiseishQ.js      |    397 |       1.35 |
+| promiseish.js       |    410 |       1.39 |
+| original.js         |    420 |       1.43 |
+| promises.js         |    456 |       1.55 |
+| flattened.js        |    472 |       1.61 |
 
 
-Streamline has the lowest complexity. Fibrous, qasync, suspend and genny are
-in the same ballpark, roughly comparable with streamline.
 
-Catcher is comparable with both promise solutions. The complexity when using 
+Streamline and co have the lowest complexity. Fibrous, qasync, suspend, genny 
+and gens are roughly comparable. 
+
+Catcher is comparable with both promiseish solutions. The complexity when using 
 promises is roughly comparable to the original version with callbacks, but 
 there is some improvement.
 
@@ -525,32 +544,125 @@ ran every solution for \\(n \\in \lbrace 100,500,1000,1500,2000 \rbrace \\).
 
 note: hover over the legend to highlight the item on the chart.
 
-<div id="perf-time-1" class="plot" style="height: 400px;">
+<div id="perf-time-1" class="plot">
 </div>
 <script type="text/javascript">
-window.addEventListener('load', function() {
-    $.plot('#perf-time-1', 
+
+window.perfCPUBound = 
 [ { label: 'catcher.js',
     data: 
-     [ [ 100, 19 ],
-       [ 500, 42 ],
-       [ 1000, 67 ],
-       [ 1500, 94 ],
-       [ 2000, 143 ] ] },
-  { label: 'dst-genny-traceur.js',
+     [ [ 100, 21 ],
+       [ 500, 47 ],
+       [ 1000, 74 ],
+       [ 1500, 108 ],
+       [ 2000, 156 ] ] },
+  { label: 'co.js',
+    data: 
+     [ [ 100, 27 ],
+       [ 500, 70 ],
+       [ 1000, 172 ],
+       [ 1500, 247 ],
+       [ 2000, 313 ] ] },
+  { label: 'dst-co-traceur.js',
     data: 
      [ [ 100, 29 ],
-       [ 500, 123 ],
-       [ 1000, 224 ],
-       [ 1500, 332 ],
-       [ 2000, 416 ] ] },
+       [ 500, 146 ],
+       [ 1000, 218 ],
+       [ 1500, 295 ],
+       [ 2000, 405 ] ] },
+  { label: 'dst-genny-traceur.js',
+    data: 
+     [ [ 100, 30 ],
+       [ 500, 138 ],
+       [ 1000, 243 ],
+       [ 1500, 297 ],
+       [ 2000, 429 ] ] },
   { label: 'dst-qasync-traceur.js',
     data: 
-     [ [ 100, 123 ],
+     [ [ 100, 111 ],
        [ 500, 501 ],
-       [ 1000, 1044 ],
-       [ 1500, 1679 ],
-       [ 2000, 2448 ] ] },
+       [ 1000, 1102 ],
+       [ 1500, 1698 ],
+       [ 2000, 2382 ] ] },
+  { label: 'dst-streamline.js',
+    data: 
+     [ [ 100, 24 ],
+       [ 500, 58 ],
+       [ 1000, 122 ],
+       [ 1500, 174 ],
+       [ 2000, 247 ] ] },
+  { label: 'dst-suspend-traceur.js',
+    data: 
+     [ [ 100, 24 ],
+       [ 500, 129 ],
+       [ 1000, 203 ],
+       [ 1500, 333 ],
+       [ 2000, 339 ] ] },
+  { label: 'flattened.js',
+    data: 
+     [ [ 100, 20 ],
+       [ 500, 43 ],
+       [ 1000, 69 ],
+       [ 1500, 95 ],
+       [ 2000, 145 ] ] },
+  { label: 'genny.js',
+    data: 
+     [ [ 100, 24 ],
+       [ 500, 70 ],
+       [ 1000, 152 ],
+       [ 1500, 229 ],
+       [ 2000, 301 ] ] },
+  { label: 'gens.js',
+    data: 
+     [ [ 100, 24 ],
+       [ 500, 60 ],
+       [ 1000, 130 ],
+       [ 1500, 180 ],
+       [ 2000, 238 ] ] },
+  { label: 'original.js',
+    data: 
+     [ [ 100, 19 ],
+       [ 500, 44 ],
+       [ 1000, 70 ],
+       [ 1500, 98 ],
+       [ 2000, 136 ] ] },
+  { label: 'promiseish.js',
+    data: 
+     [ [ 100, 99 ],
+       [ 500, 376 ],
+       [ 1000, 999 ],
+       [ 1500, 1339 ],
+       [ 2000, 1820 ] ] },
+  { label: 'promiseishQ.js',
+    data: 
+     [ [ 100, 105 ],
+       [ 500, 504 ],
+       [ 1000, 1039 ],
+       [ 1500, 1650 ],
+       [ 2000, 2214 ] ] },
+  { label: 'promises.js',
+    data: 
+     [ [ 100, 220 ],
+       [ 500, 1254 ],
+       [ 1000, 2237 ],
+       [ 1500, 3343 ],
+       [ 2000, 5061 ] ] },
+  { label: 'qasync.js',
+    data: 
+     [ [ 100, 80 ],
+       [ 500, 497 ],
+       [ 1000, 974 ],
+       [ 1500, 1536 ],
+       [ 2000, 2079 ] ] },
+  { label: 'suspend.js',
+    data: 
+     [ [ 100, 18 ],
+       [ 500, 53 ],
+       [ 1000, 115 ],
+       [ 1500, 166 ],
+       [ 2000, 231 ] ] } ]
+
+  .concat([
   { label: 'dst-streamline-fibers.js',
     data: 
      [ [ 100, 31 ],
@@ -564,78 +676,10 @@ window.addEventListener('load', function() {
        [ 500, 537 ],
        [ 1000, 1283 ],
        [ 1500, 2405 ],
-       [ 2000, 3917 ] ] },
-  { label: 'dst-streamline.js',
-    data: 
-     [ [ 100, 20 ],
-       [ 500, 49 ],
-       [ 1000, 90 ],
-       [ 1500, 141 ],
-       [ 2000, 199 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data: 
-     [ [ 100, 23 ],
-       [ 500, 105 ],
-       [ 1000, 199 ],
-       [ 1500, 264 ],
-       [ 2000, 319 ] ] },
-  { label: 'flattened.js',
-    data: 
-     [ [ 100, 18 ],
-       [ 500, 41 ],
-       [ 1000, 64 ],
-       [ 1500, 88 ],
-       [ 2000, 109 ] ] },
-  { label: 'genny.js',
-    data: 
-     [ [ 100, 25 ],
-       [ 500, 71 ],
-       [ 1000, 156 ],
-       [ 1500, 228 ],
-       [ 2000, 336 ] ] },
-  { label: 'original.js',
-    data: 
-     [ [ 100, 19 ],
-       [ 500, 42 ],
-       [ 1000, 64 ],
-       [ 1500, 85 ],
-       [ 2000, 109 ] ] },
-  { label: 'promiseish.js',
-    data: 
-     [ [ 100, 61 ],
-       [ 500, 454 ],
-       [ 1000, 780 ],
-       [ 1500, 1539 ],
-       [ 2000, 1682 ] ] },
-  { label: 'promiseishQ.js',
-    data: 
-     [ [ 100, 92 ],
-       [ 500, 518 ],
-       [ 1000, 1017 ],
-       [ 1500, 1668 ],
-       [ 2000, 2198 ] ] },
-  { label: 'promises.js',
-    data: 
-     [ [ 100, 216 ],
-       [ 500, 911 ],
-       [ 1000, 2265 ],
-       [ 1500, 3861 ],
-       [ 2000, 5793 ] ] },
-  { label: 'qasync.js',
-    data: 
-     [ [ 100, 76 ],
-       [ 500, 472 ],
-       [ 1000, 950 ],
-       [ 1500, 1518 ],
-       [ 2000, 2053 ] ] },
-  { label: 'suspend.js',
-    data: 
-     [ [ 100, 17 ],
-       [ 500, 45 ],
-       [ 1000, 73 ],
-       [ 1500, 135 ],
-       [ 2000, 184 ] ] } ]
-,{legend: { position: 'nw' }})
+       [ 2000, 3917 ] ] }]);
+
+window.addEventListener('load', function() {
+    $.plot('#perf-time-1', perfCPUBound, {legend: { position: 'nw' }});
 });
 </script>
 
@@ -644,68 +688,15 @@ complexity \\( O(n^2) \\). Everything else seems to be much faster.
 
 Lets try removing all those promises and fibers to see whats down there.
 
-<div id="perf-time-2" class="plot" style="height: 400px;">
+<div id="perf-time-2" class="plot">
 </div>
 <script type="text/javascript">
+
+
 window.addEventListener('load', function() {
-    $.plot('#perf-time-2', 
-[ { label: 'catcher.js',
-    data: 
-     [ [ 100, 19 ],
-       [ 500, 42 ],
-       [ 1000, 67 ],
-       [ 1500, 94 ],
-       [ 2000, 143 ] ] },
-  { label: 'dst-genny-traceur.js',
-    data: 
-     [ [ 100, 29 ],
-       [ 500, 123 ],
-       [ 1000, 224 ],
-       [ 1500, 332 ],
-       [ 2000, 416 ] ] },
-  { label: 'dst-streamline.js',
-    data: 
-     [ [ 100, 20 ],
-       [ 500, 49 ],
-       [ 1000, 90 ],
-       [ 1500, 141 ],
-       [ 2000, 199 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data: 
-     [ [ 100, 23 ],
-       [ 500, 105 ],
-       [ 1000, 199 ],
-       [ 1500, 264 ],
-       [ 2000, 319 ] ] },
-  { label: 'flattened.js',
-    data: 
-     [ [ 100, 18 ],
-       [ 500, 41 ],
-       [ 1000, 64 ],
-       [ 1500, 88 ],
-       [ 2000, 109 ] ] },
-  { label: 'genny.js',
-    data: 
-     [ [ 100, 25 ],
-       [ 500, 71 ],
-       [ 1000, 156 ],
-       [ 1500, 228 ],
-       [ 2000, 336 ] ] },
-  { label: 'original.js',
-    data: 
-     [ [ 100, 19 ],
-       [ 500, 42 ],
-       [ 1000, 64 ],
-       [ 1500, 85 ],
-       [ 2000, 109 ] ] },
-  { label: 'suspend.js',
-    data: 
-     [ [ 100, 17 ],
-       [ 500, 45 ],
-       [ 1000, 73 ],
-       [ 1500, 135 ],
-       [ 2000, 184 ] ] } ]
-  , {legend: { position: 'nw' }})
+    $.plot('#perf-time-2', perfCPUBound.filter(function(item) {
+        return !/(promise|qasync|fibrous|fiber)/.test(item.label)
+    }), {legend: { position: 'nw' }})
 });
 </script>
 
@@ -725,13 +716,15 @@ Next is suspend compiled with
 which we need to run generators code without the `--harmony` switch or in 
 browsers. Is roughly 2-3 times slower, which is great.
 
-Genny is also 2-3 times slower. This is because it adds some protection 
+Genny is about 2 times slower. This is because it adds some protection 
 guarantees: it makes sure that callback-calling function behaves and calls the 
 callback only once and provides a mechanism to enable better stack traces
 when errors are encountered.
 
-The slowest is genny when run with traceur, which is about 4 times slower than
-the original solution.
+Gens is in the same ballpark as 
+
+The slowest is co. There is nothing intrinsically slow about it though:
+the slowness is mostly caused by `co.wrap`.
 
 Looks great. But isn't this a bit unrealistic?
 
@@ -749,33 +742,125 @@ take 10 ms on average when there are 100 running in parallel and 100 ms when
 there are 1000 running in parallel. Makes much more sense.
 
 
-<div id="perf-time-3" class="plot" style="height: 400px;">
+<div id="perf-time-3" class="plot">
 </div>
 <script type="text/javascript">
-window.addEventListener('load', function() {
-    $.plot('#perf-time-3', 
+window.perfIOBound = 
 
 [ { label: 'catcher.js',
     data: 
-     [ [ 100, 81 ],
-       [ 500, 366 ],
-       [ 1000, 740 ],
-       [ 1500, 1107 ],
-       [ 2000, 1499 ] ] },
+     [ [ 100, 95 ],
+       [ 500, 360 ],
+       [ 1000, 723 ],
+       [ 1500, 1088 ],
+       [ 2000, 1509 ] ] },
+  { label: 'co.js',
+    data: 
+     [ [ 100, 107 ],
+       [ 500, 446 ],
+       [ 1000, 873 ],
+       [ 1500, 1313 ],
+       [ 2000, 1713 ] ] },
+  { label: 'dst-co-traceur.js',
+    data: 
+     [ [ 100, 111 ],
+       [ 500, 497 ],
+       [ 1000, 934 ],
+       [ 1500, 1330 ],
+       [ 2000, 1736 ] ] },
   { label: 'dst-genny-traceur.js',
     data: 
-     [ [ 100, 98 ],
-       [ 500, 454 ],
-       [ 1000, 863 ],
-       [ 1500, 1268 ],
-       [ 2000, 1738 ] ] },
+     [ [ 100, 105 ],
+       [ 500, 485 ],
+       [ 1000, 854 ],
+       [ 1500, 1230 ],
+       [ 2000, 1659 ] ] },
   { label: 'dst-qasync-traceur.js',
     data: 
-     [ [ 100, 117 ],
-       [ 500, 509 ],
-       [ 1000, 1093 ],
-       [ 1500, 2096 ],
-       [ 2000, 2484 ] ] },
+     [ [ 100, 111 ],
+       [ 500, 484 ],
+       [ 1000, 1130 ],
+       [ 1500, 1714 ],
+       [ 2000, 2395 ] ] },
+  { label: 'dst-streamline.js',
+    data: 
+     [ [ 100, 94 ],
+       [ 500, 385 ],
+       [ 1000, 755 ],
+       [ 1500, 1171 ],
+       [ 2000, 1573 ] ] },
+  { label: 'dst-suspend-traceur.js',
+    data: 
+     [ [ 100, 85 ],
+       [ 500, 377 ],
+       [ 1000, 709 ],
+       [ 1500, 1071 ],
+       [ 2000, 1399 ] ] },
+  { label: 'flattened.js',
+    data: 
+     [ [ 100, 76 ],
+       [ 500, 359 ],
+       [ 1000, 718 ],
+       [ 1500, 1088 ],
+       [ 2000, 1467 ] ] },
+  { label: 'genny.js',
+    data: 
+     [ [ 100, 103 ],
+       [ 500, 398 ],
+       [ 1000, 805 ],
+       [ 1500, 1234 ],
+       [ 2000, 1623 ] ] },
+  { label: 'gens.js',
+    data: 
+     [ [ 100, 93 ],
+       [ 500, 390 ],
+       [ 1000, 781 ],
+       [ 1500, 1164 ],
+       [ 2000, 1556 ] ] },
+  { label: 'original.js',
+    data: 
+     [ [ 100, 86 ],
+       [ 500, 369 ],
+       [ 1000, 728 ],
+       [ 1500, 1086 ],
+       [ 2000, 1487 ] ] },
+  { label: 'promiseish.js',
+    data: 
+     [ [ 100, 99 ],
+       [ 500, 503 ],
+       [ 1000, 988 ],
+       [ 1500, 1437 ],
+       [ 2000, 1827 ] ] },
+  { label: 'promiseishQ.js',
+    data: 
+     [ [ 100, 102 ],
+       [ 500, 525 ],
+       [ 1000, 1060 ],
+       [ 1500, 1657 ],
+       [ 2000, 2257 ] ] },
+  { label: 'promises.js',
+    data: 
+     [ [ 100, 219 ],
+       [ 500, 1239 ],
+       [ 1000, 2229 ],
+       [ 1500, 3334 ],
+       [ 2000, 5048 ] ] },
+  { label: 'qasync.js',
+    data: 
+     [ [ 100, 84 ],
+       [ 500, 480 ],
+       [ 1000, 999 ],
+       [ 1500, 1542 ],
+       [ 2000, 2077 ] ] },
+  { label: 'suspend.js',
+    data: 
+     [ [ 100, 77 ],
+       [ 500, 345 ],
+       [ 1000, 669 ],
+       [ 1500, 1066 ],
+       [ 2000, 1430 ] ] } ]
+
+.concat([ 
   { label: 'dst-streamline-fibers.js',
     data: 
      [ [ 100, 94 ],
@@ -789,186 +874,22 @@ window.addEventListener('load', function() {
        [ 500, 602 ],
        [ 1000, 1340 ],
        [ 1500, 2454 ],
-       [ 2000, 3919 ] ] },
-  { label: 'dst-streamline.js',
-    data: 
-     [ [ 100, 87 ],
-       [ 500, 366 ],
-       [ 1000, 736 ],
-       [ 1500, 1211 ],
-       [ 2000, 1550 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data: 
-     [ [ 100, 88 ],
-       [ 500, 371 ],
-       [ 1000, 703 ],
-       [ 1500, 1056 ],
-       [ 2000, 1383 ] ] },
-  { label: 'flattened.js',
-    data: 
-     [ [ 100, 84 ],
-       [ 500, 351 ],
-       [ 1000, 718 ],
-       [ 1500, 1099 ],
-       [ 2000, 1472 ] ] },
-  { label: 'genny.js',
-    data: 
-     [ [ 100, 85 ],
-       [ 500, 395 ],
-       [ 1000, 780 ],
-       [ 1500, 1205 ],
-       [ 2000, 1658 ] ] },
-  { label: 'original.js',
-    data: 
-     [ [ 100, 85 ],
-       [ 500, 356 ],
-       [ 1000, 726 ],
-       [ 1500, 1107 ],
-       [ 2000, 1474 ] ] },
-  { label: 'promiseish.js',
-    data: 
-     [ [ 100, 66 ],
-       [ 500, 459 ],
-       [ 1000, 803 ],
-       [ 1500, 1570 ],
-       [ 2000, 1779 ] ] },
-  { label: 'promiseishQ.js',
-    data: 
-     [ [ 100, 90 ],
-       [ 500, 537 ],
-       [ 1000, 1054 ],
-       [ 1500, 1664 ],
-       [ 2000, 2210 ] ] },
-  { label: 'promises.js',
-    data: 
-     [ [ 100, 212 ],
-       [ 500, 912 ],
-       [ 1000, 2227 ],
-       [ 1500, 3851 ],
-       [ 2000, 5855 ] ] },
-  { label: 'qasync.js',
-    data: 
-     [ [ 100, 84 ],
-       [ 500, 499 ],
-       [ 1000, 986 ],
-       [ 1500, 1537 ],
-       [ 2000, 2102 ] ] },
-  { label: 'suspend.js',
-    data: 
-     [ [ 100, 78 ],
-       [ 500, 342 ],
-       [ 1000, 693 ],
-       [ 1500, 1064 ],
-       [ 2000, 1432 ] ] } ]
-
-
-, {legend: { position: 'nw' }})
+       [ 2000, 3919 ] ] } ]);
+window.addEventListener('load', function() {
+    $.plot('#perf-time-3', perfIOBound, {legend: { position: 'nw' }})
 });
 </script>
 
 `promises.js` and `fibrous.js` are still significantly slower. However all of
 the other solutions are quite comparable now . Lets remove the worst two:
 
-<div id="perf-time-4" class="plot" style="height: 400px;">
+<div id="perf-time-4" class="plot">
 </div>
 <script type="text/javascript">
 window.addEventListener('load', function() {
-    $.plot('#perf-time-4', 
-
-[ { label: 'catcher.js',
-    data: 
-     [ [ 100, 81 ],
-       [ 500, 366 ],
-       [ 1000, 740 ],
-       [ 1500, 1107 ],
-       [ 2000, 1499 ] ] },
-  { label: 'dst-genny-traceur.js',
-    data: 
-     [ [ 100, 98 ],
-       [ 500, 454 ],
-       [ 1000, 863 ],
-       [ 1500, 1268 ],
-       [ 2000, 1738 ] ] },
-  { label: 'dst-qasync-traceur.js',
-    data: 
-     [ [ 100, 117 ],
-       [ 500, 509 ],
-       [ 1000, 1093 ],
-       [ 1500, 2096 ],
-       [ 2000, 2484 ] ] },
-  { label: 'dst-streamline-fibers.js',
-    data: 
-     [ [ 100, 94 ],
-       [ 500, 465 ],
-       [ 1000, 909 ],
-       [ 1500, 1389 ],
-       [ 2000, 2538 ] ] },
-  { label: 'dst-streamline.js',
-    data: 
-     [ [ 100, 87 ],
-       [ 500, 366 ],
-       [ 1000, 736 ],
-       [ 1500, 1211 ],
-       [ 2000, 1550 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data: 
-     [ [ 100, 88 ],
-       [ 500, 371 ],
-       [ 1000, 703 ],
-       [ 1500, 1056 ],
-       [ 2000, 1383 ] ] },
-  { label: 'flattened.js',
-    data: 
-     [ [ 100, 84 ],
-       [ 500, 351 ],
-       [ 1000, 718 ],
-       [ 1500, 1099 ],
-       [ 2000, 1472 ] ] },
-  { label: 'genny.js',
-    data: 
-     [ [ 100, 85 ],
-       [ 500, 395 ],
-       [ 1000, 780 ],
-       [ 1500, 1205 ],
-       [ 2000, 1658 ] ] },
-  { label: 'original.js',
-    data: 
-     [ [ 100, 85 ],
-       [ 500, 356 ],
-       [ 1000, 726 ],
-       [ 1500, 1107 ],
-       [ 2000, 1474 ] ] },
-  { label: 'promiseish.js',
-    data: 
-     [ [ 100, 66 ],
-       [ 500, 459 ],
-       [ 1000, 803 ],
-       [ 1500, 1570 ],
-       [ 2000, 1779 ] ] },
-  { label: 'promiseishQ.js',
-    data: 
-     [ [ 100, 90 ],
-       [ 500, 537 ],
-       [ 1000, 1054 ],
-       [ 1500, 1664 ],
-       [ 2000, 2210 ] ] },
-  { label: 'qasync.js',
-    data: 
-     [ [ 100, 84 ],
-       [ 500, 499 ],
-       [ 1000, 986 ],
-       [ 1500, 1537 ],
-       [ 2000, 2102 ] ] },
-  { label: 'suspend.js',
-    data: 
-     [ [ 100, 78 ],
-       [ 500, 342 ],
-       [ 1000, 693 ],
-       [ 1500, 1064 ],
-       [ 2000, 1432 ] ] } ]
-
-
-, {legend: { position: 'nw' }})
+    $.plot('#perf-time-4', perfIOBound.filter(function(item) {
+        return !/(promises.js|fibrous.js)/.test(item.label)
+    }), {legend: { position: 'nw' }});
 });
 </script>
 
@@ -978,50 +899,130 @@ some of the generator libraries, the overhead simply disappears.
 
 Excellent. But what about memory usage? Lets chart that too!
 
-Note: the y axis represents the amount of RAM (in MB) used when running the 
-test.
+Note: the y axis represents peak memory usage (in MB).
 
-<div id="perf-mem-1" class="plot" style="height: 400px;">
+<div id="perf-mem-1" class="plot">
 </div>
 <script type="text/javascript">
-window.addEventListener('load', function() {
-    $.plot('#perf-mem-1', 
+
+window.perfMEM = 
+
 [ { label: 'catcher.js',
     data: 
-     [ [ 100, 1.96875 ],
-       [ 500, 6.20703125 ],
-       [ 1000, 9.5234375 ],
-       [ 1500, 14.98046875 ],
-       [ 2000, 21.609375 ] ] },
+     [ [ 100, 2.3828125 ],
+       [ 500, 7.99609375 ],
+       [ 1000, 9.51171875 ],
+       [ 1500, 18.96484375 ],
+       [ 2000, 21.078125 ] ] },
+  { label: 'co.js',
+    data: 
+     [ [ 100, 3.25390625 ],
+       [ 500, 9.7578125 ],
+       [ 1000, 16.6484375 ],
+       [ 1500, 25.62890625 ],
+       [ 2000, 31.8671875 ] ] },
+  { label: 'dst-co-traceur.js',
+    data: 
+     [ [ 100, 0.90234375 ],
+       [ 500, 9.43359375 ],
+       [ 1000, 19.25 ],
+       [ 1500, 31.58984375 ],
+       [ 2000, 40.66796875 ] ] },
   { label: 'dst-genny-traceur.js',
     data: 
-     [ [ 100, 0.8359375 ],
-       [ 500, 7.55078125 ],
-       [ 1000, 12.125 ],
-       [ 1500, 27.3828125 ],
-       [ 2000, 33.921875 ] ] },
+     [ [ 100, 0.99609375 ],
+       [ 500, 11.35546875 ],
+       [ 1000, 16.67578125 ],
+       [ 1500, 36.8515625 ],
+       [ 2000, 42.25 ] ] },
   { label: 'dst-qasync-traceur.js',
     data: 
-     [ [ 100, 11.75 ],
-       [ 500, 58.3828125 ],
-       [ 1000, 92.86328125 ],
-       [ 1500, 135.484375 ],
-       [ 2000, 137.42578125 ] ] },
+     [ [ 100, 10.4296875 ],
+       [ 500, 61.30078125 ],
+       [ 1000, 110.34765625 ],
+       [ 1500, 139.08984375 ],
+       [ 2000, 187.03515625 ] ] },
   { label: 'dst-streamline.js',
     data: 
-     [ [ 100, 1.83984375 ],
-       [ 500, 6.96484375 ],
-       [ 1000, 11.953125 ],
-       [ 1500, 22.03515625 ],
-       [ 2000, 25.21875 ] ] },
+     [ [ 100, 3 ],
+       [ 500, 8.93359375 ],
+       [ 1000, 17.8203125 ],
+       [ 1500, 25.69140625 ],
+       [ 2000, 32.09765625 ] ] },
   { label: 'dst-suspend-traceur.js',
     data: 
-     [ [ 100, 1.41015625 ],
-       [ 500, 6.92578125 ],
-       [ 1000, 10.15234375 ],
-       [ 1500, 18.47265625 ],
-       [ 2000, 36.859375 ] ] },
-  { label: 'dst-streamline-fibers.js',
+     [ [ 100, 1.171875 ],
+       [ 500, 7.57421875 ],
+       [ 1000, 14.82421875 ],
+       [ 1500, 26.47265625 ],
+       [ 2000, 37.11328125 ] ] },
+  { label: 'flattened.js',
+    data: 
+     [ [ 100, 2.015625 ],
+       [ 500, 7.01953125 ],
+       [ 1000, 8.86328125 ],
+       [ 1500, 14.21875 ],
+       [ 2000, 20.078125 ] ] },
+  { label: 'genny.js',
+    data: 
+     [ [ 100, 3.1796875 ],
+       [ 500, 11.5 ],
+       [ 1000, 21.1640625 ],
+       [ 1500, 28.41015625 ],
+       [ 2000, 40.03125 ] ] },
+  { label: 'gens.js',
+    data: 
+     [ [ 100, 2.984375 ],
+       [ 500, 9.62109375 ],
+       [ 1000, 18.421875 ],
+       [ 1500, 25.375 ],
+       [ 2000, 35.93359375 ] ] },
+  { label: 'original.js',
+    data: 
+     [ [ 100, 1.86328125 ],
+       [ 500, 7.0078125 ],
+       [ 1000, 8.6015625 ],
+       [ 1500, 14.15625 ],
+       [ 2000, 19 ] ] },
+  { label: 'promiseish.js',
+    data: 
+     [ [ 100, 18.2265625 ],
+       [ 500, 88.390625 ],
+       [ 1000, 138.7265625 ],
+       [ 1500, 179.640625 ],
+       [ 2000, 239.70703125 ] ] },
+  { label: 'promiseishQ.js',
+    data: 
+     [ [ 100, 15.5859375 ],
+       [ 500, 75.85546875 ],
+       [ 1000, 121.36328125 ],
+       [ 1500, 170.74609375 ],
+       [ 2000, 176.2265625 ] ] },
+  { label: 'promises.js',
+    data: 
+     [ [ 100, 25.515625 ],
+       [ 500, 125.359375 ],
+       [ 1000, 244.90234375 ],
+       [ 1500, 366.99609375 ],
+       [ 2000, 489.53515625 ] ] },
+  { label: 'qasync.js',
+    data: 
+     [ [ 100, 11.8515625 ],
+       [ 500, 61.0859375 ],
+       [ 1000, 96.12109375 ],
+       [ 1500, 145.15625 ],
+       [ 2000, 156.015625 ] ] },
+  { label: 'suspend.js',
+    data: 
+     [ [ 100, 3.02734375 ],
+       [ 500, 10.06640625 ],
+       [ 1000, 17.41015625 ],
+       [ 1500, 24.625 ],
+       [ 2000, 31.2890625 ] ] } ]
+
+
+  .concat(     
+  [{ label: 'dst-streamline-fibers.js',
     data: 
      [ [ 100, 2.5703125 ],
        [ 500, 13.8359375 ],
@@ -1034,65 +1035,10 @@ window.addEventListener('load', function() {
        [ 500, 37.265625 ],
        [ 1000, 71.1171875 ],
        [ 1500, 93.4609375 ],
-       [ 2000, 114.8828125 ] ] },
-  { label: 'flattened.js',
-    data: 
-     [ [ 100, 1.40234375 ],
-       [ 500, 5.5859375 ],
-       [ 1000, 9.1328125 ],
-       [ 1500, 10.39453125 ],
-       [ 2000, 19.2890625 ] ] },
-  { label: 'genny.js',
-    data: 
-     [ [ 100, 2.265625 ],
-       [ 500, 10.65625 ],
-       [ 1000, 16.546875 ],
-       [ 1500, 26.1796875 ],
-       [ 2000, 32.30078125 ] ] },
-  { label: 'original.js',
-    data: 
-     [ [ 100, 1.4453125 ],
-       [ 500, 5.55078125 ],
-       [ 1000, 9.0625 ],
-       [ 1500, 10.41015625 ],
-       [ 2000, 19.265625 ] ] },
-  { label: 'promiseish.js',
-    data: 
-     [ [ 100, 17.453125 ],
-       [ 500, 76.05078125 ],
-       [ 1000, 136.4296875 ],
-       [ 1500, 221.9140625 ],
-       [ 2000, 230.33984375 ] ] },
-  { label: 'promiseishQ.js',
-    data: 
-     [ [ 100, 16.01171875 ],
-       [ 500, 75.4375 ],
-       [ 1000, 100.28125 ],
-       [ 1500, 167.7890625 ],
-       [ 2000, 181.2265625 ] ] },
-  { label: 'promises.js',
-    data: 
-     [ [ 100, 24.68359375 ],
-       [ 500, 120.0703125 ],
-       [ 1000, 239.69140625 ],
-       [ 1500, 358.953125 ],
-       [ 2000, 480.25390625 ] ] },
-  { label: 'qasync.js',
-    data: 
-     [ [ 100, 11.8671875 ],
-       [ 500, 60.09765625 ],
-       [ 1000, 97.4140625 ],
-       [ 1500, 146.78125 ],
-       [ 2000, 160.43359375 ] ] },
-  { label: 'suspend.js',
-    data: 
-     [ [ 100, 2.06640625 ],
-       [ 500, 7.34765625 ],
-       [ 1000, 12.90625 ],
-       [ 1500, 21.98828125 ],
-       [ 2000, 25.26171875 ] ] } ]
+       [ 2000, 114.8828125 ] ] }]);
 
-, {legend: { position: 'nw' }})
+window.addEventListener('load', function() {
+    $.plot('#perf-mem-1', perfMEM, {legend: { position: 'nw' }});
 });
 </script>
 
@@ -1105,81 +1051,18 @@ still over 5 times bigger than the original.
 
 Lets remove the hogs and see what remains underneath.
 
-<div id="perf-mem-2" class="plot" style="height: 400px;">
+<div id="perf-mem-2" class="plot">
 </div>
 <script type="text/javascript">
 window.addEventListener('load', function() {
-    $.plot('#perf-mem-2', 
-[ { label: 'catcher.js',
-    data: 
-     [ [ 100, 1.96875 ],
-       [ 500, 6.20703125 ],
-       [ 1000, 9.5234375 ],
-       [ 1500, 14.98046875 ],
-       [ 2000, 21.609375 ] ] },
-  { label: 'dst-genny-traceur.js',
-    data: 
-     [ [ 100, 0.8359375 ],
-       [ 500, 7.55078125 ],
-       [ 1000, 12.125 ],
-       [ 1500, 27.3828125 ],
-       [ 2000, 33.921875 ] ] },
-  { label: 'dst-streamline.js',
-    data: 
-     [ [ 100, 1.83984375 ],
-       [ 500, 6.96484375 ],
-       [ 1000, 11.953125 ],
-       [ 1500, 22.03515625 ],
-       [ 2000, 25.21875 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data: 
-     [ [ 100, 1.41015625 ],
-       [ 500, 6.92578125 ],
-       [ 1000, 10.15234375 ],
-       [ 1500, 18.47265625 ],
-       [ 2000, 36.859375 ] ] },
-  { label: 'dst-streamline-fibers.js',
-    data: 
-     [ [ 100, 2.5703125 ],
-       [ 500, 13.8359375 ],
-       [ 1000, 25.56640625 ],
-       [ 1500, 37.890625 ],
-       [ 2000, 48.703125 ] ] },
-  { label: 'flattened.js',
-    data: 
-     [ [ 100, 1.40234375 ],
-       [ 500, 5.5859375 ],
-       [ 1000, 9.1328125 ],
-       [ 1500, 10.39453125 ],
-       [ 2000, 19.2890625 ] ] },
-  { label: 'genny.js',
-    data: 
-     [ [ 100, 2.265625 ],
-       [ 500, 10.65625 ],
-       [ 1000, 16.546875 ],
-       [ 1500, 26.1796875 ],
-       [ 2000, 32.30078125 ] ] },
-  { label: 'original.js',
-    data: 
-     [ [ 100, 1.4453125 ],
-       [ 500, 5.55078125 ],
-       [ 1000, 9.0625 ],
-       [ 1500, 10.41015625 ],
-       [ 2000, 19.265625 ] ] },
-  { label: 'suspend.js',
-    data: 
-     [ [ 100, 2.06640625 ],
-       [ 500, 7.34765625 ],
-       [ 1000, 12.90625 ],
-       [ 1500, 21.98828125 ],
-       [ 2000, 25.26171875 ] ] } ]
-
-, {legend: { position: 'nw' }})
+    $.plot('#perf-mem-2', perfMEM.filter(function(item) {
+        return !/(promises|promiseish|qasync|fibrous)/.test(item.label)
+    }), {legend: { position: 'nw' }});
 });
 </script>
 
-Streamline's fibers implementation uses 50MB of RAM. The rest use between
-20MB and 35MB - an overhead that can be safely ignored. 
+Streamline's fibers implementation uses 50MB while the rest use between
+20MB and 40MB - an overhead that can be safely ignored. 
 
 This is amazing. Generators (without promises) have a low memory overhead, 
 even when compiled with traceur.
@@ -1196,23 +1079,27 @@ tested.
 With that said, here is a table for 1000 parallel requests, 10 ms per I/O 
 operation:
 
-| file                     | time(ms)  | memory(MB) |
-|--------------------------|----------:|-----------:|
-| suspend.js               |      112  |      12.89 |
-| catcher.js               |      146  |       9.51 |
-| original.js              |      153  |       9.08 |
-| flattened.js             |      155  |       9.13 |
-| dst-streamline.js        |      173  |      12.07 |
-| dst-suspend-traceur.js   |      200  |      12.36 |
-| genny.js                 |      243  |      16.54 |
-| dst-genny-traceur.js     |      327  |      15.78 |
-| dst-streamline-fibers.js |      600  |      25.59 |
-| promiseish.js            |      781  |     136.39 |
-| qasync.js                |      958  |     103.61 |
-| promiseishQ.js           |     1030  |     122.86 |
-| dst-qasync-traceur.js    |     1062  |     101.12 |
-| fibrous.js               |     1304  |      71.24 |
-| promises.js              |     2232  |     239.88 |
+
+| file                     | time(ms) | memory(MB) |
+|--------------------------|---------:|-----------:|
+| suspend.js               |      134 |      16.73 |
+| original.js              |      145 |       8.73 |
+| catcher.js               |      153 |       9.52 |
+| flattened.js             |      155 |       8.85 |
+| dst-suspend-traceur.js   |      205 |      14.24 |
+| gens.js                  |      212 |      18.47 |
+| dst-streamline.js        |      212 |      17.80 |
+| genny.js                 |      230 |      21.39 |
+| co.js                    |      230 |      16.65 |
+| dst-co-traceur.js        |      314 |      17.85 |
+| dst-genny-traceur.js     |      316 |      16.68 |
+| dst-streamline-fibers.js |      600 |      25.59 |
+| qasync.js                |      929 |     104.61 |
+| promiseish.js            |     1003 |     138.76 |
+| promiseishQ.js           |     1053 |     120.63 |
+| dst-qasync-traceur.js    |     1114 |     110.38 |
+| fibrous.js               |     1304 |      71.24 |
+| promises.js              |     2255 |     244.80 |
 
 
 <a name="debuggability"></a>
@@ -1246,11 +1133,11 @@ This has a couple of levels itself:
 
 * **level 4**: has source maps and needs them sometimes
 
-  Generators are in this category. When compiled with traceur (e.g. for the
-  browser) source maps are required and needed. If ES6 is available, source
-  maps are unnecessary.
+  Generator libraries are in this category. When compiled with traceur (e.g. 
+  for the browser) source maps are required and needed. If ES6 is available, 
+  source maps are unnecessary.
 
-  Streamline is also in this category, for another reason. With streamline,
+  Streamline is also in this category for another reason. With streamline,
   you don't need source maps to get accurate stack traces. However, you will
   need them if you want to read the original code (e.g. when debugging in 
   the browser).
@@ -1266,8 +1153,8 @@ This has a couple of levels itself:
 
 * **level 1**: stack traces are missing
 
-  `suspend` is in this category. When an error happens in one of the async
-  functions, this is how the result looks like:  
+  `suspend`, `co` and `gens` are in this category. When an error happens in one 
+  of the async functions, this is how the result looks like:  
 
   ```
   Error: Error happened
@@ -1296,13 +1183,13 @@ This has a couple of levels itself:
   Bruno Jouhier's generator based solution [galaxy](//github.com/bjouhier/galaxy) 
   is in this category. It has a native companion module called 
   [galaxy-stack](//github.com/bjouhier/galaxy-stack) that implements long stack
-  traces without a performance penalty.
+  traces without a performance penalty. 
 
 * **level 4**: stack traces are correct with a flag (adding a performance 
   penalty).
 
   All Q-based solutions are here, even `qasync.js`, which uses generators. Q's
-  support for stack traces via `Q.longStackSupport = true;` is excellent:
+  support for stack traces via `Q.longStackSupport = true;` is good:
 
   ```
   Error: Error happened
@@ -1322,12 +1209,11 @@ This has a couple of levels itself:
   Error: Error happened
       at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
       at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
-  From previous event:
+  From generator:
       at upload (/home/spion/Documents/tests/async-compare/examples/genny.js:38:35)
-      at GeneratorFunctionPrototype.next (native)
   ```
   
-  However it incurs about 50% memory overhead and is about 5 times slower.
+  However it incurs about 50-70% memory overhead and is about 6 times slower.
 
   Catcher is also in this category, with 100% memory overhead and about 
   10 times slower.
@@ -1343,24 +1229,25 @@ Ah yes. A table.
 
 | name                | source maps | stack traces | total | 
 |---------------------|------------:|-------------:|------:|
-| src-streamline._js  |          4  |            5 |     9 |
-| fibrous.js          |          5  |            5 |    10 |
-| qasync.js           |          4  |            4 |     8 |
-| suspend.js          |          4  |            1 |     5 |
-| genny.js            |          4  |            4 |     8 |
-| catcher.js          |          5  |            4 |     9 |
-| promiseishQ.js      |          5  |            4 |     9 |
-| promiseish.js       |          5  |            2 |     7 |
 | original.js         |          5  |            5 |    10 |
 | flattened.js        |          5  |            5 |    10 |
+| fibrous.js          |          5  |            5 |    10 |
+| src-streamline._js  |          4  |            5 |     9 |
+| catcher.js          |          5  |            4 |     9 |
+| promiseishQ.js      |          5  |            4 |     9 |
+| qasync.js           |          4  |            4 |     8 |
+| genny.js            |          4  |            4 |     8 |
+| promiseish.js       |          5  |            2 |     7 |
 | promises.js         |          5  |            1 |     6 |
+| suspend.js          |          4  |            1 |     5 |
+| gens.js             |          4  |            1 |     5 |
+| co.js               |          4  |            1 |     5 |
 
 Generators are not exactly the best here, but they're doing well enough thanks
 to qasync and genny.
 
-Here is the report from my automated test script that compares the reported 
-error line with the actual error line for those cases where the report is 
-correct.
+Here is the report from an automated test script that compares the reported 
+error line with the actual error line:
 
 | file                     | actual line | rep line | distance |
 |--------------------------|------------:|---------:|---------:|

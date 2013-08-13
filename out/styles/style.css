@@ -182,3 +182,6 @@ hr {
 .post .legendLabel {
   font-size: 0.8rem;
 }
+.post .content .plot {
+  height: 500px;
+}
