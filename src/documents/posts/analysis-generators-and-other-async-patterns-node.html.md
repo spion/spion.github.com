@@ -732,7 +732,7 @@ CPU-bound?
 
 So lets increase the average time needed for an async operation to 
 
-$$ t = {n \\over 10} $$
+$$ t = n \cdot 0.1 ms $$
 
 This will make I/O operation time grow together with \\(n\\). Each will
 take 10 ms on average when there are 100 running in parallel and 100 ms when 
@@ -1181,6 +1181,8 @@ This has a couple of levels itself:
   is in this category. It has a native companion module called 
   [galaxy-stack](//github.com/bjouhier/galaxy-stack) that implements long stack
   traces without a performance penalty. 
+
+  Note that galaxy-stack doesn't work with node v0.11.5
 
 * **level 4**: stack traces are correct with a flag (adding a performance 
   penalty).

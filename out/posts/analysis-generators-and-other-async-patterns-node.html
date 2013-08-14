@@ -654,7 +654,7 @@ especially when the load is as high as thousands of requests per second.
 As a result, performance is I/O bound - why measure things as if it were 
 CPU-bound?</p>
 <p>So lets increase the average time needed for an async operation to </p>
-<p>$$ t = {n \over 10} $$</p>
+<p>$$ t = n \cdot 0.1 ms $$</p>
 <p>This will make I/O operation time grow together with \(n\). Each will
 take 10 ms on average when there are 100 running in parallel and 100 ms when 
 there are 1000 running in parallel. Makes much more sense.</p>
@@ -1146,6 +1146,7 @@ to preserve a stack trace, it will not be preserved and the promise library
 is in this category. It has a native companion module called 
 <a href="//github.com/bjouhier/galaxy-stack">galaxy-stack</a> that implements long stack
 traces without a performance penalty. </p>
+<p>Note that galaxy-stack doesn&#39;t work with node v0.11.5</p>
 </li>
 <li><p><strong>level 4</strong>: stack traces are correct with a flag (adding a performance 
 penalty).</p>
