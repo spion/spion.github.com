@@ -1,31 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
-    <title>A hint of chaos</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-  </head>
-  <body>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <div class="main">
-      <div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-      </div>
-      <div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
-        <h1 class="first"> <a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-        <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
-      </div>
-      <div class="rest">
-<div class="post">
-  <h1><a href="/posts/analysis-generators-and-other-async-patterns-node.html">Analysis of generators and other async patterns in node</a></h1>
-  <div class="date">Fri Aug 09 2013</div>
-  <div class="content"><p>Table of contents:</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>A hint of chaos</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></head><body><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><div class="main"><div class="info-tiny"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></div><div class="info"><a href="/"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"> <a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><div class="rest"><div class="post"><h1><a href="/posts/analysis-generators-and-other-async-patterns-node.html">Analysis of generators and other async patterns in node</a></h1><div class="date">Fri Aug 09 2013</div><div class="content"><p>Table of contents:</p>
 <ul>
 <li><a href="#a-gentle-introduction-to-generators">A gentle introduction to generators</a></li>
 <li><a href="#the-analysis">The analysis</a></li>
@@ -75,28 +48,33 @@ console.log(seq.next()); // 2 etc.</code></pre>
 <p>When <code>next</code> is invoked, it starts the execution of the generator. The generator 
 runs until it encounters a <code>yield</code> expression. Then it pauses and the execution
 goes back to the code that called <code>next</code></p>
-<p>If that code calls <code>next</code> again, the generator resumes from the point where 
-it left off. In this case, the generator will resume to the top of the endless 
-<code>for</code> loop and calculate the next Fibonacci pair.</p>
+<p>So in a way, <code>yield</code> works similarly to <code>return</code>. But there is a big difference. 
+If we call <code>next</code> on the generator again, the generator will resume from the 
+point where it left off - from the last <code>yield</code> line. </p>
+<p>In our example, the generator will resume to the top of the endless  <code>for</code> loop 
+and calculate the next Fibonacci pair.</p>
 <p>So how would we use this to write async code? </p>
 <p>A great thing about the <code>next()</code> method is that it can also send values to the 
-generator. Let&#39;s write a simple number generator that also collects the stuff it 
-receives and never does anything with them.</p>
+generator. Let&#39;s write a simple number generator that also collects the stuff 
+it receives. When it gets two things it prints them using <code>console.log</code>:</p>
 <pre><code class="lang-js">function* numbers() {
     var stuffIgot = [];
-    for (var k = 0; k &lt; 10; ++k) {        
+    for (var k = 0; k &lt; 2; ++k) {        
         var itemReceived = yield k;
         stuffIgot.push(itemReceived);
     }
+    console.log(stuffIgot);
 }</code></pre>
-<p>Let&#39;s give things to this generator:</p>
+<p>This generator gives us 3 numbers using yield. Can we give something back?</p>
+<p>Let&#39;s give two things to this generator:</p>
 <pre><code class="lang-js">var iterator = numbers();
 // Cant give anything the first time: need to get to a yield first.
-console.log(iterator.next()); // 1
-console.log(iterator.next(&#39;present&#39;)); // 2
+console.log(iterator.next()); // logs 0
+console.log(iterator.next(&#39;present&#39;)); // logs 1
 fs.readFile(&#39;file.txt&#39;, function(err, resultFromAnAsyncTask) {
-    console.log(iterator.next(resultFromAnAsyncTask)); // 3
+    console.log(iterator.next(resultFromAnAsyncTask)); // logs 2
 });</code></pre>
+<p>The generator will log the string <code>&#39;present&#39;</code> and the contents of <code>file.txt</code></p>
 <p>Uh-oh.</p>
 <p>Seems that we can keep the generator paused across the event loop boundary. </p>
 <p>What if instead of numbers, we yielded some files to be read?</p>
@@ -106,7 +84,8 @@ fs.readFile(&#39;file.txt&#39;, function(err, resultFromAnAsyncTask) {
         results.push(yield files[k]);
     return results;
 }</code></pre>
-<p>We could process those file reading tasks asynchronously:</p>
+<p>We could process those file reading tasks asynchronously. But from the
+generator&#39;s point of view, everything seems to be happening synchronously.</p>
 <pre><code class="lang-js">var iterator = files();
 function process(iterator, sendValue) {
     var fileTask = iterator.next(sendValue);
@@ -121,7 +100,7 @@ from inside the generator. How cool is that?</p>
 <p>With <code>next</code> and <code>throw</code> combined together, we can easily run async code. Here 
 is an example from one of the earliest ES6 async generators library 
 <a href="http://taskjs.org/">task.js</a>. </p>
-<pre><code class="lang-js">spawn(function*() {
+<pre><code class="lang-js">spawn(function* () {
     var data = yield $.ajax(url);
     $(&#39;#result&#39;).html(data);
     var status = $(&#39;#status&#39;).html(&#39;Download complete.&#39;);
@@ -1367,15 +1346,7 @@ and <a href="//github.com/DamonOehlman">damonoehlman</a>
 for their input on the draft version of this essay.</p>
 <p>Thanks to <a href="//github.com/jmar777">jmar777</a> for making suspend</p>
 <script src="/scripts/jquery.flot.js"></script>
-<script src="/scripts/jquery.flot.highlightSeries.js"></script></div>
-  <div class="comments"> 
-    <hr/><a href="/posts/analysis-generators-and-other-async-patterns-node.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h1>
-  <div class="date">Thu Dec 13 2012</div>
-  <div class="content"><iframe allowfullscreen="allowfullscreen" frameborder="0" height="360" 
+<script src="/scripts/jquery.flot.highlightSeries.js"></script></div><div class="comments"> <hr/><a href="/posts/analysis-generators-and-other-async-patterns-node.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="/posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h1><div class="date">Thu Dec 13 2012</div><div class="content"><iframe allowfullscreen="allowfullscreen" frameborder="0" height="360" 
     src="http://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
 
 <p>This is Appser for Google Docs. It allows you to run the full, web version of Google Docs on the iPad. And by that we mean all of it, even editing presentations (a feature which was recently completely disabled on the iPad by Google)</p>
@@ -1421,15 +1392,7 @@ facilities and the iPad screen has plenty of resolution and size.</p>
 <p>There are some limitations when editing text fields (like the username and password on the login screen) - they must be shown on the iPad temporarily while editing. We&#39;re working on that.</p>
 <h2>Conclusion</h2>
 <p>What, you&#39;re still reading this? <a href="https://itunes.apple.com/us/app/appser-for-google-docs/id577825348?ls=1&amp;mt=8">Download the app and try it out</a>. We&#39;d also <a href="http://appser.docucalc.com/support">love to hear from you</a>. You can also <a href="http://appser.docucalc.com/">visit the official Appser website</a>, if you&#39;d like to find out more.</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/make-most-webapps-work-on-ipad.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h1>
-  <div class="date">Tue Nov 27 2012</div>
-  <div class="content"><p>Node&#39;s package manager <a href="https://npmjs.org/">npm</a> is a wonderful tool.</p>
+</div><div class="comments"> <hr/><a href="/posts/make-most-webapps-work-on-ipad.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h1><div class="date">Tue Nov 27 2012</div><div class="content"><p>Node&#39;s package manager <a href="https://npmjs.org/">npm</a> is a wonderful tool.</p>
 <p>It handles dependencies and versions the right way. It requires simple, easy to write package metadata. It uses a central registry (by default) which makes installing modules easier. The central registry is <a href="http://couchdb.apache.org/">CouchDB</a> which basically makes it completely transparent and available to everyone.</p>
 <p>It does many things right.</p>
 <p>But it doesn&#39;t do search that well.</p>
@@ -1519,15 +1482,7 @@ days old lose half of their value, default 30</li>
 </ul>
 <p>I hope this will help fellow nodesters find their next favorite modules</p>
 <p>Have fun!</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/introducing-npmsearch.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h1>
-  <div class="date">Tue Aug 21 2012</div>
-  <div class="content"><p>There is a certain phenomenon that seems to happen in almost every online 
+</div><div class="comments"> <hr/><a href="/posts/introducing-npmsearch.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h1><div class="date">Tue Aug 21 2012</div><div class="content"><p>There is a certain phenomenon that seems to happen in almost every online 
 community of user-generated content. A community is created: the initial users 
 define the values of this new community. After a while the community experiences 
 growth in numbers. As a result of that growth, users that joined before it feel 
@@ -1661,15 +1616,7 @@ popularity and most importantly time, none of which I presently have in
 sufficient amounts or know how to achieve). But hopefully, pg and the rest of 
 the hacker news team might find this scheme useful enough to somehow incorporate
 it into the existing scoring system.</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/fixing-hackernews-mathematical-approach.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/let-it-snow.html">Let it snow</a></h1>
-  <div class="date">Fri Aug 10 2012</div>
-  <div class="content"><p>I thought I&#39;d post my javascript snow one-liner. Note that it doesn&#39;t work in firefox due to the new protection mechanisms. In Chrome it does, however you will need to type in the &quot;javascript:&quot; part manually because it automatically strips it off from the pasted text</p>
+</div><div class="comments"> <hr/><a href="/posts/fixing-hackernews-mathematical-approach.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="/posts/let-it-snow.html">Let it snow</a></h1><div class="date">Fri Aug 10 2012</div><div class="content"><p>I thought I&#39;d post my javascript snow one-liner. Note that it doesn&#39;t work in firefox due to the new protection mechanisms. In Chrome it does, however you will need to type in the &quot;javascript:&quot; part manually because it automatically strips it off from the pasted text</p>
 <ol>
 <li><p>Open a website</p>
 </li>
@@ -1689,33 +1636,12 @@ c[b].c.style.top=a.b+&quot;px&quot;,c[b].c.style.left=a.a+&quot;px&quot;},33)})(
 <object width="640" height="360" class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://1.gvt0.com/vi/mN7LW0Y00kE/0.jpg"><param name="movie" value="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" /><param name="bgcolor" value="#FFFFFF" /><param name="allowFullScreen" value="true" /><embed width="640" height="360"  src="http://www.youtube.com/v/mN7LW0Y00kE&fs=1&source=uds" type="application/x-shockwave-flash" allowfullscreen="true"></embed></object>
 
 <p>:)</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/let-it-snow.html#_comments">comment or share</a>
-  </div>
-</div>
-<hr/>
-<h1>Older posts</h1>
-<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
-<h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
-<h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
-<h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>
-    </div>
-    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
-    <script>
-      $('code').addClass('prettyprint');
-      prettyPrint();
-    </script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      
-      ga('create', 'UA-42872676-1', 'spion.github.io');
-      ga('send', 'pageview');
-      
-    </script>
-  </body>
-</html>
+</div><div class="comments"> <hr/><a href="/posts/let-it-snow.html#_comments">comment or share</a></div></div><hr/><h1>Older posts</h1><h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4><h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4><h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4><h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div></div><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
+prettyPrint();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-42872676-1', 'spion.github.io');
+ga('send', 'pageview');
+</script></body></html>

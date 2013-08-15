@@ -74,37 +74,45 @@ When `next` is invoked, it starts the execution of the generator. The generator
 runs until it encounters a `yield` expression. Then it pauses and the execution
 goes back to the code that called `next`
 
-If that code calls `next` again, the generator resumes from the point where 
-it left off. In this case, the generator will resume to the top of the endless 
-`for` loop and calculate the next Fibonacci pair.
+So in a way, `yield` works similarly to `return`. But there is a big difference. 
+If we call `next` on the generator again, the generator will resume from the 
+point where it left off - from the last `yield` line. 
+
+In our example, the generator will resume to the top of the endless  `for` loop 
+and calculate the next Fibonacci pair.
 
 So how would we use this to write async code? 
 
 A great thing about the `next()` method is that it can also send values to the 
-generator. Let's write a simple number generator that also collects the stuff it 
-receives and never does anything with them.
+generator. Let's write a simple number generator that also collects the stuff 
+it receives. When it gets two things it prints them using `console.log`:
 
 ```js
 function* numbers() {
     var stuffIgot = [];
-    for (var k = 0; k < 10; ++k) {        
+    for (var k = 0; k < 2; ++k) {        
         var itemReceived = yield k;
         stuffIgot.push(itemReceived);
     }
+    console.log(stuffIgot);
 }
 ```
 
-Let's give things to this generator:
+This generator gives us 3 numbers using yield. Can we give something back?
+
+Let's give two things to this generator:
 
 ```js
 var iterator = numbers();
 // Cant give anything the first time: need to get to a yield first.
-console.log(iterator.next()); // 1
-console.log(iterator.next('present')); // 2
+console.log(iterator.next()); // logs 0
+console.log(iterator.next('present')); // logs 1
 fs.readFile('file.txt', function(err, resultFromAnAsyncTask) {
-    console.log(iterator.next(resultFromAnAsyncTask)); // 3
+    console.log(iterator.next(resultFromAnAsyncTask)); // logs 2
 });
 ```
+
+The generator will log the string `'present'` and the contents of `file.txt`
 
 Uh-oh.
 
@@ -121,7 +129,8 @@ function* files() {
 }
 ```
 
-We could process those file reading tasks asynchronously:
+We could process those file reading tasks asynchronously. But from the
+generator's point of view, everything seems to be happening synchronously.
 
 ```js
 var iterator = files();
@@ -143,7 +152,7 @@ is an example from one of the earliest ES6 async generators library
 [task.js](http://taskjs.org/). 
 
 ```js
-spawn(function*() {
+spawn(function* () {
     var data = yield $.ajax(url);
     $('#result').html(data);
     var status = $('#status').html('Download complete.');
