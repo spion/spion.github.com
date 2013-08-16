@@ -38,7 +38,7 @@ Until now.
 
 Generators are a new feature of ES6. Normally they would be used for iteration.
 Here is a generator that generates Fibonacci numbers. The example is taken from
-the [ECMAScript harmony wiki](http://wiki.ecmascript.org/doku.php?id=harmony:generators)
+the [ECMAScript harmony wiki](http://wiki.ecmascript.org/doku.php?id=harmony:generators):
 
 ```js
 function* fibonacci() {
