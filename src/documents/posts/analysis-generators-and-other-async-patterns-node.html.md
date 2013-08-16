@@ -129,8 +129,7 @@ function* files() {
 }
 ```
 
-We could process those file reading tasks asynchronously. But from the
-generator's point of view, everything seems to be happening synchronously.
+We could process those file reading tasks asynchronously. 
 
 ```js
 var iterator = files();
@@ -144,7 +143,12 @@ function process(iterator, sendValue) {
 process(iterator);
 ```
 
-So there is also `generator.throw()`. It causes an exception to be thrown
+But from the generator's point of view, everything seems to be happening 
+synchronously: it gives us the file using `yield`, then it waits to be resumed, 
+then it receives the contents of the file and makes a push to the results 
+array.
+
+And there is also `generator.throw()`. It causes an exception to be thrown
 from inside the generator. How cool is that?
 
 With `next` and `throw` combined together, we can easily run async code. Here 
