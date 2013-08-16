@@ -9,6 +9,7 @@ Table of contents:
 
 - [A gentle introduction to generators](#a-gentle-introduction-to-generators)
 - [The analysis](#the-analysis)
+- [The examples](#the-examples)
 - [Complexity](#complexity)
 - [Performance (time and memory)](#performance-time-and-memory)
 - [Debuggability](#debuggability)
@@ -327,6 +328,11 @@ streamlinejs and promises (without generators).
 
 So I wrote a lot of different versions of this method, and I will share my 
 personal impressions before giving you the results of the analysis
+
+<a name="the-examples"></a>
+
+### The examples
+
 
 **[original.js](//github.com/spion/async-compare/blob/master/examples/original.js)**
 
