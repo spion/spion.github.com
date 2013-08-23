@@ -299,25 +299,6 @@ I tried to write two more flattened variants. The idea is to minimize
 performance loss and memory usage by avoiding the creation of closures.</p>
 <p>If you want to read more comments about this implementation, see
 <a href="/posts/closures-are-unavoidable-in-node.html">this post</a></p>
-<p>Of course, this made complexity skyrocket. </p>
-<p>However, there were no significant performance gains. Why?</p>
-<p>Because this kind of code requires that results from previous callbacks to be 
-somehow passed to the next callbacks. </p>
-<p>Unfortunately, in node this means creating closures. There is no other option. 
-If the low-level api was also able to take context, e.g. instead of writing</p>
-<pre><code>fs.readFile(f, this.afterFileRead.bind(this));</code></pre>
-<p>if we were able to simply write </p>
-<pre><code>fs.readFile(f, this.afterFileRead, this);</code></pre>
-<p>then <code>flattened-class.js</code> could have been much faster. But node functions only
-take callback functions, and if we want to pass context with that callback 
-function we <em>have</em> to create closures. Even the implementation of bind is a 
-closure, e.g.</p>
-<pre><code>function bind(fn, ctx) {
-    return function bound() {
-        return fn.apply(ctx, arguments);
-    }
-}</code></pre>
-<p>Notice the closure?</p>
 <p><strong><a href="//github.com/spion/async-compare/blob/master/examples/promises.js">promises.js</a></strong></p>
 <p>I&#39;ll be honest. I&#39;ve never written promise code in node before. Driven by 
 <a href="//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post">Gozalla&#39;s excellent post</a>

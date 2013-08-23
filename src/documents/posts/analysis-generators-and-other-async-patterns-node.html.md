@@ -364,36 +364,6 @@ performance loss and memory usage by avoiding the creation of closures.
 If you want to read more comments about this implementation, see
 [this post](/posts/closures-are-unavoidable-in-node.html)
 
-Of course, this made complexity skyrocket. 
-
-However, there were no significant performance gains. Why?
-
-Because this kind of code requires that results from previous callbacks to be 
-somehow passed to the next callbacks. 
-
-Unfortunately, in node this means creating closures. There is no other option. 
-If the low-level api was also able to take context, e.g. instead of writing
-
-    fs.readFile(f, this.afterFileRead.bind(this));
-
-if we were able to simply write 
-    
-    fs.readFile(f, this.afterFileRead, this);
-
-then `flattened-class.js` could have been much faster. But node functions only
-take callback functions, and if we want to pass context with that callback 
-function we *have* to create closures. Even the implementation of bind is a 
-closure, e.g.
-
-    function bind(fn, ctx) {
-        return function bound() {
-            return fn.apply(ctx, arguments);
-        }
-    }
-
-Notice the closure?
-
-
 
 **[promises.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
 
