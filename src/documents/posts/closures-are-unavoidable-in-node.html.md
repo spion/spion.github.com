@@ -84,11 +84,12 @@ And here is how it performs:
 
 | file                     | time(ms) | memory(MB) |
 |:-------------------------|---------:|-----------:|
-| [flattened-class-ctx.js] |      736 |      58.11 |
-| [flattened-class.js]     |     1062 |      84.72 |
-| [flattened.js]           |     1148 |      88.00 |
-| [original.js]            |     1426 |     104.66 |
-| [suspend.js]             |     2157 |     139.97 |
+| [flattened-class-ctx.js] |      929 |      59.57 |
+| [flattened-class.js]     |     1403 |     106.57 |
+| [flattened.js]           |     1452 |     110.19 |
+| [original.js]            |     1743 |     125.02 |
+| [suspend.js]             |     2834 |     145.34 |
+
 
 Yeah. That shaved off a couple of 100s of miliseconds more. 
 
