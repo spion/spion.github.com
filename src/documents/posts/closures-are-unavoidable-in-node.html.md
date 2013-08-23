@@ -58,8 +58,8 @@ And yeah, `bind` also creates a closure:
 
 Notice how `bound` is a closure over ctx and fn. 
 
-Now, if the low-level core API was also able to take a context argument, things 
-could have been different. For example, instead of writing:
+Now, if node core API were also able to take a context argument, things could 
+have been different. For example, instead of writing:
 
     fs.readFile(f, bind(this.afterFileRead, this));
 
@@ -72,11 +72,11 @@ then we would be able to write code that avoids closures and
 
 But we can't do that.
 
-What if we could though? 
+What if we could though? Lets fork 
+[timers.js](https://github.com/joyent/node/blob/master/lib/timers.js) from 
+node core and find out:
 
-Since my fake I/O functions use `setTimeout`, I decided to take 
-[timers.js](https://github.com/joyent/node/blob/master/lib/timers.js) from node 
-core and add context passing support to the `Timeout` class. The result was 
+I added context passing support to the `Timeout` class. The result was 
 [timers-ctx.js](//github.com/spion/async-compare/blob/master/lib/timers-ctx.js) 
 which in turn resulted with [flattened-class-ctx.js]
 
