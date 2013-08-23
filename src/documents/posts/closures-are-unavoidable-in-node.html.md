@@ -44,9 +44,12 @@ Because this kind of code requires that results from previous callbacks are
 passed to the next callback. And unfortunately, in node this means creating 
 closures. 
 
-There really is no other option: node core functions only take callback 
-functions. If we want to pass context with that callback function, we *have* to 
-create a closure. And yeah, `bind` is also a closure:
+There really is no other option. Node core functions only take callback 
+functions. If we want to pass context with those callback function, we *have* 
+to create a closure. Its the only mechanism in JS that allows you to pass 
+context together with a function.
+
+And yeah, `bind` is also a closure:
 
     function bind(fn, ctx) {
         return function bound() {
@@ -54,8 +57,7 @@ create a closure. And yeah, `bind` is also a closure:
         }
     }
 
-Notice how `bound` is a closure over ctx and fn. Its the only mechanism to pass 
-context together with a function.
+Notice how `bound` is a closure over ctx and fn. 
 
 Now, if the low-level core API was also able to take a context argument, things 
 could have been different. For example, instead of writing:

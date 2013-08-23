@@ -1,4 +1,4 @@
-out/.git
+out
 .DS_Store
 node_modules
 db.json
