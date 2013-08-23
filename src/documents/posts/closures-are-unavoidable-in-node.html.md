@@ -48,7 +48,7 @@ There really is no other option. Node core functions only take callback
 functions. This means we *have* to create a closure: its the only mechanism in 
 JS that allows you to include context together with a function.
 
-And yeah, `bind` is also a closure:
+And yeah, `bind` also creates a closure:
 
     function bind(fn, ctx) {
         return function bound() {
