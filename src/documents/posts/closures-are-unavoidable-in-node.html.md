@@ -45,9 +45,8 @@ passed to the next callback. And unfortunately, in node this means creating
 closures. 
 
 There really is no other option. Node core functions only take callback 
-functions. If we want to pass context with those callback function, we *have* 
-to create a closure. Its the only mechanism in JS that allows you to pass 
-context together with a function.
+functions. This means we *have* to create a closure: its the only mechanism in 
+JS that allows you to include context together with a function.
 
 And yeah, `bind` is also a closure:
 
