@@ -359,12 +359,41 @@ and [flattened-noclosure.js](//github.com/spion/async-compare/blob/master/exampl
 Driven by 
 [a post that Trevor Norris wrote](http://blog.trevnorris.com/2013/08/long-live-callbacks.html),
 I tried to write two more flattened variants. The idea is to minimize 
-performance loss and memory usage by avoiding overreaching closures and passing
-everything around. Of course, this made complexity skyrocket. 
+performance loss and memory usage by avoiding the creation of closures.
 
-However, either I am doing something wrong, or there were almost no performance 
-gains. I suspect the results of this optimization can only be seen in tight 
-CPU-bound loops but not in code that frequently exits to the event loop.
+If you want to read more comments about this implementation, see
+[this post](/posts/closures-are-unavoidable-in-node.html)
+
+Of course, this made complexity skyrocket. 
+
+However, there were no significant performance gains. Why?
+
+Because this kind of code requires that results from previous callbacks to be 
+somehow passed to the next callbacks. 
+
+Unfortunately, in node this means creating closures. There is no other option. 
+If the low-level api was also able to take context, e.g. instead of writing
+
+    fs.readFile(f, this.afterFileRead.bind(this));
+
+if we were able to simply write 
+    
+    fs.readFile(f, this.afterFileRead, this);
+
+then `flattened-class.js` could have been much faster. But node functions only
+take callback functions, and if we want to pass context with that callback 
+function we *have* to create closures. Even the implementation of bind is a 
+closure, e.g.
+
+    function bind(fn, ctx) {
+        return function bound() {
+            return fn.apply(ctx, arguments);
+        }
+    }
+
+Notice the closure?
+
+
 
 **[promises.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
 
