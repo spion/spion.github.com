@@ -353,16 +353,17 @@ handling code everywhere. So I wrote a tiny library called catcher.js which
 works very much like node's `domain.intercept`. This reduced the complexity
 and the number of lines further, but the pyramidal looks remained.
 
-**[flattened-class.js](//github.com/spion/async-compare/blob/master/examples/flattened-class.js)
-and [flattened-noclosure.js](//github.com/spion/async-compare/blob/master/examples/flattened-noclosure.js)**
+**[async.js](//github.com/spion/async-compare/blob/master/examples/async.js)**
 
-Driven by 
-[a post that Trevor Norris wrote](http://blog.trevnorris.com/2013/08/long-live-callbacks.html),
-I tried to write two more flattened variants. The idea is to minimize 
-performance loss and memory usage by avoiding the creation of closures.
+Uses the waterfall function from [caolan's async](//github.com/caolan/async).
+Very similar to flattened.js but without the need to handle errors at every 
+step. 
 
-If you want to read more comments about this implementation, see
-[this post](/posts/closures-are-unavoidable-in-node.html)
+**[flattened-class.js](//github.com/spion/async-compare/blob/master/examples/flattened-class.js), 
+[flattened-noclosure.js](//github.com/spion/async-compare/blob/master/examples/flattened-noclosure.js),
+[flattened-class-ctx.js](//github.com/spion/async-compare/blob/master/examples/flattened-class-ctx.js)**
+
+See [this post](/posts/closures-are-unavoidable-in-node.html) for details
 
 
 **[promises.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
@@ -423,35 +424,6 @@ language all the time.
 The second file `promiseishQ.js` uses [Q](//github.com/kriskowal/q) instead of 
 [when](//github.com/cujojs/when).
 
-**[co.js](//github.com/spion/async-compare/blob/master/examples/co.js) 
-and [gens.js](//github.com/spion/async-compare/blob/master/examples/gens.js)**
-
-[Gens](//github.com/Raynos/gens) and [co](//github.com/visionmedia/co) are 
-generator-based libraries. Both can work by yielding thunk-style functions: 
-that is, functions that take a single argument which is a node style callback 
-in the format `function (err, result)`
-
-The problem is, thunks still require wrapping. The recommended way to wrap node 
-style functions is to use `co.wrap` for co and `fn.bind` for gens - so thats 
-what I did.
-
-**[suspend.js](//github.com/spion/async-compare/blob/master/examples/suspend.js) 
-and [genny.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
-
-[suspend](https://github.com/jmar777/suspend) and 
-[genny](http://github.com/spion/genny) are generator-based solutions that can 
-work directly with node-style functions.
-
-I'm biased here since I wrote genny. I still think that this is objectively the 
-best way to use generators in node. Just replace the callback with a placeholder 
-function `resume`, then yield that. Comes back to you with the value. 
-
-Kudos to [jmar777](//github.com/jmar777) for realizing that you don't need
-to actually yield anything and can resume the generator using the placeholder 
-callback instead.
-
-Both suspend and genny use generators roughly the same way. The resulting code 
-is very clean, very straightforward and completely devoid of callbacks. 
 
 **[fibrous.js](//github.com/spion/async-compare/blob/master/examples/fibrous.js)**
 
@@ -492,9 +464,27 @@ native modules.
 
 Library: [fibrous](//github.com/goodeggs/fibrous)
 
+**[suspend.js](//github.com/spion/async-compare/blob/master/examples/suspend.js) 
+and [genny.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
+
+[suspend](https://github.com/jmar777/suspend) and 
+[genny](http://github.com/spion/genny) are generator-based solutions that can 
+work directly with node-style functions.
+
+I'm biased here since I wrote genny. I still think that this is objectively the 
+best way to use generators in node. Just replace the callback with a placeholder 
+function `resume`, then yield that. Comes back to you with the value. 
+
+Kudos to [jmar777](//github.com/jmar777) for realizing that you don't need
+to actually yield anything and can resume the generator using the placeholder 
+callback instead.
+
+Both suspend and genny use generators roughly the same way. The resulting code 
+is very clean, very straightforward and completely devoid of callbacks. 
+
 **[qasync.js](//github.com/spion/async-compare/blob/master/examples/qasync.js)**
 
-Generators with promises. Didn't feel very different than genny or suspend.
+Generators with promises. Didn't feel very different from genny and suspend.
 Its slightly less complicated: you can yield the promise instead of placing
 the provided resume function at every point where a callback is needed. 
 
@@ -503,11 +493,25 @@ functions.
 
 Library: [Q](//github.com/kriskowal/q)
 
+**[co.js](//github.com/spion/async-compare/blob/master/examples/co.js) 
+and [gens.js](//github.com/spion/async-compare/blob/master/examples/gens.js)**
+
+[Gens](//github.com/Raynos/gens) and [co](//github.com/visionmedia/co) are 
+generator-based libraries. Both can work by yielding thunk-style functions: 
+that is, functions that take a single argument which is a node style callback 
+in the format `function (err, result)`
+
+Code looks roughly the same as qasync.js
+
+The problem is, thunks still require wrapping. The recommended way to wrap node 
+style functions is to use `co.wrap` for co and `fn.bind` for gens - so thats 
+what I did.
+
 
 **[streamline.js](//github.com/spion/async-compare/blob/master/examples/src-streamline._js)**
 
 Uses [streamlinejs](http://github.com/Sage/streamlinejs) CPS transformer and
-works very much like suspend and genny, except without needing to write yield 
+works very much like co and qasync, except without needing to write yield 
 all the time.
 
 Caveat: you will need to compile the file in order to use it. Also, even 
@@ -516,7 +520,8 @@ has the same syntax, but it has very different semantics, particularly when
 it comes to the `_` keyword, which acts like `yield` and `resume` combined in 
 one.
 
-The code however is really simple and straightforward.
+The code however is really simple and straightforward: infact it has the lowest
+complexity.
 
 <a name="complexity"></a>
 
@@ -532,33 +537,37 @@ Results:
 |:-----------------------|-------:|-----------:|
 | src-streamline._js     |    302 |       1.00 |
 | co.js                  |    304 |       1.01 |
+| qasync.js              |    320 |       1.04 |
 | fibrous.js             |    317 |       1.05 |
-| qasync.js              |    320 |       1.06 |
 | suspend.js             |    331 |       1.10 |
 | genny.js               |    339 |       1.12 |
-| gens.js                |    344 |       1.14 |
+| gens.js                |    341 |       1.13 |
 | catcher.js             |    392 |       1.30 |
 | promiseishQ.js         |    402 |       1.33 |
 | promiseish.js          |    415 |       1.37 |
 | original.js            |    425 |       1.41 |
+| async.js               |    442 |       1.46 |
 | promises.js            |    461 |       1.53 |
 | flattened.js           |    477 |       1.58 |
 | flattened-noclosure.js |    599 |       1.98 |
-| flattened-class.js     |    717 |       2.37 |
+| flattened-class-ctx.js |    674 |       2.23 |
+| flattened-class.js     |    718 |       2.38 |
 | rx.js                  |    935 |       3.10 |
-
-
 
 
 Streamline and co have the lowest complexity. Fibrous, qasync, suspend, genny 
 and gens are roughly comparable. 
 
-Catcher is comparable with both promiseish solutions. The complexity when using 
-promises is roughly comparable to the original version with callbacks, but 
-there is some improvement.
+Catcher is comparable with the normal promise solutions. The complexity when 
+using promises is roughly comparable to the original version with callbacks, 
+but there is some improvement. 
 
-Finally, it seems that going promises-all-the-way or flattening the callback 
-pyramid are not worth it. Both only increase the complexity.
+It seems that going promises-all-the-way or flattening the callback pyramid are
+not worth it. Both only increase the complexity. 
+
+Using caolan's async in this particular case doesn't seem to yield much 
+improvement. However, its complexity is lower than the flattened version, while
+achieving the same flattening effect.
 
 The rx.js sample is still a work in progress - it can be made much better. 
 
@@ -566,8 +575,8 @@ The rx.js sample is still a work in progress - it can be made much better.
 
 ### Performance (time and memory)
 
-To be able to execute the files, all external methods are mocked with 
-setTimeout to simulate waiting for I/O. 
+To be able to execute the files, all external methods are mocked using 
+`setTimeout` to simulate waiting for I/O. 
 
 There are two variables that control the test:
 
@@ -584,7 +593,15 @@ note: hover over the legend to highlight the item on the chart.
 <script type="text/javascript">
 
 window.perfCPUBound = 
-[ { label: 'catcher.js',
+[ 
+{ label: 'async.js',
+    data: 
+     [ [ 100, 17 ],
+       [ 500, 39 ],
+       [ 1000, 65 ],
+       [ 1500, 95 ],
+       [ 2000, 119 ] ] },
+{ label: 'catcher.js',
     data: 
      [ [ 100, 17 ],
        [ 500, 29 ],
@@ -806,7 +823,14 @@ there are 1000 running in parallel. Makes much more sense.
 <script type="text/javascript">
 window.perfIOBound = 
 
-[ { label: 'catcher.js',
+[ { label: 'async.js',
+    data: 
+     [ [ 100, 92 ],
+       [ 500, 388 ],
+       [ 1000, 791 ],
+       [ 1500, 1155 ],
+       [ 2000, 1518 ] ] }, 
+{ label: 'catcher.js',
     data: 
      [ [ 100, 78 ],
        [ 500, 351 ],
@@ -989,7 +1013,14 @@ Note: the y axis represents peak memory usage (in MB).
 
 window.perfMEM = 
 
-[ { label: 'catcher.js',
+[ { label: 'async.js',
+    data: 
+     [ [ 100, 0.75 ],
+       [ 500, 3.9140625 ],
+       [ 1000, 7.359375 ],
+       [ 1500, 10.93359375 ],
+       [ 2000, 12.71875 ] ] },
+{ label: 'catcher.js',
     data: 
      [ [ 100, 0.91015625 ],
        [ 500, 3.34765625 ],
@@ -1130,7 +1161,7 @@ window.perfMEM =
        [ 500, 8.53125 ],
        [ 1000, 17.05859375 ],
        [ 1500, 27.98828125 ],
-       [ 2000, 34.38671875 ] ] },
+       [ 2000, 33.98671875 ] ] },
   { label: 'fibrous.js',
     data: 
      [ [ 100, 7.05078125 ],
@@ -1169,17 +1200,15 @@ window.addEventListener('load', function() {
 Streamline's fibers implementation uses 35MB while the rest use between
 10MB and 25MB.
 
-This is amazing. Generators (without promises) also have a pretty low memory 
-overhead, even when compiled with traceur.
+This is amazing. Generators (without promises) also have a low memory overhead, 
+even when compiled with traceur.
 
 Streamline is also quite good in this category. It has very low overhead, both 
-in CPU and memory usage. But suspend is comparable even when run non-natively 
-with the traceur compiler.
+in CPU and memory usage. 
 
-Finally, its important to note that the testing method that I use is not 
-statistically sound. Its however good enough to be used to compare orders of
-magnitude, which is fine considering the narrowly defined micro-benchmark being
-tested.
+Its important to note that the testing method that I use is not statistically 
+sound. Its however good enough to be used to compare orders of magnitude, which 
+is fine considering the narrowly defined benchmark.
 
 With that said, here is a table for 1000 parallel requests, 10 ms per I/O 
 operation:
@@ -1192,6 +1221,7 @@ operation:
 | flattened-noclosure.js   |      124 |       5.04 |
 | flattened.js             |      125 |       5.18 |
 | original.js              |      130 |       5.33 |
+| async.js                 |      135 |       7.36 |
 | dst-streamline.js        |      139 |       8.34 |
 | catcher.js               |      140 |       6.45 |
 | dst-suspend-traceur.js   |      142 |       6.76 |
@@ -1281,13 +1311,12 @@ This has a couple of levels itself:
   Regular exceptions that are not thrown using `iterator.throw` have complete 
   stack traces, so only yield points will suffer.
 
-* **level 2**: stack traces are never correct
+  Some solutions that aren't generator based are also in this category, namely 
+  `promiseish.js` and `async.js`. When a library handles errors for you, the
+  callback stack trace will not be preserved unless special care is taken to 
+  preserve it. `async` and `when` don't do that. 
   
-  In this category: `promiseish.js`. Unfortunately if special care is not taken 
-  to preserve a stack trace, it will not be preserved and the promise library
-  `when` doesn't do that.
-  
-* **level 3**: stack traces are correct with native modules
+* **level 2**: stack traces are correct with native modules
 
   Bruno Jouhier's generator based solution [galaxy](//github.com/bjouhier/galaxy) 
   is in this category. It has a native companion module called 
@@ -1296,7 +1325,7 @@ This has a couple of levels itself:
 
   Note that galaxy-stack doesn't work with node v0.11.5
 
-* **level 4**: stack traces are correct with a flag (adding a performance 
+* **level 3**: stack traces are correct with a flag (adding a performance 
   penalty).
 
   All Q-based solutions are here, even `qasync.js`, which uses generators. Q's
@@ -1329,33 +1358,44 @@ This has a couple of levels itself:
   Catcher is also in this category, with 100% memory overhead and about 
   10 times slower.
 
+* **level 4**: stack traces are correct but fragile
+  
+  All the raw-callback solutions are in this category: original, flattened,
+  flattened-class, etc. At the moment, rx.js is in this category too.
+
+  As long as the callback functions are defined by your code everything will 
+  be fine. However, the moment you introduce some wrapper that handles the 
+  errors for you, your stack traces will break and will show functions from the 
+  wrapper library instead.
+
 * **level 5**: stack traces are always correct
 
-  Streamline and both the original and flattened solutions are in this 
-  category. Streamline compiles the file in a way that preserves line numbers,
-  making stack traces correct in all cases. Fibers also include the offending
-  line in the stack trace.
+  Streamline and fibers are in this category. Streamline compiles the file in a 
+  way that preserves line numbers, making stack traces correct in all cases. 
+  Fibers also preserve the full call stack.
 
 Ah yes. A table.
 
 | name                | source maps | stack traces | total | 
 |---------------------|------------:|-------------:|------:|
-| original.js         |          5  |            5 |    10 |
-| flattened.js        |          5  |            5 |    10 |
 | fibrous.js          |          5  |            5 |    10 |
 | src-streamline._js  |          4  |            5 |     9 |
-| catcher.js          |          5  |            4 |     9 |
-| promiseishQ.js      |          5  |            4 |     9 |
-| qasync.js           |          4  |            4 |     8 |
-| genny.js            |          4  |            4 |     8 |
-| promiseish.js       |          5  |            2 |     7 |
+| original.js         |          5  |            4 |     9 |
+| flattened*.js       |          5  |            4 |     9 |
+| rx.js               |          5  |            4 |     9 |
+| catcher.js          |          5  |            3 |     8 |
+| promiseishQ.js      |          5  |            3 |     8 |
+| qasync.js           |          4  |            3 |     7 |
+| genny.js            |          4  |            3 |     7 |
+| async.js            |          5  |            1 |     6 |
+| promiseish.js       |          5  |            1 |     6 |
 | promises.js         |          5  |            1 |     6 |
 | suspend.js          |          4  |            1 |     5 |
 | gens.js             |          4  |            1 |     5 |
 | co.js               |          4  |            1 |     5 |
 
-Generators are not exactly the best here, but they're doing well enough thanks
-to qasync and genny.
+Generators are not exactly great. They're doing well enough thanks to qasync 
+and genny.
 
 Here is the report from an automated test script that compares the reported 
 error line with the actual error line:
@@ -1385,12 +1425,17 @@ My opinion is biased. I love generators, and I've been
 [pretty hard](https://news.ycombinator.com/item?id=5419030) to direct the 
 attention of V8 developers to them (maybe a bit too hard). And its obvious 
 from the analysis above that they have good characteristics: low code 
-complexity, good performance, acceptable debuggability.
+complexity, good performance. 
 
 More importantly, they will eventually become a part of everyday JavaScript 
 with no compilation (except for older browsers) or native modules required, 
 and the yield keyword is in principle as good indicator of async code as 
 callbacks are.
+
+Unfortunately, the debugging story of generators is somewhat weak, especially
+because of the missing stack traces for thrown errors. Fortunately, there are 
+solutions and workarounds, like those implemented by genny (obtrusive, reduces
+performance) and galaxy (unobtrusive, but requires native modules). 
 
 But there are things that cannot be measured. How will the community accept 
 generators? Will people find it hard to decide whether to use them or not? Will 
