@@ -537,19 +537,19 @@ Results:
 |:-----------------------|-------:|-----------:|
 | src-streamline._js     |    302 |       1.00 |
 | co.js                  |    304 |       1.01 |
-| qasync.js              |    320 |       1.04 |
+| qasync.js              |    314 |       1.04 |
 | fibrous.js             |    317 |       1.05 |
 | suspend.js             |    331 |       1.10 |
 | genny.js               |    339 |       1.12 |
 | gens.js                |    341 |       1.13 |
 | catcher.js             |    392 |       1.30 |
-| promiseishQ.js         |    402 |       1.33 |
-| promiseish.js          |    415 |       1.37 |
-| original.js            |    425 |       1.41 |
+| promiseishQ.js         |    396 |       1.31 |
+| promiseish.js          |    411 |       1.36 |
+| original.js            |    421 |       1.39 |
 | async.js               |    442 |       1.46 |
 | promises.js            |    461 |       1.53 |
-| flattened.js           |    477 |       1.58 |
-| flattened-noclosure.js |    599 |       1.98 |
+| flattened.js           |    473 |       1.57 |
+| flattened-noclosure.js |    595 |       1.97 |
 | flattened-class-ctx.js |    674 |       2.23 |
 | flattened-class.js     |    718 |       2.38 |
 | rx.js                  |    935 |       3.10 |
@@ -560,14 +560,17 @@ and gens are roughly comparable.
 
 Catcher is comparable with the normal promise solutions. The complexity when 
 using promises is roughly comparable to the original version with callbacks, 
-but there is some improvement. 
+but there is some improvement.
 
-It seems that going promises-all-the-way or flattening the callback pyramid are
-not worth it. Both only increase the complexity. 
+It seems that going flattening the callback pyramid increases the complexity. 
+However, the readability of the flattened version is improved.
 
 Using caolan's async in this particular case doesn't seem to yield much 
 improvement. However, its complexity is lower than the flattened version, while
 achieving the same flattening effect.
+
+Going promises-all-the-way as Gozala suggests also increases the complexity 
+(we're fighting the language all the time).
 
 The rx.js sample is still a work in progress - it can be made much better. 
 
@@ -779,16 +782,19 @@ window.addEventListener('load', function() {
 Ah, much better. 
 
 The original and flattened solutions are the fastest, as they use vanilla 
-callbacks, with the fastest flattened solution being flattened-class.js
+callbacks, with the fastest flattened solution being flattened-class.js. 
 
-
-suspend and gens are the fastest generator based solutions. They incurred minimal 
-overhead of about 60-100% running time. They're also roughly comparable with 
+suspend is the fastest generator based solutions. It incurred minimal 
+overhead of about 60% running time. They're also roughly comparable with 
 streamlinejs (when in raw callbacks mode).
 
-Genny is about 2 times slower. This is because it adds some protection 
-guarantees: it makes sure that callback-calling function behaves and calls the 
-callback only once and provides a mechanism to enable better stack traces
+caolan's async adds some measurable overhead (its about 2 times slower than
+the original versions). Its also somewhat slower than the fastest generator 
+based solution.
+
+genny is about 3 times slower. This is because it adds some protection 
+guarantees: it makes sure that callback-calling functions behave and call the 
+callback only once. It also provides a mechanism to enable better stack traces
 when errors are encountered.
 
 The slowest of the generator bunch is co, but not by much. There is nothing 
@@ -798,18 +804,19 @@ which creates a new arguments array on every invocation of the wrapped function.
 All generator solutions become about 2 times slower when compiled with 
 [Google Traceur](//github.com/google/traceur-compiler/), an ES6 to ES5 compiler
 which we need to run generators code without the `--harmony` switch or in 
-browsers. Is roughly 2-3 times slower, which is great.
+browsers.
 
 Finally we have rx.js which is about 10 times slower than the fastest solution.
 
-Great. But isn't this a bit unrealistic?
+However, this test is a bit unrealistic.
 
 Most async operations take much longer than 1 millisecond to complete, 
 especially when the load is as high as thousands of requests per second.
 As a result, performance is I/O bound - why measure things as if it were 
 CPU-bound?
 
-So lets increase the average time needed for an async operation to 
+So lets make the average time needed for an async operation depend on the 
+number of parallel calls to `upload()`
 
 $$ t = n \cdot 0.1 ms $$
 
@@ -987,7 +994,7 @@ window.addEventListener('load', function() {
 </script>
 
 `promises.js` and `fibrous.js` are still significantly slower. However all of
-the other solutions are quite comparable now . Lets remove the worst two:
+the other solutions are quite comparable now. Lets remove the worst two:
 
 <div id="perf-time-4" class="plot">
 </div>
@@ -1234,10 +1241,10 @@ operation:
 | dst-streamline-fibers.js |      526 |      17.05 |
 | promiseish.js            |      825 |     117.88 |
 | qasync.js                |      971 |      98.39 |
+| fibrous.js               |     1159 |      57.48 |
 | promiseishQ.js           |     1161 |      96.47 |
 | dst-qasync-traceur.js    |     1195 |     112.10 |
 | promises.js              |     2315 |     240.39 |
-| fibrous.js               |     1159 |      57.48 |
 
 
 
