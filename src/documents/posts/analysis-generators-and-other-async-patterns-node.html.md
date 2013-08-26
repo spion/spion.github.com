@@ -1404,22 +1404,6 @@ Ah yes. A table.
 Generators are not exactly great. They're doing well enough thanks to qasync 
 and genny.
 
-Here is the report from an automated test script that compares the reported 
-error line with the actual error line:
-
-| file                     | actual line | rep line | distance |
-|--------------------------|------------:|---------:|---------:|
-| catcher.js               |          38 |       38 |        0 |
-| qasync.js                |          39 |       39 |        0 |
-| genny.js                 |          38 |       38 |        0 |
-| fibrous.js               |          38 |       38 |        0 |
-| dst-streamline-fibers.js |          36 |       35 |        1 |
-| dst-streamline.js        |          37 |       36 |        1 |
-| original.js              |          50 |       51 |        1 |
-| flattened.js             |          61 |       64 |        3 |
-| promiseishQ.js           |          49 |       52 |        3 |
-
-
 <a name="conclusion"></a>
 
 ### Conclusion
