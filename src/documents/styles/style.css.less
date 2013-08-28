@@ -1,3 +1,5 @@
+// @import url(http://fonts.googleapis.com/css?family=PT+Serif:400,700,400italic&subset=latin,latin-ext,cyrillic);
+
 * { box-sizing: border-box; }
 
 body, html {
@@ -7,18 +9,13 @@ body, html {
     color: #000;
 }
 
-body {
-    margin:1ex;
-    overflow-x:hidden;
-}
+body { margin:1ex; overflow-x:hidden; }
 
 @mainColor: #f3ecdf;
 @grayColor: #666;
 
 
-.post:first-child > h1 {
-    margin-top: 4rem;
-}
+.post:first-child > h1 { margin-top: 4rem; }
 
 @h1size: 2.3636rem;
 
@@ -156,7 +153,7 @@ a:hover {
     .codecolors(0.5rem);
     padding: 0.8rem;
     margin: 1rem 0.05rem;
-    font-family: Monaco;
+    font-family: Monaco, "Liberation Mono", Courier, monospace;
     font-size: 13px;
     line-height: 1.5;
     
@@ -165,8 +162,10 @@ a:hover {
 
 .post p code {
     //.codecolors(0.2rem);
+    color: #333;
+    .pln { color: #333; }
     padding: 0.05rem 0.1rem;
-    font-family: Monaco;
+    font-family: Monaco, "Liberation Mono", Courier, monospace;
     font-size: 16px;
 }
 

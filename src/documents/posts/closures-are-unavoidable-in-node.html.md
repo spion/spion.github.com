@@ -20,14 +20,13 @@ hinting that my benchmark may be an example of "doing it wrong"
 I decided to try and write two more flattened variants. The idea is to 
 minimize performance loss and memory usage by avoiding the creation of closures.
 
-You can see the code here: 
-**[flattened-class.js] and [flattened-noclosure.js](//github.com/spion/async-compare/blob/master/examples/flattened-noclosure.js)**
+You can see the code here: **[flattened-class.js] and [flattened-noclosure.js]**
 
 Of course, this made complexity skyrocket. Lets see what it did for performance.
 
-Results are for 50 000 parallel invocations of the upload function, with 
-simulated I/O operations that always take 1ms. Note: suspend is currently the 
-fastest generator based library
+These are the results for 50 000 parallel invocations of the upload function, 
+with simulated I/O operations that always take 1ms. Note: suspend is currently 
+the fastest generator based library
 
 | file                     | time(ms) | memory(MB) |
 |:-------------------------|---------:|-----------:|
@@ -58,8 +57,8 @@ And yeah, `bind` also creates a closure:
 
 Notice how `bound` is a closure over ctx and fn. 
 
-Now, if node core API were also able to take a context argument, things could 
-have been different. For example, instead of writing:
+Now, if node core functions were also able to take a context argument, things 
+could have been different. For example, instead of writing:
 
     fs.readFile(f, bind(this.afterFileRead, this));
 

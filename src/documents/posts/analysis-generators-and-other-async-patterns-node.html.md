@@ -422,7 +422,7 @@ than the `promise.js` version, where I felt like I was trying to fight the
 language all the time.
 
 The second file `promiseishQ.js` uses [Q](//github.com/kriskowal/q) instead of 
-[when](//github.com/cujojs/when).
+[when](//github.com/cujojs/when). No big difference there.
 
 
 **[fibrous.js](//github.com/spion/async-compare/blob/master/examples/fibrous.js)**
@@ -449,8 +449,8 @@ I also needed to wrap the entire upload function:
 fibrous(function upload() { ... })
 ```
 
-This felt exactly like the generators version but with `sync` instead of 
-`yield` to indicate the methods that will yield. The one benefit I can think 
+This felt very similar to the generators version above but with `sync` instead 
+of `yield` to indicate the methods that will yield. The one benefit I can think 
 of is that it feels more natural for chaining - less parenthesis are needed. 
 
 ```
@@ -473,7 +473,7 @@ work directly with node-style functions.
 
 I'm biased here since I wrote genny. I still think that this is objectively the 
 best way to use generators in node. Just replace the callback with a placeholder 
-function `resume`, then yield that. Comes back to you with the value. 
+generator-resuming function, then yield that. Comes back to you with the value. 
 
 Kudos to [jmar777](//github.com/jmar777) for realizing that you don't need
 to actually yield anything and can resume the generator using the placeholder 
@@ -484,9 +484,13 @@ is very clean, very straightforward and completely devoid of callbacks.
 
 **[qasync.js](//github.com/spion/async-compare/blob/master/examples/qasync.js)**
 
-Generators with promises. Didn't feel very different from genny and suspend.
-Its slightly less complicated: you can yield the promise instead of placing
-the provided resume function at every point where a callback is needed. 
+Q provides two methods that allow you to use generators: `Q.spawn` and 
+`Q.async`. In both cases the generator yields promises and in turn receives
+resolved values.
+
+The code didn't feel very different from genny and suspend. Its slightly less 
+complicated: you can yield the promise instead of placing the provided resume
+function at every point where a callback is needed. 
 
 Caveat: as always with promises you will need to wrap all callback-based 
 functions.
@@ -501,7 +505,7 @@ generator-based libraries. Both can work by yielding thunk-style functions:
 that is, functions that take a single argument which is a node style callback 
 in the format `function (err, result)`
 
-Code looks roughly the same as qasync.js
+The code looks roughly the same as qasync.js
 
 The problem is, thunks still require wrapping. The recommended way to wrap node 
 style functions is to use `co.wrap` for co and `fn.bind` for gens - so thats 
@@ -531,6 +535,9 @@ To measure complexity I took the number of tokens in the source code found by
 Esprima's lexer (comments excluded). The idea is taken from
 [Paul Graham's essay _Succinctness is Power_](http://www.paulgraham.com/power.html)
 
+I decided to allow all callback wrapping to happen in a separate file: In a 
+large system, the wrapped layer will probably be a small part of the code.
+
 Results:
 
 | name                   | tokens | complexity |
@@ -558,19 +565,19 @@ Results:
 Streamline and co have the lowest complexity. Fibrous, qasync, suspend, genny 
 and gens are roughly comparable. 
 
-Catcher is comparable with the normal promise solutions. The complexity when 
-using promises is roughly comparable to the original version with callbacks, 
-but there is some improvement.
+Catcher is comparable with the normal promise solutions. Both are roughly 
+comparable to the original version with callbacks, but there is some 
+improvement as the error handling is consolidated to one place.
 
-It seems that going flattening the callback pyramid increases the complexity. 
-However, the readability of the flattened version is improved.
+It seems that flattening the callback pyramid increases the complexity a little
+bit. However, arguably the readability of the flattened version is improved.
 
 Using caolan's async in this particular case doesn't seem to yield much 
-improvement. However, its complexity is lower than the flattened version, while
-achieving the same flattening effect.
+improvement. Its complexity however is lower than the flattened version because
+it consolidates error handling.
 
 Going promises-all-the-way as Gozala suggests also increases the complexity 
-(we're fighting the language all the time).
+because we're fighting the language all the time.
 
 The rx.js sample is still a work in progress - it can be made much better. 
 
@@ -578,16 +585,15 @@ The rx.js sample is still a work in progress - it can be made much better.
 
 ### Performance (time and memory)
 
-To be able to execute the files, all external methods are mocked using 
-`setTimeout` to simulate waiting for I/O. 
+All external methods are mocked using `setTimeout` to simulate waiting for I/O. 
 
 There are two variables that control the test:
 
 * \\(n\\) - the number of parallel "upload requests"
 * \\(t\\) - average wait time per async I/O operation
 
-For the first test, I set the time for every async operation \\(t = 1ms\\) then 
-ran every solution for \\(n \\in \lbrace 100,500,1000,1500,2000 \rbrace \\).
+For the first test, I set the time for every async operation to 1ms then 
+ran every solution for \\(n \\in \lbrace 100, 500, 1000, 1500, 2000 \rbrace \\).
 
 note: hover over the legend to highlight the item on the chart.
 
@@ -784,8 +790,8 @@ Ah, much better.
 The original and flattened solutions are the fastest, as they use vanilla 
 callbacks, with the fastest flattened solution being flattened-class.js. 
 
-suspend is the fastest generator based solutions. It incurred minimal 
-overhead of about 60% running time. They're also roughly comparable with 
+suspend is the fastest generator based solution. It incurred minimal 
+overhead of about 60% running time. Its also roughly comparable with 
 streamlinejs (when in raw callbacks mode).
 
 caolan's async adds some measurable overhead (its about 2 times slower than
@@ -806,7 +812,7 @@ All generator solutions become about 2 times slower when compiled with
 which we need to run generators code without the `--harmony` switch or in 
 browsers.
 
-Finally we have rx.js which is about 10 times slower than the fastest solution.
+Finally we have rx.js which is about 10 times slower than the original.
 
 However, this test is a bit unrealistic.
 
@@ -816,13 +822,18 @@ As a result, performance is I/O bound - why measure things as if it were
 CPU-bound?
 
 So lets make the average time needed for an async operation depend on the 
-number of parallel calls to `upload()`
+number of parallel calls to `upload()`. 
 
-$$ t = n \cdot 0.1 ms $$
+On my machine redis can be queried about 40 000 times per second; node's 
+"hello world" http server can serve up to 10 000 requests per second; 
+postgresql's pgbench can do 300 mixed or 15 000 select transactions per second. 
 
-This will make I/O operation time grow together with \\(n\\). Each will
-take 10 ms on average when there are 100 running in parallel and 100 ms when 
-there are 1000 running in parallel. Makes much more sense.
+Given all that, I decided to go with 10 000 requests per second - it looks like 
+a reasonable (rounded) mean.
+
+Each I/O operation will take 10 ms on average when there are 100 running in 
+parallel and 1000 ms when there are 10 000 running in parallel. Makes much more 
+sense.
 
 
 <div id="perf-time-3" class="plot">
@@ -1008,7 +1019,7 @@ window.addEventListener('load', function() {
 
 Everything is about the same now. Great! So in practice, you won't notice 
 the CPU overhead in I/O bound cases - even if you're using promises. And with 
-some of the generator libraries, the overhead simply disappears.
+some of the generator libraries, the overhead becomes practically invisible.
 
 Excellent. But what about memory usage? Lets chart that too!
 
@@ -1217,8 +1228,8 @@ Its important to note that the testing method that I use is not statistically
 sound. Its however good enough to be used to compare orders of magnitude, which 
 is fine considering the narrowly defined benchmark.
 
-With that said, here is a table for 1000 parallel requests, 10 ms per I/O 
-operation:
+With that said, here is a table for 1000 parallel requests with 10 ms response
+time for I/O operations (i.e. 100K IO / s)
 
 
 | file                     | time(ms) | memory(MB) |
@@ -1263,7 +1274,7 @@ the generated stack traces.
 
 #### Source maps support
 
-This has a couple of levels itself:
+I split this category into 5 levels:
 
 * **level 1**: no source maps, but needs them (wacky stack trace line numbers)
 
@@ -1296,6 +1307,8 @@ This has a couple of levels itself:
 <a name="stack-trace-accuracy"></a>
 
 #### Stack trace accuracy
+
+This category also has 5 levels:
 
 * **level 1**: stack traces are missing
 
@@ -1408,7 +1421,7 @@ and genny.
 
 ### Conclusion
 
-If this essay left you even more confused than before, you're not alone. It
+If this analysis left you even more confused than before, you're not alone. It
 seems hard to make a decision even with all the data available.
 
 My opinion is biased. I love generators, and I've been 
@@ -1423,7 +1436,7 @@ with no compilation (except for older browsers) or native modules required,
 and the yield keyword is in principle as good indicator of async code as 
 callbacks are.
 
-Unfortunately, the debugging story of generators is somewhat weak, especially
+Unfortunately, the debugging story for generators is somewhat bad, especially
 because of the missing stack traces for thrown errors. Fortunately, there are 
 solutions and workarounds, like those implemented by genny (obtrusive, reduces
 performance) and galaxy (unobtrusive, but requires native modules). 
@@ -1444,7 +1457,7 @@ Special thanks to
 [maxogden](//github.com/maxogden), 
 [mikeal](//github.com/mikeal)
 and [damonoehlman](//github.com/DamonOehlman)
-for their input on the draft version of this essay.
+for their input on the draft version of this analysis.
 
 Thanks to [jmar777](//github.com/jmar777) for making suspend
 
