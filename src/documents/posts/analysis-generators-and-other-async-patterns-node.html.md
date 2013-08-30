@@ -24,7 +24,7 @@ strong feelings and opinions on all the other methods and libraries. Debates
 can be heated: sometimes social pariahs may be declared or grave rolling 
 may be induced.
 
-The reason for this is that JavaScript in node never had any continuation 
+The reason for this is that JavaScript never had any continuation 
 mechanism to allow code to pause and resume across the event loop boundary. 
 
 Until now.
