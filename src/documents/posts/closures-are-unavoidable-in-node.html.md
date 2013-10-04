@@ -72,11 +72,11 @@ then we would be able to write code that avoids closures and
 But we can't do that.
 
 What if we could though? Lets fork 
-[timers.js](https://github.com/joyent/node/blob/master/lib/timers.js) from 
+[timers.js](https://github.com/joyent/node/blob/blog/lib/timers.js) from 
 node core and find out:
 
 I added context passing support to the `Timeout` class. The result was 
-[timers-ctx.js](//github.com/spion/async-compare/blob/master/lib/timers-ctx.js) 
+[timers-ctx.js](//github.com/spion/async-compare/blob/blog/lib/timers-ctx.js) 
 which in turn resulted with [flattened-class-ctx.js]
 
 And here is how it performs:
@@ -103,9 +103,9 @@ Is it worth it?
 
 Maybe, maybe not. You decide.
 
-[suspend.js]: //github.com/spion/async-compare/blob/master/examples/suspend.js
-[original.js]: //github.com/spion/async-compare/blob/master/examples/original.js
-[flattened.js]: //github.com/spion/async-compare/blob/master/examples/flattened.js
-[flattened-class.js]: //github.com/spion/async-compare/blob/master/examples/flattened-class.js
-[flattened-noclosure.js]: //github.com/spion/async-compare/blob/master/examples/flattened-noclosure.js
-[flattened-class-ctx.js]: //github.com/spion/async-compare/blob/master/examples/flattened-class-ctx.js
+[suspend.js]: //github.com/spion/async-compare/blob/blog/examples/suspend.js
+[original.js]: //github.com/spion/async-compare/blob/blog/examples/original.js
+[flattened.js]: //github.com/spion/async-compare/blob/blog/examples/flattened.js
+[flattened-class.js]: //github.com/spion/async-compare/blob/blog/examples/flattened-class.js
+[flattened-noclosure.js]: //github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js
+[flattened-class-ctx.js]: //github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js

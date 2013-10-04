@@ -37,6 +37,7 @@ unhighlight a series manually by specifying a series by label, index or object.
 		highlightSeries: {
 			autoHighlight: true,
 			color: "black",
+			//lineWidth: 6,
 			_optimized: true,
 			_debug: false
 		}
@@ -58,6 +59,7 @@ unhighlight a series manually by specifying a series by label, index or object.
 			originalColors[seriesAndIndex[0]] = series.color;
 
 			series.color = color || options.color;
+			//series.lineWidth = options.lineWidth;
 
 			if (options._debug) { start = new Date(); }
 			if (options._optimized) {

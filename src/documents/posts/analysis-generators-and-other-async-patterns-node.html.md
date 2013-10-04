@@ -334,39 +334,39 @@ personal impressions before giving you the results of the analysis
 ### The examples
 
 
-**[original.js](//github.com/spion/async-compare/blob/master/examples/original.js)**
+**[original.js](//github.com/spion/async-compare/blob/blog/examples/original.js)**
 
 The original solution, presented above. Vanilla callbacks. Slightly pyramidal. 
 I consider it acceptable, if a bit mediocre.
 
-**[flattened.js](//github.com/spion/async-compare/blob/master/examples/flattened.js)**
+**[flattened.js](//github.com/spion/async-compare/blob/blog/examples/flattened.js)**
 
 Flattened variant of the original via named functions. Taking the advice from
 [callback hell](http://callbackhell.com/), I flattened the pyramid a little 
 bit. As I did that, I found that while the pyramid shrunk, the code actually 
 grew.
 
-**[catcher.js](//github.com/spion/async-compare/blob/master/examples/catcher.js)**
+**[catcher.js](//github.com/spion/async-compare/blob/blog/examples/catcher.js)**
 
 I noticed that the first two vanilla solutions had a lot of common error 
 handling code everywhere. So I wrote a tiny library called catcher.js which 
 works very much like node's `domain.intercept`. This reduced the complexity
 and the number of lines further, but the pyramidal looks remained.
 
-**[async.js](//github.com/spion/async-compare/blob/master/examples/async.js)**
+**[async.js](//github.com/spion/async-compare/blob/blog/examples/async.js)**
 
 Uses the waterfall function from [caolan's async](//github.com/caolan/async).
 Very similar to flattened.js but without the need to handle errors at every 
 step. 
 
-**[flattened-class.js](//github.com/spion/async-compare/blob/master/examples/flattened-class.js), 
-[flattened-noclosure.js](//github.com/spion/async-compare/blob/master/examples/flattened-noclosure.js),
-[flattened-class-ctx.js](//github.com/spion/async-compare/blob/master/examples/flattened-class-ctx.js)**
+**[flattened-class.js](//github.com/spion/async-compare/blob/blog/examples/flattened-class.js), 
+[flattened-noclosure.js](//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js),
+[flattened-class-ctx.js](//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js)**
 
 See [this post](/posts/closures-are-unavoidable-in-node.html) for details
 
 
-**[promises.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
+**[promises.js](//github.com/spion/async-compare/blob/blog/examples/promises.js)**
 
 I'll be honest. I've never written promise code in node before. Driven by 
 [Gozalla's excellent post](//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post)
@@ -414,8 +414,8 @@ note: I used [when](//github.com/cujojs/when) because i liked its function
 lifting API better than Q's
 
 
-**[promiseish.js](//github.com/spion/async-compare/blob/master/examples/promises.js) 
-and [promiseishQ.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
+**[promiseish.js](//github.com/spion/async-compare/blob/blog/examples/promises.js) 
+and [promiseishQ.js](//github.com/spion/async-compare/blob/blog/examples/promises.js)**
 
 Nothing fancy here, just some `.then()` chaining. In fact it feels less complex
 than the `promise.js` version, where I felt like I was trying to fight the
@@ -425,7 +425,7 @@ The second file `promiseishQ.js` uses [Q](//github.com/kriskowal/q) instead of
 [when](//github.com/cujojs/when). No big difference there.
 
 
-**[fibrous.js](//github.com/spion/async-compare/blob/master/examples/fibrous.js)**
+**[fibrous.js](//github.com/spion/async-compare/blob/blog/examples/fibrous.js)**
 
 [Fibrous](//github.com/goodeggs/fibrous) is a fibers library that creates 
 "sync" methods out of your async ones, which you can then run in a fiber. 
@@ -464,8 +464,8 @@ native modules.
 
 Library: [fibrous](//github.com/goodeggs/fibrous)
 
-**[suspend.js](//github.com/spion/async-compare/blob/master/examples/suspend.js) 
-and [genny.js](//github.com/spion/async-compare/blob/master/examples/promises.js)**
+**[suspend.js](//github.com/spion/async-compare/blob/blog/examples/suspend.js) 
+and [genny.js](//github.com/spion/async-compare/blob/blog/examples/promises.js)**
 
 [suspend](https://github.com/jmar777/suspend) and 
 [genny](http://github.com/spion/genny) are generator-based solutions that can 
@@ -482,7 +482,7 @@ callback instead.
 Both suspend and genny use generators roughly the same way. The resulting code 
 is very clean, very straightforward and completely devoid of callbacks. 
 
-**[qasync.js](//github.com/spion/async-compare/blob/master/examples/qasync.js)**
+**[qasync.js](//github.com/spion/async-compare/blob/blog/examples/qasync.js)**
 
 Q provides two methods that allow you to use generators: `Q.spawn` and 
 `Q.async`. In both cases the generator yields promises and in turn receives
@@ -497,8 +497,8 @@ functions.
 
 Library: [Q](//github.com/kriskowal/q)
 
-**[co.js](//github.com/spion/async-compare/blob/master/examples/co.js) 
-and [gens.js](//github.com/spion/async-compare/blob/master/examples/gens.js)**
+**[co.js](//github.com/spion/async-compare/blob/blog/examples/co.js) 
+and [gens.js](//github.com/spion/async-compare/blob/blog/examples/gens.js)**
 
 [Gens](//github.com/Raynos/gens) and [co](//github.com/visionmedia/co) are 
 generator-based libraries. Both can work by yielding thunk-style functions: 
@@ -512,7 +512,7 @@ style functions is to use `co.wrap` for co and `fn.bind` for gens - so thats
 what I did.
 
 
-**[streamline.js](//github.com/spion/async-compare/blob/master/examples/src-streamline._js)**
+**[streamline.js](//github.com/spion/async-compare/blob/blog/examples/src-streamline._js)**
 
 Uses [streamlinejs](http://github.com/Sage/streamlinejs) CPS transformer and
 works very much like co and qasync, except without needing to write yield 
@@ -645,6 +645,13 @@ window.perfCPUBound =
        [ 1000, 1108 ],
        [ 1500, 1713 ],
        [ 2000, 2316 ] ] },
+  { label: 'dst-stratifiedjs-014.js',
+    data: 
+     [ [ 100, 40 ],
+       [ 500, 131 ],
+       [ 1000, 224 ],
+       [ 1500, 280 ],
+       [ 2000, 433 ] ] },       
   { label: 'dst-streamline.js',
     data: 
      [ [ 100, 19 ],
@@ -883,6 +890,13 @@ window.perfIOBound =
        [ 1000, 1125 ],
        [ 1500, 1757 ],
        [ 2000, 2301 ] ] },
+  { label: 'dst-stratifiedjs-014.js',
+    data: 
+     [ [ 100, 117 ],
+       [ 500, 437 ],
+       [ 1000, 820 ],
+       [ 1500, 1216 ],
+       [ 2000, 1592 ] ] },
   { label: 'dst-streamline.js',
     data: 
      [ [ 100, 79 ],
@@ -1073,6 +1087,13 @@ window.perfMEM =
        [ 1000, 101.76953125 ],
        [ 1500, 135.78125 ],
        [ 2000, 190.25 ] ] },
+  { label: 'dst-stratifiedjs-014.js',
+    data: 
+     [ [ 100, 2.21875 ],
+       [ 500, 11.32421875 ],
+       [ 1000, 23.32421875 ],
+       [ 1500, 38.71875 ],
+       [ 2000, 48.015625 ] ] },
   { label: 'dst-streamline.js',
     data: 
      [ [ 100, 1.5078125 ],
@@ -1200,8 +1221,8 @@ Seems like promises also use a lot of memory, especially the extreme
 implementation `promises.js`. `promiseish.js` as well as `qasync.js` are not
 too far behind.
 
-`fibrous.js` and `rx.js` are somewhat better than the above, however their 
-memory usage is still over 5 times bigger than the original.
+`fibrous.js`, `rx.js` and `stratifiedjs` are somewhat better than the above, 
+however their memory usage is still over 5 times bigger than the original.
 
 Lets remove the hogs and see what remains underneath.
 
@@ -1210,7 +1231,8 @@ Lets remove the hogs and see what remains underneath.
 <script type="text/javascript">
 window.addEventListener('load', function() {
     $.plot('#perf-mem-2', perfMEM.filter(function(item) {
-        return !/(promises|promiseish|qasync|fibrous|rx.js)/.test(item.label)
+        return !/(promises|promiseish|qasync|fibrous|rx.js|stratifiedjs)/
+            .test(item.label)
     }), {legend: { position: 'nw' }, yaxis: {min: 0}});
 });
 </script>
@@ -1247,6 +1269,7 @@ time for I/O operations (i.e. 100K IO / s)
 | genny.js                 |      161 |      11.69 |
 | co.js                    |      182 |      11.14 |
 | dst-genny-traceur.js     |      250 |       8.84 |
+| dst-stratifiedjs-014.js  |      267 |      23.55 |
 | dst-co-traceur.js        |      284 |      13.54 |
 | rx.js                    |      295 |      40.43 |
 | dst-streamline-fibers.js |      526 |      17.05 |
