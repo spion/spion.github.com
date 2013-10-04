@@ -366,7 +366,7 @@ step.
 See [this post](/posts/closures-are-unavoidable-in-node.html) for details
 
 
-**[promises.js](//github.com/spion/async-compare/blob/blog/examples/promises.js)**
+**[promises.js](//github.com/spion/async-compare/blob/blog/examples-extra/promises.js)**
 
 I'll be honest. I've never written promise code in node before. Driven by 
 [Gozalla's excellent post](//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post)
@@ -414,8 +414,8 @@ note: I used [when](//github.com/cujojs/when) because i liked its function
 lifting API better than Q's
 
 
-**[promiseish.js](//github.com/spion/async-compare/blob/blog/examples/promises.js) 
-and [promiseishQ.js](//github.com/spion/async-compare/blob/blog/examples/promises.js)**
+**[promiseish.js](//github.com/spion/async-compare/blob/blog/examples/promiseish.js) 
+and [promiseishQ.js](//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js)**
 
 Nothing fancy here, just some `.then()` chaining. In fact it feels less complex
 than the `promise.js` version, where I felt like I was trying to fight the
@@ -465,7 +465,7 @@ native modules.
 Library: [fibrous](//github.com/goodeggs/fibrous)
 
 **[suspend.js](//github.com/spion/async-compare/blob/blog/examples/suspend.js) 
-and [genny.js](//github.com/spion/async-compare/blob/blog/examples/promises.js)**
+and [genny.js](//github.com/spion/async-compare/blob/blog/examples-extra/promises.js)**
 
 [suspend](https://github.com/jmar777/suspend) and 
 [genny](http://github.com/spion/genny) are generator-based solutions that can 
