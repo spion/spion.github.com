@@ -27,10 +27,15 @@ Promises are exception safe. If an unhandled exception happens in one of the
 handler to handle the exception and do any clean up if necessary - 
 transparently! The process will happily continue to serve the rest of my users.
 
-### `if (err) return done(err)`
+### `if (err) return callback(err)`
 
-That line is haunting me in my dreams now. I'm honestly tired of writing it.
-What happened to the [DRY principle](dry)?
+That line is haunting me in my dreams now. What happened to the 
+[DRY principle](dry)?
+
+Yes, I understand that its important to explicitly handle all errors. But I 
+don't believe its important to explicitly *bubble them up* the callback chain.
+If I don't deal with the error here, thats because I can't deal with the error
+there - I simply don't have enough context.
 
 > But spion, why don't you wrap all your calbacks? 
 
@@ -39,7 +44,7 @@ I guess I could do that and lose the callback stack when generating a
 entire thing with promises, rely on longStackSupport, and handle errors at
 at my discretion?
 
-### [Releasing Zalgo][releasing-zalgo]
+### Containing Zalgo
 
 Your promise library prevents you from [releasing Zalgo][releasing-zalgo]. You 
 can't release Zalgo with promises. Its impossible for a promise to result with 
