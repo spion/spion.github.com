@@ -254,7 +254,7 @@ note: `async.waterfall` doesn't do this. exceptions still crash your process.
 
 ## What about stack traces?
 
-Bluebird has them behind a flag that has slows it down about 5 times. They're
+Bluebird has them behind a flag that slows it down about 5 times. They're
 even longer than Q's `longStackSupport`: bluebird can give you the entire event
 chain. Simply enable the flag in development mode, and you're suddenly in 
 debugging nirvana.
