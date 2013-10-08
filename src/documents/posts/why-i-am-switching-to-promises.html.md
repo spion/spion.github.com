@@ -328,12 +328,19 @@ fs.readFile(file).then(function(res) {
 });
 ```
 
-Pretty much the same so far, except you use a second callback for the error 
-(which isn't really better). So when does it get better?
+Whats going on here? `fs.readFile(file)` starts a file reading operation. That 
+operation is not yet complete at the point when the readFile function returns. 
+This means we can't return the file content. But we can still return something: 
+we can return the reading operation itself. And that operation is represanted 
+with a promise.
 
-Its better because you can attach a callback later if you want. Remember, 
-`fs.readFile(file)` returns a promise now, so you can put that in a var, or
-return it from a function:
+So far, the rest of the code looks very similar to regular node callbacks - 
+except that you use a second callback for the error (which isn't really better). 
+So when does it get better?
+
+Its better because you can attach the callback later if you want. Remember, 
+`fs.readFile(file)` returns a promise now, so you can put that promise in a var, 
+or return it from a function:
 
 ```js
 var filePromise = fs.readFile(file);
@@ -361,7 +368,10 @@ callback, then you'll get a promise for that thing on the outside?
 Say you want to get a line from a file.
 
 ```js
-var linePromise = fs.readFile(file).then(function(data) {
+
+var filePromise = fs.readFile(file)
+
+var linePromise = filePromise.then(function(data) {
     return data.toString.split('\n')[line];
 });
 
@@ -369,13 +379,9 @@ var beginsWithHelloPromise = linePromise.then(function(line) {
     return /^hello/.test(line);
 });
 
-var message = beginsWithHelloPromise.then(function(beginsWithHello) {
-	if (beginsWithHello) return "Looks like hello world";
-	else return "Probably not hello world";
-});
 ```
 
-Thats pretty cool, although not terribly useful - we could just put all sync
+Thats pretty cool, although not terribly useful - we could just put both sync
 operations in the first `.then()` callback and be done with it.
 
 But guess what happens when you return a *promise* from within a `.then` 
