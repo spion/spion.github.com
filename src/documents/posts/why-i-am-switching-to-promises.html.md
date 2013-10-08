@@ -49,10 +49,11 @@ the release of the Zalgo-beast. [Promises are Zalgo-safe (see section
 ### Promises are now part of ES6
 
 Yes, they will become a part of the language. New DOM APIs will be using them 
-too. jQuery already fixed their promises... mostly. angular utilizes promises 
-everywhere (even in the templates), Ember uses promises. The list goes on.
+too. jQuery is already switched to promise...ish things. angular utilizes 
+promises everywhere (even in the templates), Ember uses promises. 
+The list goes on.
 
-Browser libraries have already switched. I'm switching too.
+Browser libraries already switched. I'm switching too.
 
 ## But promises are slow!
 
@@ -238,8 +239,8 @@ I/O op. Measure ALL the things!
 
 
 Promises are not slow. At least, not anymore. Infact, bluebird generators
-are almost as fast as regular callback code (and they're also the fastest 
-generators right now). And bluebird promises are definitely faster than 
+are almost as fast as regular callback code (they're also the fastest 
+generators as of now). And bluebird promises are definitely faster than 
 `async.waterfall`
 
 Considering that bluebird wraps the underlying callback-using libraries **and**
@@ -284,8 +285,8 @@ To use generators with callbacks you have two options
 1. use a resumer style library like [suspend] or [genny]
 2. wrap callback-taking functions to become thunk returning functions.
 
-Since #1 is proving to be unpopular, why not just `s/thunk/promise/g` and use
-generators with promises?
+Since #1 is proving to be unpopular, why not just `s/thunk/promise/g` in #2 
+and use generators with promises?
 
 ## But promises are unnecessarily complicated!
 
@@ -377,21 +378,21 @@ callback. Do you get a promise for that promise outside of `.then()`?  Nope,
 you just get the same promise on the outside!
 
 ```js
-function readUploadAndSave(file, url, otherPath) {
+function readProcessAndSave(inPath, outPath) {
 	// read the file
-	var filePromise = fs.readFile(file);
-	// upload it when done reading
-	var uploadedPromise = filePromise.then(function(content) { 
-		return uploadData(url, content);
+	var filePromise = fs.readFile(inPath);
+	// then send it to the transform service
+	var transformedPromise = filePromise.then(function(content) { 
+		return service.transform(content);
 	});
-	// also save to another place locally
-	var savedLocalPromise = filePromise.then(function(res) {
-		return fs.saveFile(res, otherPath)
+	// then save the transformed content
+	var savedLocalPromise = transformedPromise.then(function(transformed) {
+		return fs.writeFile(otherPath, transformed)
 	});
-	// return a promise that "succeeds" when both saving and uploading succeed:
-	return Promise.join(uploadedPromise, savedLocalPromise);
+	// return a promise that "succeeds" when the file is saved.
+	return savedLocalPromise;
 }
-readUploadAndSave(file, url, otherPath).then(function() {
+readProcessAndSave(file, url, otherPath).then(function() {
 	console.log("Success!");
 }, function(err) {
 	// This function will catch *ALL* errors from the above 
@@ -400,72 +401,72 @@ readUploadAndSave(file, url, otherPath).then(function() {
 });
 ```
 
-
 Now its easier to understand chaining: at the end of every function passed
 to a `.then()` call, simply return a promise. Lets make our code even shorter:
 
 ```js
-function readUploadAndSave(file, url, otherPath) {
-	return fs.readFile(file).then(function(content) {
-		// upload and save when done reading
-		return Bluebird.join(uploadData(url, content), 
-			fs.saveFile(res, otherPath));
-});
-  }
+function readProcessAndSave(file, url, otherPath) {
+	return fs.readFile(file)
+		.then(service.transform)
+		.then(fs.writeFile.bind(fs, otherPath));
+}
 ```
 
 Mind = blown! Notice how I don't have to manually propagate errors. They will
 automatically get passed with the returned promise.
 
-What if we want to make sure the data is uploaded first before saving?
-
-```js
-function readUploadAndSave(file, url, otherPath) {
-	var content;
-	// read the file
-	var uploadedPromise = fs.readFile(file).then(function(vContent)
-		content = vContent;
-		// return promise that its uploaded
-  		return uploadData(url, content);
-	});
-	return uploadedPromise.then(function() {
-		// return promise that its saved.
-		return fs.saveFile(content, otherPath);
-	});
-}
-```
-
-Or even shorter, skip the temporary promise variables and chain `promise.then` 
-the way we chain `stream.pipe` in node:
+What if we want to read, process, then upload, then also save locally?
 
 ```js
 function readUploadAndSave(file, url, otherPath) {
     var content;
-    // read the file
-    return fs.readFile(file).then(function(vContent)
+    // read the file and transform it
+    return fs.readFile(file)
+    .then(service.transform)
+    .then(function(vContent)
         content = vContent;
         // then upload it
         return uploadData(url, content);
     }).then(function() { // after its uploaded
         // save it
-        return fs.saveFile(content, otherPath);
+        return fs.writeFile(otherPath, content);
     });
 }
 ```
 
-Or just nest it if you need the closure.
+Or just nest it if you prefer the closure.
 
 ```js
 function readUploadAndSave(file, url, otherPath) {
-    // read the file
-    return fs.readFile(file).then(function(content)
-        return uploadData(url, content).then(function() {
-        	// after its uploaded, save it
-        	return fs.saveFile(content, otherPath);
-        });
-    });
+    // read the file and transform it
+    return fs.readFile(file)
+    	.then(service.transform)
+    	.then(function(content)
+        	return uploadData(url, content).then(function() {
+        		// after its uploaded, save it
+        		return fs.writeFile(otherPath, content);
+        	});
+    	});
 }
 ```
+
+But hey, you can also upload and save in parallel!
+
+```js
+function readUploadAndSave(file, url, otherPath) {
+    // read the file and transform it
+    return fs.readFile(file)
+    	.then(service.transform)
+    	.then(function(content) {
+        	return Promise.join(
+        		uploadData(url, content),
+        		fs.writeFile(otherPath, content));
+    	});
+}
+```
+
+No, these are not "conveniently chosen" functions. Promise code really is that 
+short in practice!
 
 And similarly to how in a `stream.pipe` chain the last stream is returned, in 
 promise pipes the promise returned from the last `.then` callback is returned.
