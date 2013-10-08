@@ -334,12 +334,22 @@ This means we can't return the file content. But we can still return something:
 we can return the reading operation itself. And that operation is represanted 
 with a promise.
 
-So far, the rest of the code looks very similar to regular node callbacks - 
-except that you use a second callback for the error (which isn't really better). 
-So when does it get better?
+This is sort of like a single-value stream:
+
+```js
+net.connect(port).on('data', function(res) { 
+	doStuffWith(res); 
+}).on('error', function(err) { 
+	hadnleError(); 
+});
+```
+
+So far, this doesn't look that different from regular node callbacks - 
+except that you use a second callback for the error (which isn't necessarily 
+better). So when does it get better?
 
 Its better because you can attach the callback later if you want. Remember, 
-`fs.readFile(file)` returns a promise now, so you can put that promise in a var, 
+`fs.readFile(file)` *returns* a promise now, so you can put that in a var, 
 or return it from a function:
 
 ```js
@@ -347,6 +357,8 @@ var filePromise = fs.readFile(file);
 // do more stuff... even nest inside another promise, then
 filePromise.then(function(res) { ... });
 ```
+
+Yup, the second callback is optional. We're going to see why later.
 
 Okay, that's still not much of an improvement. How about this then? You can 
 attach more than one callback to a promise if you like:
@@ -365,14 +377,15 @@ Still not good enough?
 What if I told you... that if you return something from inside a .then() 
 callback, then you'll get a promise for that thing on the outside?
 
-Say you want to get a line from a file.
+Say you want to get a line from a file. Well, you can get a promise for that
+line instead:
 
 ```js
 
 var filePromise = fs.readFile(file)
 
 var linePromise = filePromise.then(function(data) {
-    return data.toString.split('\n')[line];
+    return data.toString().split('\n')[line];
 });
 
 var beginsWithHelloPromise = linePromise.then(function(line) {
@@ -397,11 +410,11 @@ function readProcessAndSave(inPath, outPath) {
 		return service.transform(content);
 	});
 	// then save the transformed content
-	var savedLocalPromise = transformedPromise.then(function(transformed) {
+	var writeFilePromise = transformedPromise.then(function(transformed) {
 		return fs.writeFile(otherPath, transformed)
 	});
 	// return a promise that "succeeds" when the file is saved.
-	return savedLocalPromise;
+	return writeFilePromise;
 }
 readProcessAndSave(file, url, otherPath).then(function() {
 	console.log("Success!");
@@ -413,7 +426,11 @@ readProcessAndSave(file, url, otherPath).then(function() {
 ```
 
 Now its easier to understand chaining: at the end of every function passed
-to a `.then()` call, simply return a promise. Lets make our code even shorter:
+to a `.then()` call, simply return a promise. Its also easier to understand
+what happens if we don't add the error handling callback: errors in the chain 
+will be propagated automatically with the returned promise.
+
+Lets make our code even shorter:
 
 ```js
 function readProcessAndSave(file, url, otherPath) {
