@@ -740,7 +740,7 @@ Looks awesome. I definitely want to explore that.
 In ES7, promises will become monadic (by getting flatMap and unit). 
 Also, we're going to get generic syntax sugar for monads. Then, it trully wont 
 matter what style you use - stream, promise or thunk - as long as it also 
-implements the monad functions. That is, except for callbakck passing style - 
+implements the monad functions. That is, except for callback-passing style - 
 it wont be able to join the party because it doesn't produce values.
 
 I'm just kidding, of course. I don't know if thats going to happen. Either way,
