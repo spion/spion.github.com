@@ -500,13 +500,15 @@ file, falls back to a default config if the file doesn't exist, but reports
 JSON parsing errors? Here it is:
 
 ```js
-function configFromFileOrDefault(file, defaultContent) {
+function configFromFileOrDefault(file, defaultConfig) {
     // if fs.readFile fails, a default config is returned.
     // if JSON.parse throws, this promise propagates that.
-	return fs.readFile(file)
-		.catch(function() {
-			return '{"default":"config"}';
-		}).then(JSON.parse);
+	return fs.readFile(file).then(JSON.parse, 
+		   function ifReadFails() { 
+		       return defaultConfig; 
+		   });
+	// if we want to catch JSON.parse errors, we need to chain another
+	// .then here - this one only captures errors from fs.readFile(file)
 }
 ```
 
