@@ -329,7 +329,7 @@ Pretty much the same so far, except you use a second callback for the error
 
 Its better because you can attach a callback later if you want. Remember, 
 `fs.readFile(file)` returns a promise now, so you can put that in a var, or
-return them from your functions:
+return it from a function:
 
 ```js
 var filePromise = fs.readFile(file);
@@ -414,6 +414,7 @@ function readUploadAndSave(file, url, otherPath) {
 			fs.saveFile(res, otherPath));
 });
   }
+```
 
 Mind = blown! Notice how I don't have to manually propagate errors. They will
 automatically get passed with the returned promise.
@@ -461,7 +462,7 @@ function readUploadAndSave(file, url, otherPath) {
     // read the file
     return fs.readFile(file).then(function(content)
         return uploadData(url, content).then(function() {
-        // after its uploaded, save it
+        	// after its uploaded, save it
         	return fs.saveFile(content, otherPath);
         });
     });
@@ -625,11 +626,92 @@ Promise.all(namePromises).then(function(names) {
 });
 ```
 
-That covers most of async. But we've barely started to scratch the surface.
+That covers most of async. 
 
-For example, promises could work very well with streams. Imagine a `limit` 
-stream that allows at most 3 promises resolving in parallel, backpressuring 
-otherwise, processing items from leveldb:
+## What about early returns?
+
+Early returns are a pattern used throughout both sync and async code. Take this 
+hypothetical sync example:
+
+```
+function getItem(key) {
+	var item;
+	// early-return if the item is in the cache.
+	if (item = cache.get(key)) return item;
+	// continue to get the item from the database. cache.put returns the item.
+	item = cache.put(database.get(key));
+
+	return item;
+}
+```
+
+If we attempt to write this using promises, at first it looks impossible:
+
+```js
+function getItem(key) {
+	return cache.get(key).then(function(item) {
+		// early-return if the item is in the cache.
+		if (item) return item;
+		return database.get(item)
+	}).then(function(putOrItem) {
+		// what do we do here to avoid the unnecessary cache.put ?
+	})
+}
+```
+
+How can we solve this?
+
+We solve it by remembering that the callback variant looks like this:
+
+```js
+function getItem(key, callback) {
+	cache.get(key, function(err, res) {
+		// early-return if the item is in the cache.
+		if (res) return callback(null, res);
+		// continue to get the item from the database
+		database.get(key, function(err, res) {
+			if (err) return callback(err);
+			// cache.put calls back with the item
+			cache.put(key, res, callback); 
+		})
+	})
+}
+```
+
+The promise version can do pretty much the same - just nest the rest
+of the chain inside the first callback.
+
+```js
+function getItem(key) {
+	return cache.get(key).then(function(res) {
+		// early return if the item is in the cache
+		if (res) return res;
+		// continue the chain within the callback.
+		return database.get(key)
+			.then(cache.put);		
+	});
+}
+```
+
+Or alternatively, if a cache miss results with an error:
+
+```js
+function getItem(key) {
+	return cache.get(key).catch(function(err) {
+		return database.get(key).then(cache.put);		
+	});
+}
+```
+
+That means that early returns are just as easy as with callbacks, and sometimes
+even easier (in case of errors)
+
+
+## What about streams?
+
+Promises can work very well with streams. Imagine a `limit` stream that allows 
+at most 3 promises resolving in parallel, backpressuring otherwise, processing 
+items from leveldb:
 
 ```js
 originalSublevel.createReadStream().pipe(limit(3, function(data) {
@@ -651,6 +733,19 @@ pipeline(original, limiter, converted).then(function(done) {
 ```
 
 Looks awesome. I definitely want to explore that.
+
+## The future?
+
+In ES7, promises will become monadic (by getting flatMap and unit). 
+Also, we're going to get generic syntax sugar for monads. Then, it trully wont 
+matter what style you use - stream, promise or thunk - as long as it also 
+implements the monad functions. That is, except for callbakck passing style - 
+it wont be able to join the party because it doesn't produce values.
+
+I'm just kidding, of course. I don't know if thats going to happen. Either way,
+promises are useful and practical and will remain useful and practical in the
+future.
+
 
 [bluebird]: https://github.com/petkaantonov/bluebird
 [releasing-zalgo]: http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
