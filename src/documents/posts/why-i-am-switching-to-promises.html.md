@@ -49,9 +49,8 @@ the release of the Zalgo-beast. [Promises are Zalgo-safe (see section
 ### Promises are now part of ES6
 
 Yes, they will become a part of the language. New DOM APIs will be using them 
-too. jQuery is already switched to promise...ish things. angular utilizes 
-promises everywhere (even in the templates), Ember uses promises. 
-The list goes on.
+too. jQuery already switched to promise...ish things. angular utilizes promises 
+everywhere (even in the templates), Ember uses promises. The list goes on.
 
 Browser libraries already switched. I'm switching too.
 
