@@ -254,8 +254,6 @@ even longer than Q's `longStackSupport`: bluebird can give you the entire event
 chain. Simply enable the flag in development mode, and you're suddenly in 
 debugging nirvana.
 
-And here is a table reporting all the different ways
-
 ## What about the community? 
 
 This is a valid point. Mikeal said it: If you write a library based on promises, 
