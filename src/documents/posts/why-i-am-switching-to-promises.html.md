@@ -458,6 +458,8 @@ function readUploadAndSave(file, url, otherPath) {
     return fs.readFile(file)
     	.then(service.transform)
     	.then(function(content) {
+    	    // create a promise that is done when both the upload
+    	    // and file write are done:
         	return Promise.join(
         		uploadData(url, content),
         		fs.writeFile(otherPath, content));
@@ -468,7 +470,7 @@ function readUploadAndSave(file, url, otherPath) {
 No, these are not "conveniently chosen" functions. Promise code really is that 
 short in practice!
 
-And similarly to how in a `stream.pipe` chain the last stream is returned, in 
+Similarly to how in a `stream.pipe` chain the last stream is returned, in 
 promise pipes the promise returned from the last `.then` callback is returned.
 
 Thats all you need, really. The rest is just converting callback-taking 
