@@ -426,9 +426,7 @@ readProcessAndSave(file, url, otherPath).then(function() {
 ```
 
 Now its easier to understand chaining: at the end of every function passed
-to a `.then()` call, simply return a promise. Its also easier to understand
-what happens if we don't add the error handling callback: errors in the chain 
-will be propagated automatically with the returned promise.
+to a `.then()` call, simply return a promise. 
 
 Lets make our code even shorter:
 
