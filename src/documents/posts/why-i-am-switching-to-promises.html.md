@@ -8,33 +8,33 @@ date: 2013-10-07
 I'm switching my node code from callbacks to promises. The reasons aren't
 merely aesthetical, they're rather practical:
 
+
+<a name="exception-crash"></a>
 ### Exception? Crash!
 
-We're all human. We make mistakes, and JavaScript `throw`s an error. How do
-callbacks punish mistakes? They crash your process! 
+We're all human. We make mistakes, and then JavaScript `throw`s an error. How 
+do callbacks punish mistakes? They crash your process! 
 
 > But spion, why don't you use domains?
 
 Yes, I could do that. I could [crash my process gracefully][must-shutdown]
-instead of letting it just crash. But its still a crash no matter the
+instead of letting it just crash. But its still a crash no matter what
 lipstick you put on it. With thousands of users, 0.5% hitting a throwing
 path means over 50 process shutdowns and most likely denial of service.
 
-Promises are exception safe. Totally. If an unhandled exception happens in 
-one of the `.then` callbacks, only that promise chain will die. I can also
-attach an error handler to handle the exception and do any clean up if 
-necessary - transparently! The process will happily continue to serve the rest 
-of my users.
+Promises are exception safe. If an unhandled exception happens in one of the 
+`.then` callbacks, only that promise chain will die. I can also attach an error 
+handler to handle the exception and do any clean up if necessary - 
+transparently! The process will happily continue to serve the rest of my users.
 
 ### `if (err) return done(err)`
 
-You all know what I'm talking about. This line is haunting me in my dreams by 
-now. I'm really, really tired of writing it every single time. What happened to 
-the [DRY principle](dry)?
+That line is haunting me in my dreams now. I'm honestly tired of writing it.
+What happened to the [DRY principle](dry)?
 
 > But spion, why don't you wrap all your calbacks? 
 
-I guess could do that and lose the callback stack when generating a 
+I guess I could do that and lose the callback stack when generating a 
 `new Error()`. Or since I'm already wrapping things, why not wrap the
 entire thing with promises, rely on longStackSupport, and handle errors at
 at my discretion?
@@ -46,12 +46,20 @@ can't release Zalgo with promises. Its impossible for a promise to result with
 the release of the Zalgo-beast. [Promises are Zalgo-safe (see section 
 3.1)][promises-zalgo-safe].
 
+### Promises are now part of ES6
+
+Yes, they will become a part of the language. New DOM APIs will be using them 
+too. jQuery already uses promises..ish things, angular utilizes promises 
+everywhere (even in the templates), and Ember uses promises extensively
+
+Browser code has already switched. I'm switching too.
+
 ## But promises are slow!
 
 Yeah, I know I wrote that. But I was wrong. A month after I wrote 
 [the giant comparison of async patterns][the-analysis], Petka Antonov wrote 
-[Bluebird][bluebird]. Its a wicked fast promise library, and here are the charts 
-to prove it:
+[Bluebird][bluebird]. Its a wicked fast promise library, and here are the 
+charts to prove it:
 
 Run time (ms)
 
@@ -222,10 +230,12 @@ Measure ALL the things!
 
 Promises are not slow. At least, not anymore. Infact, bluebird generators
 are almost as fast as regular callback code (and the fastest generators so
-far). And bluebird promises are definitely faster than .async.
+far). And bluebird promises are definitely faster than using `async.waterfall`
 
 Considering that bluebird wraps the underlying callback-using libraries **and**
-makes them exception-safe, this is really, really amazing.
+makes your own callbacks exception-safe, this is really amazing.
+
+note: `async.waterfall` doesn't do this. exceptions still crash your process.
 
 ## What about stack traces?
 
@@ -255,8 +265,18 @@ friendlier to the community: if I make a dumb mistake within the library that
 causes an exception to be thrown, it wont crash your process but instead it 
 will pass that exception as an error to your callback. 
 
-I also avoid being cursed by my angry, angry users for crashing their 
-production servers. Which is always a win.
+As a bonus, I don't have to fear the wrath of my angry users for crashing their 
+production servers. Thats always a plus.
+
+## What about generators?
+
+To use generators with callbacks you have two options
+
+1. use a resumer library like [suspend] or [genny]
+2. wrap callback-taking functions to become thunk returning functions.
+
+Since #1 is proving to be unpopular, why not just `s/thunk/promise/g` and use
+generators with promises?
 
 ## But promises are unnecessarily complicated!
 
@@ -268,12 +288,11 @@ not correctness):
 Promises are objects that have a `.then` method. The `.then` method takes 2
 callbacks, a success callback and an error callback. When one of these two 
 callbacks returns a value or throws an exception, `.then` must behave in a way 
-that enables stream-like chaining and simplified error handling. We will 
-explain that behavior of `.then` through examples:
+that enables stream-like chaining and simplified error handling. Lets explain 
+that behavior through examples:
 
-Instead of writing your functions to take callbacks, you write functions that 
-`return` promises. Imagine that node's `fs` was wrapped to work in this manner. 
-This is pretty easy to do - bluebird already does something like that with 
+Imagine that node's `fs` was wrapped to work in this manner. This is pretty 
+easy to do - bluebird already does something like that with 
 [`promisify()`][promisify]. Then this code:
 
 ```js
@@ -283,7 +302,7 @@ fs.readFile(file, function(err, res) {
 });
 ```
 
-would look like this:
+will look like this:
 
 ```js
 fs.readFile(file).then(function(res) {
@@ -297,7 +316,8 @@ Pretty much the same so far, except you use a second callback for the error
 (which isn't really better). So when does it get better?
 
 Its better because you can attach a callback later if you want. Remember, 
-`fs.readFile(file)` returns a promise now, so you can put that in a var:
+`fs.readFile(file)` returns a promise now, so you can put that in a var, or
+return them from your functions:
 
 ```js
 var filePromise = fs.readFile(file);
@@ -321,9 +341,9 @@ Still not good enough?
 What if I told you... that if you return something from inside the .then() 
 callback, then you'll get a promise for that thing?
 
-Say you want to get a line from a file...
+Say you want to get a line from a file.
 
-```
+```js
 var linePromise = fs.readFile(file).then(function(data) {
     return data.toString.split('\n')[line];
 });
@@ -338,8 +358,12 @@ var message = beginsWithHelloPromise.then(function(beginsWithHello) {
 });
 ```
 
-Thats pretty cool. But the coolest thing is probably this: if you return a 
-promise from within `.then`, you will get that promise outside of `.then`:
+Thats pretty cool, although not very useful - we could just put all sync
+operations in the first `.then()` callback. 
+
+But guess what happens when we return a promise from within that `.then` 
+callback. We get a promise for that promise outside of `.then()`?  Nope, we 
+just get the same promise on the outside too!
 
 ```js
 function readUploadAndSave(file, url, otherPath) {
@@ -356,7 +380,6 @@ function readUploadAndSave(file, url, otherPath) {
 	// return a promise that "succeeds" when both saving and uploading succeed:
 	return Promise.join(uploadedPromise, savedLocalPromise);
 }
-```
 readUploadAndSave(file, url, otherPath).then(function() {
 	console.log("Success!");
 }, function(err) {
@@ -364,9 +387,11 @@ readUploadAndSave(file, url, otherPath).then(function() {
 	// operations including any exceptions thrown inside .then 
 	console.log("Oops, it failed.", err);
 });
+```
 
-Now its easier to understand the chaining: at the end of every function passed
-to a `.then()` call, return a promise. Lets make our code even shorter:
+
+Now its easier to understand chaining: at the end of every function passed
+to a `.then()` call, simply return a promise. Lets make our code even shorter:
 
 ```js
 function readUploadAndSave(file, url, otherPath) {
@@ -398,8 +423,8 @@ function readUploadAndSave(file, url, otherPath) {
 }
 ```
 
-Or even shorter, skip the temporary promise variables and chain .then the way 
-we chain `stream.pipe` in node:
+Or even shorter, skip the temporary promise variables and chain `promise.then` 
+the way we chain `stream.pipe` in node:
 
 ```js
 function readUploadAndSave(file, url, otherPath) {
@@ -411,13 +436,13 @@ function readUploadAndSave(file, url, otherPath) {
         return uploadData(url, content);
     }).then(function() { // after its uploaded
         // save it
-        return fs.saveFile(res, otherPath);
+        return fs.saveFile(content, otherPath);
     });
 }
 ```
 
 And similarly to how in a `stream.pipe` chain the last stream is returned, in 
-promise pipes the last returned promise is returned.
+promise pipes the promise returned from the last `.then` callback is returned.
 
 Thats all you need, really. The rest is just converting callback-taking 
 functions to promise-returning functions and using the stuff above to do your 
@@ -428,6 +453,7 @@ You can also return values in case of an error. So for example, to write a
 doesn't exist) you would simply return the default value from the error
 callback:
 
+```js
 function readFileOrDefault(file, line, defaultContent) {
 	return fs.readFile(file).then(function(fileContent) {
     	return fileContent;
@@ -435,6 +461,7 @@ function readFileOrDefault(file, line, defaultContent) {
     	return defaultContent;
     });
 }
+```
 
 You can also throw exceptions within both callbacks passed to `.then`. The 
 user of the returned promise can catch those errors by adding the second
@@ -462,7 +489,7 @@ var result = doSomethingAsync();
 return result.finally(cleanUp);
 ```
 
-The same promise is still returned, but only after the `cleanUp` completes.
+The same promise is still returned, but only after `cleanUp` completes.
 
 ## But what about [async][async]?
 
@@ -491,68 +518,73 @@ files.getLastTwoVersions(filename)
 	});
 ```
 
-`async.parallel` / `async.map` is straightforward:
+`async.parallel` / `async.map` are straightforward:
 
-  // download all items, then get their names
-  var pNames = ids.map(function(id) { 
+```js
+// download all items, then get their names
+var pNames = ids.map(function(id) { 
     return getItem(id).then(function(result) { 
-      return result.name;
+    	return result.name;
     });
-  });
-  // wait for things to complete:
-  Promise.all(pNames).then(function(names) {
+});
+// wait for things to complete:
+Promise.all(pNames).then(function(names) {
     // we now have all the names.
-  });
+});
+```
 
-If you want to wait for the current item to download first (ala 
-`async.mapSeries` and `async.series`) thats also pretty straightforward: just 
-wait for the current download to complete, then run the next download, then 
+What if you want to wait for the current item to download first (like 
+`async.mapSeries` and `async.series`)? Thats also pretty straightforward: just 
+wait for the current download to complete, then start the next download, then 
 extract the item name, and thats exactly what you say in the code:
 
 ```js
-  // start with current being an "empty" already-fulfilled promise
-  var current = Promise.fulfilled();
-  var namePromises = ids.map(function(id) { 
-    // wait for the previous download to complete, then get the next
+// start with current being an "empty" already-fulfilled promise
+var current = Promise.fulfilled();
+var namePromises = ids.map(function(id) { 
+    // wait for the current download to complete, then get the next
     // item, then extract its name.
     current = current
-      .then(function() { return getItem(id); })
-      .then(function(item) { return item.name; });
+        .then(function() { return getItem(id); })
+        .then(function(item) { return item.name; });
     return current;
-  }); 
-  Promise.all(namePromises).then(function(names) {
+}); 
+Promise.all(namePromises).then(function(names) {
     // use all names here.
-  });
+});
 ```
 
-The only thing that remains is mapLimit - which is a bit harder to write - but still not that hard:
+The only thing that remains is mapLimit - which is a bit harder to write - but 
+still not that hard:
 
 ```js
-  var queued = [], parallel = 3;
-  var namePromises = ids.map(function(id) {
+var queued = [], parallel = 3;
+var namePromises = ids.map(function(id) {
     // How many items must be complete before fetching the next?
-    // The queued, minus those running in parallel, plus one of the parallel slots.
+    // The queued, minus those running in parallel, plus one of 
+    // the parallel slots.
     var minComplete = Math.max(0, queued.length - parallel + 1);
-    // when enough items are complete, queue another request
-    // for an item, then get the item's name.
+    // when enough items are complete, queue another request for an item    
     return Promise.some(queued, minComplete)
-      .then(function() {
-        var download = getItem(id);
-        queued.push(download);
-        return download;
-      }).then(function(item) {
-        return item.name;
-      });
+        .then(function() {
+            var download = getItem(id);
+            queued.push(download);
+        	return download;        
+        }).then(function(item) {
+            // after that new download completes, get the item's name.	
+        	return item.name;
+        });
   });
-  Promise.all(namePromises).then(function(names) {
+Promise.all(namePromises).then(function(names) {
     // use all names here.
-  });
+});
 ```
 
 That covers most of async. But we've barely started to scratch the surface.
-Promises could work well with streams. Imagine a limit stream that 
-allows at most 3 promises resolving in parallel, backpressuring otherwise,
-processing items from leveldb:
+
+For example, promises could work very well with streams. Imagine a `limit` 
+stream that allows at most 3 promises resolving in parallel, backpressuring 
+otherwise, processing items from leveldb:
 
 ```js
 originalSublevel.createReadStream().pipe(limit(3, function(data) {
@@ -562,18 +594,19 @@ originalSublevel.createReadStream().pipe(limit(3, function(data) {
 })).pipe(convertedSublevel.createWriteStream());
 ```
 
-Looks awesome. I would definitely like to explore that.
+Looks awesome. I definitely want to explore that.
 
 [bluebird]: https://github.com/petkaantonov/bluebird
 [releasing-zalgo]: http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
 [the-analysis]: /posts/analysis-generators-and-other-async-patterns-node.html
 [must-shutdown]: http://nodejs.org/api/domain.html#domain_warning_don_t_ignore_errors
 [dry]: http://c2.com/cgi/wiki?DontRepeatYourself
-[promises-zalgo-safe]: http://promises-aplus.github.io/promises-spec/#point-87
+[promises-zalgo-safe]: http://promisesaplus.com/#point-87
 [mikeal-talk]: http://www.youtube.com/watch?v=GaqxIMLLOu8
 [promisify]: https://github.com/petkaantonov/bluebird/blob/master/API.md#promisepromisifyobject-target---object
 [async]:https://github.com/caolan/async
-
+[suspend]:https://github.com/jmar777/suspend
+[genny]:https://github.com/jmar777/genny
 
 <script src="/scripts/jquery.flot.js"></script>
 <script src="/scripts/jquery.flot.highlightSeries.js"></script>
