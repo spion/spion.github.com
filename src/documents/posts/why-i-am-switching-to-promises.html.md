@@ -543,7 +543,7 @@ The same promise is still returned, but only after `cleanUp` completes.
 Since promises are actual values, most of the tools in async.js become 
 unnecessary and you can just use whatever you're using for regular values, like 
 your regular `array.map` / `array.reduce` functions, or just plain for loops.
-That, and a couple of promise tools like `.all`, `.spread` and `.some`
+That, and a couple of promise array tools like `.all`, `.spread` and `.some`
 
 You already have async.waterfall and async.auto with .then and .spread 
 chaining:
