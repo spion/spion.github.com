@@ -292,6 +292,7 @@ To use generators with callbacks you have two options
 Since #1 is proving to be unpopular, why not just `s/thunk/promise/g` in #2 
 and use generators with promises?
 
+<a name="promises-tutorial"></a>
 ## But promises are unnecessarily complicated!
 
 Yes, the terminology used to explain promises can often be confusing. 
