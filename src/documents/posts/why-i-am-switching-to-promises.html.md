@@ -49,26 +49,29 @@ the release of the Zalgo-beast. [Promises are Zalgo-safe (see section
 ### Promises are now part of ES6
 
 Yes, they will become a part of the language. New DOM APIs will be using them 
-too. jQuery already uses promises..ish things, angular utilizes promises 
-everywhere (even in the templates), and Ember uses promises extensively
+too. jQuery already fixed their promises... mostly. angular utilizes promises 
+everywhere (even in the templates), Ember uses promises. The list goes on.
 
-Browser code has already switched. I'm switching too.
+Browser libraries have already switched. I'm switching too.
 
 ## But promises are slow!
 
-Yeah, I know I wrote that. But I was wrong. A month after I wrote 
+Yes, I know I wrote that. But I was wrong. A month after I wrote 
 [the giant comparison of async patterns][the-analysis], Petka Antonov wrote 
 [Bluebird][bluebird]. Its a wicked fast promise library, and here are the 
 charts to prove it:
 
-Run time (ms)
+Time to complete (ms)
 
 <div id="perf-time-promises" class="plot">
 </div>
+
+<p style="text-align:right">Parallel requests</p>
+
 <script type="text/javascript">
 
-
 window.perfTimePromises = 
+
 [ { label: 'callbacks-async-waterfall.js',
     data: 
      [ [ '200', 19 ],
@@ -122,18 +125,23 @@ window.perfTimePromises =
        [ '2000', 111 ],
        [ '5000', 272 ],
        [ '10000', 569 ],
-       [ '20000', 1000 ] ] } ]
+       [ '20000', 1000 ] ] } ];
 
 window.addEventListener('load', function() {
-    $.plot('#perf-time-promises', window.perfTimePromises, {legend: { position: 'nw' }});
+    $.plot("#perf-time-promises", window.perfTimePromises, 
+    	{legend: { position: 'nw' }});
 });
 
 </script>
 
-Also, memory usage (MB)
+
+Memory usage (MB)
 
 <div id="perf-mem-promises" class="plot">
 </div>
+
+<p style="text-align:right">Parallel requests</p>
+
 <script type="text/javascript">
 
 window.perfMemPromises = 
@@ -201,8 +209,8 @@ window.addEventListener('load', function() {
 
 </script>
 
-Here is a bigger table for 10 000 parallel operations, 1 ms per I/O op.
-Measure ALL the things!
+And now, a table containing many patterns, 10 000 parallel requests, 1 ms per 
+I/O op. Measure ALL the things!
 
 | file                                       | time(ms) | memory(MB) |
 |:-------------------------------------------|---------:|-----------:|
@@ -228,9 +236,11 @@ Measure ALL the things!
 | promises-q.js                              |    28262 |     712.93 |
 | promises-compose-q.js                      |    59413 |     778.05 |
 
+
 Promises are not slow. At least, not anymore. Infact, bluebird generators
-are almost as fast as regular callback code (and the fastest generators so
-far). And bluebird promises are definitely faster than using `async.waterfall`
+are almost as fast as regular callback code (and they're also the fastest 
+generators right now). And bluebird promises are definitely faster than 
+`async.waterfall`
 
 Considering that bluebird wraps the underlying callback-using libraries **and**
 makes your own callbacks exception-safe, this is really amazing.
@@ -243,6 +253,8 @@ Bluebird has them behind a flag that has slows it down about 5 times. They're
 even longer than Q's `longStackSupport`: bluebird can give you the entire event
 chain. Simply enable the flag in development mode, and you're suddenly in 
 debugging nirvana.
+
+And here is a table reporting all the different ways
 
 ## What about the community? 
 
@@ -261,18 +273,17 @@ module.exports = function fetch(itemId, callback) {
 ```
 
 And now my library is not imposing promises on you. Infact, my library is even 
-friendlier to the community: if I make a dumb mistake within the library that 
-causes an exception to be thrown, it wont crash your process but instead it 
-will pass that exception as an error to your callback. 
-
-As a bonus, I don't have to fear the wrath of my angry users for crashing their 
-production servers. Thats always a plus.
+friendlier to the community: if I make a dumb mistake that causes an exception 
+to be thrown in the library, the exception will be passed as an error to 
+your callback instead of crashing your process. Now I don't have to fear the 
+wrath of angry library users expecting zero downtime on their production 
+servers. Thats always a plus, right?
 
 ## What about generators?
 
 To use generators with callbacks you have two options
 
-1. use a resumer library like [suspend] or [genny]
+1. use a resumer style library like [suspend] or [genny]
 2. wrap callback-taking functions to become thunk returning functions.
 
 Since #1 is proving to be unpopular, why not just `s/thunk/promise/g` and use
@@ -280,16 +291,17 @@ generators with promises?
 
 ## But promises are unnecessarily complicated!
 
-Promises are actually pretty simple, its just that the usual terminology used
-to explain them is complicated. Here is a straight-forward guide that uses known 
-principles and analogies from node (remember, the focus is on simplicity,
-not correctness):
+Yes, the terminology used to explain promises can often be confusing. 
+But promises themselves are actually pretty simple. Here is a straight-forward 
+guide that uses known principles and analogies from node (remember, the focus 
+is on simplicity, not correctness):
 
-Promises are objects that have a `.then` method. The `.then` method takes 2
-callbacks, a success callback and an error callback. When one of these two 
-callbacks returns a value or throws an exception, `.then` must behave in a way 
+Promises are objects that have a `then` method. Unlike node functions, which 
+take a single callback, the `then` method of a promise can take two
+callbacks: a success callback and an error callback. When one of these two 
+callbacks returns a value or throws an exception, `then` must behave in a way 
 that enables stream-like chaining and simplified error handling. Lets explain 
-that behavior through examples:
+that behavior of `then` through examples:
 
 Imagine that node's `fs` was wrapped to work in this manner. This is pretty 
 easy to do - bluebird already does something like that with 
@@ -321,7 +333,7 @@ return them from your functions:
 
 ```js
 var filePromise = fs.readFile(file);
-// do more stuff...
+// do more stuff... even nest inside another promise, then
 filePromise.then(function(res) { ... });
 ```
 
@@ -334,12 +346,13 @@ filePromise.then(function(res) { saveLocal(url, res); });
 ```
 
 Hey, this is beginning to look a lot like streams - they too can be piped to
-multiple destinations.
+multiple destinations. But unlike streams, you can attach more callbacks and 
+get the value even *after* the file reading operation completes.
 
 Still not good enough? 
 
-What if I told you... that if you return something from inside the .then() 
-callback, then you'll get a promise for that thing?
+What if I told you... that if you return something from inside a .then() 
+callback, then you'll get a promise for that thing on the outside?
 
 Say you want to get a line from a file.
 
@@ -358,12 +371,12 @@ var message = beginsWithHelloPromise.then(function(beginsWithHello) {
 });
 ```
 
-Thats pretty cool, although not very useful - we could just put all sync
-operations in the first `.then()` callback. 
+Thats pretty cool, although not terribly useful - we could just put all sync
+operations in the first `.then()` callback and be done with it.
 
-But guess what happens when we return a promise from within that `.then` 
-callback. We get a promise for that promise outside of `.then()`?  Nope, we 
-just get the same promise on the outside too!
+But guess what happens when you return a *promise* from within a `.then` 
+callback. Do you get a promise for that promise outside of `.then()`?  Nope, 
+you just get the same promise on the outside!
 
 ```js
 function readUploadAndSave(file, url, otherPath) {
@@ -402,8 +415,8 @@ function readUploadAndSave(file, url, otherPath) {
 });
   }
 
-Mind = blown! Notice how I'm not handling errors if I can't handle them there.
-They will automatically get passed with the returned promise.
+Mind = blown! Notice how I don't have to manually propagate errors. They will
+automatically get passed with the returned promise.
 
 What if we want to make sure the data is uploaded first before saving?
 
@@ -441,6 +454,20 @@ function readUploadAndSave(file, url, otherPath) {
 }
 ```
 
+Or just nest it if you need the closure.
+
+```js
+function readUploadAndSave(file, url, otherPath) {
+    // read the file
+    return fs.readFile(file).then(function(content)
+        return uploadData(url, content).then(function() {
+        // after its uploaded, save it
+        	return fs.saveFile(content, otherPath);
+        });
+    });
+}
+```
+
 And similarly to how in a `stream.pipe` chain the last stream is returned, in 
 promise pipes the promise returned from the last `.then` callback is returned.
 
@@ -454,7 +481,7 @@ doesn't exist) you would simply return the default value from the error
 callback:
 
 ```js
-function readFileOrDefault(file, line, defaultContent) {
+function readFileOrDefault(file, defaultContent) {
 	return fs.readFile(file).then(function(fileContent) {
     	return fileContent;
     }, function(err) {
@@ -463,12 +490,28 @@ function readFileOrDefault(file, line, defaultContent) {
 }
 ```
 
+
 You can also throw exceptions within both callbacks passed to `.then`. The 
 user of the returned promise can catch those errors by adding the second
 .then handler
 
+Now how about `configFromFileOrDefault` that reads and parses a JSON config 
+file, falls back to a default config if the file doesn't exist, but reports
+JSON parsing errors? Here it is:
+
+```js
+function configFromFileOrDefault(file, defaultContent) {
+    // if fs.readFile fails, a default config is returned.
+    // if JSON.parse throws, this promise propagates that.
+	return fs.readFile(file)
+		.catch(function() {
+			return '{"default":"config"}';
+		}).then(JSON.parse);
+}
+```
+
 Finally, you can make sure your resources are released in all cases, even
-when an error or an exception happens:
+when an error or exception happens:
 
 ```js
 var result = doSomethingAsync();
@@ -495,8 +538,8 @@ The same promise is still returned, but only after `cleanUp` completes.
 
 Since promises are actual values, most of the tools in async.js become 
 unnecessary and you can just use whatever you're using for regular values, like 
-your regular `array.map` / `array.reduce` functions combined with some promise 
-tools like `.all` 
+your regular `array.map` / `array.reduce` functions, or just plain for loops.
+That, and a couple of promise tools like `.all`, `.spread` and `.some`
 
 You already have async.waterfall and async.auto with .then and .spread 
 chaining:
@@ -560,12 +603,12 @@ still not that hard:
 ```js
 var queued = [], parallel = 3;
 var namePromises = ids.map(function(id) {
-    // How many items must be complete before fetching the next?
+    // How many items must download before fetching the next?
     // The queued, minus those running in parallel, plus one of 
     // the parallel slots.
-    var minComplete = Math.max(0, queued.length - parallel + 1);
+    var mustComplete = Math.max(0, queued.length - parallel + 1);
     // when enough items are complete, queue another request for an item    
-    return Promise.some(queued, minComplete)
+    return Promise.some(queued, mustComplete)
         .then(function() {
             var download = getItem(id);
             queued.push(download);
@@ -592,6 +635,17 @@ originalSublevel.createReadStream().pipe(limit(3, function(data) {
 		return {key: data.key, value: converted};
 	});
 })).pipe(convertedSublevel.createWriteStream());
+```
+
+Or how about stream pipelines that are safe from errors without attaching
+error handlers to all of them?
+
+```js
+pipeline(original, limiter, converted).then(function(done) {
+	
+}, function(streamError) {
+	
+})
 ```
 
 Looks awesome. I definitely want to explore that.
