@@ -1,7 +1,7 @@
 ---
 title: Why I am switching to promises
 layout: post
-hidden: false
+hidden: true
 date: 2013-10-07
 ---
 
