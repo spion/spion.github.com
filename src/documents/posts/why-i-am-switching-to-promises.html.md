@@ -10,10 +10,10 @@ merely aesthetical, they're rather practical:
 
 
 <a name="exception-crash"></a>
-### Exception? Crash!
+### Throw-catch? Nope, throw-crash!
 
 We're all human. We make mistakes, and then JavaScript `throw`s an error. How 
-do callbacks punish mistakes? They crash your process! 
+do callbacks punish that mistake? They crash your process! 
 
 > But spion, why don't you use domains?
 
@@ -30,6 +30,8 @@ Promises are exception safe. If an unhandled exception happens in one of the
 `.then` callbacks, only that promise chain will die. I can also attach an error 
 handler to handle the exception and do any clean up if necessary - 
 transparently! The process will happily continue to serve the rest of my users.
+
+For more info see [#5114][#5114] andi [#5149][#5149] 
 
 ### `if (err) return callback(err)`
 
@@ -788,7 +790,8 @@ I'm just kidding, of course. I don't know if thats going to happen. Either way,
 promises are useful and practical and will remain useful and practical in the
 future.
 
-
+[#5114]: https://github.com/joyent/node/issues/5114
+[#5149]: https://github.com/joyent/node/issues/5149
 [bluebird]: https://github.com/petkaantonov/bluebird
 [releasing-zalgo]: http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
 [the-analysis]: /posts/analysis-generators-and-other-async-patterns-node.html
