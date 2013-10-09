@@ -19,7 +19,7 @@ do callbacks punish that mistake? They crash your process!
 
 Yes, I could do that. I could [crash my process gracefully][must-shutdown]
 instead of letting it just crash. But its still a crash no matter what
-lipstick you put on it. It still results with a inoperative worker. With 
+lipstick you put on it. It still results with an inoperative worker. With 
 thousands of requests, 0.5% hitting a throwing path means over 50 process 
 shutdowns and most likely denial of service. 
 
