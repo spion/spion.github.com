@@ -1,7 +1,7 @@
 ---
 title: Why I am switching to promises
 layout: post
-hidden: true
+hidden: false
 date: 2013-10-07
 ---
 
@@ -27,9 +27,9 @@ And guess what a user that hits an error does? Starts repeatedly refreshing
 the page, thats what. The horror!
 
 Promises are throw-safe. If an error is thrown in one of the `.then` 
-callbacks, only that single promise chain will die. I can also attach an error 
-handler to handle the exception and do any clean up if necessary - 
-transparently! The process will happily continue to serve the rest of my users.
+callbacks, only that single promise chain will die. I can also attach error or 
+"finally" handlers to do any clean up if necessary - transparently! The 
+process will happily continue to serve the rest of my users.
 
 For more info see [#5114][#5114] and [#5149][#5149] 
 
