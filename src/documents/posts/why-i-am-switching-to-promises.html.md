@@ -50,6 +50,8 @@ I guess I could do that and lose the callback stack when generating a
 entire thing with promises, rely on longStackSupport, and handle errors at
 at my discretion?
 
+Also, what happened to the [DRY principle](dry)?
+
 ### Promises are now part of ES6
 
 Yes, they will become a part of the language. New DOM APIs will be using them 
