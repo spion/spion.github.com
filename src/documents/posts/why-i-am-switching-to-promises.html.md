@@ -19,8 +19,12 @@ do callbacks punish mistakes? They crash your process!
 
 Yes, I could do that. I could [crash my process gracefully][must-shutdown]
 instead of letting it just crash. But its still a crash no matter what
-lipstick you put on it. With thousands of users, 0.5% hitting a throwing
-path means over 50 process shutdowns and most likely denial of service.
+lipstick you put on it. It still results with a inoperative worker. With 
+thousands of requests, 0.5% hitting a throwing path means over 50 process 
+shutdowns and most likely denial of service. 
+
+And guess what a user that hits an error does? Starts repeatedly refreshing 
+the page, thats what. The horror!
 
 Promises are exception safe. If an unhandled exception happens in one of the 
 `.then` callbacks, only that promise chain will die. I can also attach an error 
@@ -32,24 +36,17 @@ transparently! The process will happily continue to serve the rest of my users.
 That line is haunting me in my dreams now. What happened to the 
 [DRY principle](dry)?
 
-Yes, I understand that its important to explicitly handle all errors. But I 
-don't believe its important to explicitly *bubble them up* the callback chain.
-If I don't deal with the error here, thats because I can't deal with the error
+I understand that its important to explicitly handle all errors. But I don't
+ believe its important to explicitly *bubble them up* the callback chain. If 
+I don't deal with the error here, thats because I can't deal with the error
 there - I simply don't have enough context.
 
-> But spion, why don't you wrap all your calbacks? 
+> But spion, why don't you wrap your calbacks? 
 
 I guess I could do that and lose the callback stack when generating a 
 `new Error()`. Or since I'm already wrapping things, why not wrap the
 entire thing with promises, rely on longStackSupport, and handle errors at
 at my discretion?
-
-### Containing Zalgo
-
-Your promise library prevents you from [releasing Zalgo][releasing-zalgo]. You 
-can't release Zalgo with promises. Its impossible for a promise to result with 
-the release of the Zalgo-beast. [Promises are Zalgo-safe (see section 
-3.1)][promises-zalgo-safe].
 
 ### Promises are now part of ES6
 
@@ -59,7 +56,23 @@ everywhere (even in the templates). Ember uses promises. The list goes on.
 
 Browser libraries already switched. I'm switching too.
 
-## But promises are slow!
+### Containing Zalgo
+
+Your promise library prevents you from [releasing Zalgo][releasing-zalgo]. You 
+can't release Zalgo with promises. Its impossible for a promise to result with 
+the release of the Zalgo-beast. [Promises are Zalgo-safe (see section 
+3.1)][promises-zalgo-safe].
+
+### Callbacks getting called multiple times
+
+Promises solve that too. Once the operation is complete and the promise is
+resolved (either with a result or with an error), it cannot be resolved again.
+
+### Promises can do your laundry
+
+Oops, unfortunately, promises wont do that. You still need to do it manually.
+
+## But you said promises are slow!
 
 Yes, I know I wrote that. But I was wrong. A month after I wrote 
 [the giant comparison of async patterns][the-analysis], Petka Antonov wrote 
@@ -244,28 +257,28 @@ I/O op. Measure ALL the things!
 
 Promises are not slow. At least, not anymore. Infact, bluebird generators
 are almost as fast as regular callback code (they're also the fastest 
-generators as of now). And bluebird promises are definitely faster than 
-`async.waterfall`
+generators as of now). And bluebird promises are definitely at least two times 
+faster than `async.waterfall`.
 
-Considering that bluebird wraps the underlying callback-using libraries **and**
-makes your own callbacks exception-safe, this is really amazing.
-
-note: `async.waterfall` doesn't do this. exceptions still crash your process.
+Considering that bluebird wraps the underlying callback-based libraries **and**
+makes your own callbacks exception-safe, this is really amazing. 
+`async.waterfall` doesn't do this. exceptions still crash your process.
 
 ## What about stack traces?
 
 Bluebird has them behind a flag that slows it down about 5 times. They're
 even longer than Q's `longStackSupport`: bluebird can give you the entire event
 chain. Simply enable the flag in development mode, and you're suddenly in 
-debugging nirvana.
+debugging nirvana. It may even be viable to turn them on in production!
 
 ## What about the community? 
 
-This is a valid point. Mikeal said it: If you write a library based on promises, 
-[nobody is going to use it][mikeal-talk].
+This is a valid point. Mikeal said it: If you write a library based on 
+promises, [nobody is going to use it][mikeal-talk].
 
-However, both bluebird and Q give you `promise.nodeify`. With it, you can write 
-a library with a dual API that can both take callbacks and return promises:
+However, both bluebird and Q give you `promise.nodeify`. With it, you can 
+write a library with a dual API that can both take callbacks and return 
+promises:
 
 ```js
 module.exports = function fetch(itemId, callback) {
@@ -289,16 +302,18 @@ To use generators with callbacks you have two options
 1. use a resumer style library like [suspend] or [genny]
 2. wrap callback-taking functions to become thunk returning functions.
 
-Since #1 is proving to be unpopular, why not just `s/thunk/promise/g` in #2 
-and use generators with promises?
+Since #1 is proving to be unpopular, and #2 already involves wrapping, why not 
+just `s/thunk/promise/g` in #2 and use generators with promises?
 
 <a name="promises-tutorial"></a>
 ## But promises are unnecessarily complicated!
 
-Yes, the terminology used to explain promises can often be confusing. 
-But promises themselves are actually pretty simple. Here is a straight-forward 
-guide that uses known principles and analogies from node (remember, the focus 
-is on simplicity, not correctness):
+Yes, the terminology used to explain promises can often be confusing. But 
+promises themselves are pretty simple - they're basically like lightweight 
+streams for single values. 
+
+Here is a straight-forward guide that uses known principles and analogies from 
+node (remember, the focus is on simplicity, not correctness):
 
 Promises are objects that have a `then` method. Unlike node functions, which 
 take a single callback, the `then` method of a promise can take two
@@ -308,7 +323,7 @@ that enables stream-like chaining and simplified error handling. Lets explain
 that behavior of `then` through examples:
 
 Imagine that node's `fs` was wrapped to work in this manner. This is pretty 
-easy to do - bluebird already does something like that with 
+easy to do - bluebird already lets you do something like that with 
 [`promisify()`][promisify]. Then this code:
 
 ```js
@@ -329,10 +344,10 @@ fs.readFile(file).then(function(res) {
 ```
 
 Whats going on here? `fs.readFile(file)` starts a file reading operation. That 
-operation is not yet complete at the point when the readFile function returns. 
-This means we can't return the file content. But we can still return something: 
-we can return the reading operation itself. And that operation is represanted 
-with a promise.
+operation is not yet complete at the point when readFile returns. This means 
+we can't return the file content. But we can still return something: we can 
+return the reading operation itself. And that operation is represanted with a 
+promise.
 
 This is sort of like a single-value stream:
 
@@ -368,9 +383,9 @@ filePromise.then(function(res) { uploadData(url, res); });
 filePromise.then(function(res) { saveLocal(url, res); });
 ```
 
-Hey, this is beginning to look a lot like streams - they too can be piped to
-multiple destinations. But unlike streams, you can attach more callbacks and 
-get the value even *after* the file reading operation completes.
+Hey, this is beginning to look more and more like streams - they too can be 
+piped to multiple destinations. But unlike streams, you can attach more 
+callbacks and get the value even *after* the file reading operation completes.
 
 Still not good enough? 
 
@@ -398,8 +413,8 @@ Thats pretty cool, although not terribly useful - we could just put both sync
 operations in the first `.then()` callback and be done with it.
 
 But guess what happens when you return a *promise* from within a `.then` 
-callback. Do you get a promise for that promise outside of `.then()`?  Nope, 
-you just get the same promise on the outside!
+callback. You get a promise for a promise outside of `.then()`?  Nope, 
+you just get the same promise! 
 
 ```js
 function readProcessAndSave(inPath, outPath) {
