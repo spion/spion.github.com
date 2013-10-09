@@ -9,8 +9,8 @@ I'm switching my node code from callbacks to promises. The reasons aren't
 merely aesthetical, they're rather practical:
 
 
-<a name="exception-crash"></a>
-### Throw-catch? Nope, throw-crash!
+<a name="throw-crash"></a>
+### Throw-catch vs throw-crash
 
 We're all human. We make mistakes, and then JavaScript `throw`s an error. How 
 do callbacks punish that mistake? They crash your process! 
@@ -26,12 +26,12 @@ shutdowns and most likely denial of service.
 And guess what a user that hits an error does? Starts repeatedly refreshing 
 the page, thats what. The horror!
 
-Promises are exception safe. If an unhandled exception happens in one of the 
-`.then` callbacks, only that promise chain will die. I can also attach an error 
+Promises are throw-safe. If an error is thrown in one of the `.then` 
+callbacks, only that single promise chain will die. I can also attach an error 
 handler to handle the exception and do any clean up if necessary - 
 transparently! The process will happily continue to serve the rest of my users.
 
-For more info see [#5114][#5114] andi [#5149][#5149] 
+For more info see [#5114][#5114] and [#5149][#5149] 
 
 ### `if (err) return callback(err)`
 
