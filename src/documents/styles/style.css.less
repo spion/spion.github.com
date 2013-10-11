@@ -19,11 +19,14 @@ body { margin:1ex; overflow-x:hidden; }
 
 @h1size: 2.3636rem;
 
-.post > h1 { 
+h1 { 
     font-size: @h1size; 
     line-height: @h1size + 0.3333rem;
     margin-top: 5rem;
     margin-bottom: 0.5rem;
+}
+h1.first {
+    margin-top: 1rem;
 }
 
 h2 { 
@@ -99,33 +102,35 @@ h2, h3, h4 {
     margin-bottom:0.25rem;
 }
 
-.post p {
-    line-height:1.45em;
-    
+p {
+    line-height:1.45rem;    
+}
+p.subtitle {
+    line-height: 1.2rem;
 }
 
 h2 + p, h3 + p, h4 + p {
     margin-top:0;
 }
 
-.post li {
+li {
     line-height: 1.45;
     margin-bottom: 0.25rem;
     margin-top: 0.25rem;
     margin-left: 1rem;
 }
 
-.post blockquote {
+blockquote {
     border-left: solid 1ex @mainColor;
     padding-left: 1rem;
     margin: 1rem 0.05rem;
     font-style: italic;
     color: @grayColor;
 }
-.post blockquote small {
+blockquote small {
     color: @grayColor;
 }
-.post blockquote small:before {
+blockquote small:before {
     content: '\2014 \00A0';
 }
 
@@ -182,7 +187,7 @@ hr {
     margin: 2rem 0 4rem 0;
 }
 
-.post .content > table {
+.content > table {
 
     margin: 1rem 0;
     border: solid 2px @mainColor;

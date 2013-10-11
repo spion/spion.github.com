@@ -48,7 +48,7 @@ there - I simply don't have enough context.
 I guess I could do that and lose the callback stack when generating a 
 `new Error()`. Or since I'm already wrapping things, why not wrap the
 entire thing with promises, rely on longStackSupport, and handle errors at
-at my discretion?
+my discretion?
 
 Also, what happened to the [DRY principle](dry)?
 

@@ -1,0 +1,27 @@
+---
+layout: nuggets
+title: Promise nuggets
+---
+
+- var nuggets = getFilesAtPath("promise-nuggets").toJSON();
+- nuggets = nuggets.sort(function(p1, p2) {
+-       var l = p1.basename < p2.basename ? -1:
+-               p1.basename > p2.basename ? 1 : 0;
+-       return l;
+-   }).filter(function(p){
+-       return !p.hidden && p.category;
+-   }).reduce(function(acc, p) {
+-       if (!acc[p.category]) acc[p.category] = [p];
+-       else acc[p.category].push(p);
+-       return acc;
+-   }, {})
+
+each items, category in nuggets
+  .category 
+    .name
+      h2= category
+    .items
+      each post in items
+        .post 
+          a(href=post.url)=post.title
+
