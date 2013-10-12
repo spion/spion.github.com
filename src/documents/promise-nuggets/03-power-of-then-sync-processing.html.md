@@ -1,5 +1,5 @@
 ---
-title: The power of then - Sync processing
+title: The power of then - sync processing
 layout: nuggets
 category: Basic examples
 date: 2007-01-05
