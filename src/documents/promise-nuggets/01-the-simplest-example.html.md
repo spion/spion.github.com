@@ -2,14 +2,13 @@
 title: The simplest example
 layout: nuggets
 category: Basic examples
-level: 1
 date: 2007-01-05
 ---
 
-Whats the difference between callback-based functions and promise-based 
+Whats the main difference between callback-based functions and promise-based 
 functions?
 
-The first functions call the callback with the error and the result:
+The first call the callback with the error and the result:
 
 ```js
 fs.readFile(path, function(error, content) {
@@ -17,7 +16,7 @@ fs.readFile(path, function(error, content) {
 })
 ```
 
-The second functions return a promise. We can then attach two callbacks
+The second return promises. We can then attach two callbacks
 to that promise - one to handle success, one to handle errors.
 
 ```js
@@ -50,5 +49,5 @@ represent the reading operation so we can't put it in a variable or pass it
 around to other functions.
 
 In promise-returning functions, the function immediately returns the operation
-as a promise. You put the operation in a var, do some processing, attach a
-callback or pass it around to other functions.
+as a promise. You can put the operation in a variable, do some processing, 
+attach a callback or pass it around to other functions.
