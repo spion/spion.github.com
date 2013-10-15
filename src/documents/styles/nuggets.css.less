@@ -1,5 +1,6 @@
+@import 'vars.less';
+
 pre {
-	
 
     padding: 0.8rem;
     margin: 1rem 0.05rem;
@@ -19,4 +20,25 @@ p code {
     padding: 0.05rem 0.1rem;
     font-family: Monaco, "Liberation Mono", Courier, monospace;
     font-size: 16px;
+}
+
+.category {
+
+    .items {
+        padding-left: 2rem;
+    }
+}
+
+h1 {
+    position:relative;
+    a.back {
+        position:absolute;
+        left: -1.2em;
+        top: 0.07em;
+        color: #aaa;
+        border-bottom: none;
+    }
+    a.back:hover {
+        color: @linkColor;
+    }
 }

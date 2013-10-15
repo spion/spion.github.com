@@ -1,5 +1,7 @@
 // @import url(http://fonts.googleapis.com/css?family=PT+Serif:400,700,400italic&subset=latin,latin-ext,cyrillic);
 
+@import 'vars.less';
+
 * { box-sizing: border-box; }
 
 body, html {
@@ -13,11 +15,12 @@ body { margin:1ex; overflow-x:hidden; }
 
 @mainColor: #f3ecdf;
 @grayColor: #666;
-
+@linkColor: #37c;
+@h1size: 2.3636rem;
 
 .post:first-child > h1 { margin-top: 4rem; }
 
-@h1size: 2.3636rem;
+
 
 h1 { 
     font-size: @h1size; 
@@ -143,9 +146,8 @@ a.img {
     border-bottom: none;
 }
 
-a:hover {
-    text-decoration: none;
-}
+a:hover { color: @linkColor; }
+a:active { color: @linkColor; }
 
 .post .date {    
     margin: 0.5rem 0 1.5rem 0;

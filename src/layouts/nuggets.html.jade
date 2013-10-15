@@ -2,5 +2,7 @@
 layout: base
 ---
 link(rel='stylesheet', href='/styles/nuggets.css')
-h1= document.title
+h1
+	a.back(href='/promise-nuggets') ↩
+	span= document.title
 .content!= content
