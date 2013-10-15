@@ -1,7 +1,7 @@
 ---
 title: Creating new functions
 layout: nuggets
-category: Basic examples
+category: Introduction
 date: 2007-01-05
 ---
 

@@ -1,11 +1,11 @@
 ---
 title: The power of then - async operations
 layout: nuggets
-category: Basic examples
+category: Introduction
 date: 2007-01-05
 ---
 
-In the [previous example](03-power-of-thhen-sync-processing.html) we learned 
+In the [previous example](03-power-of-then-sync-processing.html) we learned 
 how to apply sync transformations to the result. But what if we need to do 
 another async operation instead? 
 
@@ -44,13 +44,12 @@ And we get a promise for the fetched friends outside of `.then`
 
 ## Notes
 
-Howcome this works? If we return a promise from `.then()` wont we get a promise
-for a promise inside `.then()`? 
+How come this works? If we return a promise from `.then()` won't we get a 
+promise for a promise inside `.then()`? 
 
 The answer is no. When `.then()` sees that we have returned a promise, it will 
-also try to wait for it and "unpack" it to the actual value. As long as the 
-unpacking results with another promise, `.then()` will continue to unpack them 
-until it gets to an actual value.
+also try to "unpack" it to get to an actual value. As long as the unpacking 
+results with another promise, `.then()` will continue to unpack them.
 
 In the callback example, we must explicitly handle the error. Since we can't
 deal with that error there, we must call the passed callback to pass that error. 

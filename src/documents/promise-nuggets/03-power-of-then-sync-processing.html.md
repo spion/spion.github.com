@@ -1,7 +1,7 @@
 ---
 title: The power of then - sync processing
 layout: nuggets
-category: Basic examples
+category: Introduction
 date: 2007-01-05
 ---
 
@@ -35,9 +35,13 @@ readLine('myfile.txt', 2, function(err, line) {
 
 #### Promises
 
-To create a promise-based function you can simply return the line from inside
-the first .then callback. You'll get a promise for that line outside of the 
-callback.
+To create a promise-based function we can use another promise method called 
+`.then()`. It works exactly the same as `.done()`, but also returns a promise 
+for the value returned inside its callbacks. 
+
+We can simply return the line from inside the first .then callback. We get a 
+promise for that line outside of the callback (which we return from the 
+function)
 
 ```js
 function readLine(file, line) {
@@ -45,7 +49,7 @@ function readLine(file, line) {
 		return res.split('\n')[line];
 	});
 }
-readLine(file, line).then(function(line) {
+readLine(file, line).done(function(line) {
 	// use line
 }, function(err) {
 	// handle error
@@ -56,7 +60,6 @@ When you call a promise's .then function, a new promise is created and returned
 by `.then`. Its a promise to apply all the operations inside the then callback 
 after the original async operation completes, and return the result.
 
-
 ## Notes
 
 In the callback example, we must explicitly handle the error. Since we can't
@@ -64,3 +67,10 @@ deal with that error there, we must call the passed callback to pass that error.
 
 In the promise example, we can skip the error handling function. If we do that,
 the error will automatically propagate with the returned promise.
+
+
+
+`Promise.done()` is the equivalent of `Array.forEach` while `Promise.then()` is
+the equivalent for `Array.map`. You use the first when you don't want to create
+a new promise, and the second when you do.
+

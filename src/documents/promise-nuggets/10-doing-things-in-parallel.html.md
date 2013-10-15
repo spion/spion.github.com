@@ -32,13 +32,13 @@ operations are complete, or when the first error is encountered.
 
 #### Promises
 
-Bluebird and Q give you the `.all()` method which creates a new promise from 
+Bluebird and Q give you `.all()`, a method that creates a new promise from 
 an array of promises:
 
 ```js
 function readTwoFiles(file1, file2) {
-	return Bluebird.join(fs.readFileAsync(file1), 
-		fs.readFileAsync(file2));
+	return Bluebird.all([fs.readFileAsync(file1), 
+		fs.readFileAsync(file2)]);
 }
 readTwoFiles(file1, file2).then(function(files) {
 	console.log(files[0], files[1]);
@@ -51,7 +51,7 @@ fulfilled or is rejected with an error when the first error is encountered.
 ## Notes
 
 async.parallel expects functions that take a single callback argument. 
-`Function.bind` allows us to create such functions by binding some of the
+`Function.bind()` allows us to create such functions by binding some of the
 arguments with predefined values. Therefore 
 
 ```js
@@ -63,5 +63,3 @@ returns a function that works like this:
 ```js
 function(callback) { fs.readFile(file1, callback); }
 ```
-
-

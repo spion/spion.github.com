@@ -1,7 +1,7 @@
 ---
 title: Safety of then - Exceptions
 layout: nuggets
-category: Basic examples
+category: Introduction
 date: 2007-01-05
 ---
 
@@ -47,7 +47,7 @@ as errors with the promise, and we can handle them in the error handler of that
 promise:
 
 ```js
-readConfig(file).then(function(config) {
+readConfig(file).done(function(config) {
 	// Got configuration.
 }, function(error) {
 	// JSON parse error or file read error.
