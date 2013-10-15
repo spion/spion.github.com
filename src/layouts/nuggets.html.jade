@@ -3,6 +3,7 @@ layout: base
 ---
 link(rel='stylesheet', href='/styles/nuggets.css')
 h1
-	a.back(href='/promise-nuggets') ↩
+	unless document.isTOC
+		a.back(href='/promise-nuggets') ↩
 	span= document.title
 .content!= content
