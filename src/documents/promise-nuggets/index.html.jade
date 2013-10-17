@@ -6,12 +6,12 @@ isTOC: true
 
 - var nuggets = getFilesAtPath("promise-nuggets").toJSON();
 - nuggets = nuggets.sort(function(p1, p2) {
--       var l = p1.basename < p2.basename ? -1:
--               p1.basename > p2.basename ? 1 : 0;
--       return l;
+-       return p1.basename.localeCompare(p2.basename);
+-       //return l;
 -   }).filter(function(p){
 -       return !p.hidden && p.category;
 -   }).reduce(function(acc, p) {
+-				//console.log(p.basename);
 -       if (!acc[p.category]) acc[p.category] = [p];
 -       else acc[p.category].push(p);
 -       return acc;
@@ -21,8 +21,8 @@ each items, category in nuggets
   .category 
     .name
       h2= category
-    .items
+    ol.items
       each post in items
-        .post 
+        li.post 
           a(href=post.url)=post.title
 

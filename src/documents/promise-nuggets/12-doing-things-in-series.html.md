@@ -40,8 +40,8 @@ operations are complete, or when the first error is encountered.
 
 #### Promises
 
-Thanks to `.then` returning a promise, we can chain async operations without
-any helper tools:
+Thanks to `.then`'s behavior when returning a promise, we can chain async 
+operations without any helper tools:
 
 ```js
 function transformFile(input, output) {
@@ -72,6 +72,6 @@ fs.readFile.bind(fs, file1)
 returns a function that works like this:
 
 ```js
-function(callback) { fs.readFile(file1, callback); }
+function(callback) { return fs.readFile(file1, callback); }
 ```
 
