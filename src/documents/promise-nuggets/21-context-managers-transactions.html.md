@@ -94,8 +94,6 @@ function beginTransaction(fn) {
   return tx.then(fn).then(function(res) { 
     return tx.commit().then(function() {
       return res;
-    }, function(err) {
-      throw err;
     });
   }, function(err) {
     tx.rollback();
