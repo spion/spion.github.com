@@ -133,9 +133,8 @@ resources which will be automatically disposed. The API could look like this:
 ```js
 using(client.connect(host1), 
       client.connect(host2), function(conn1, conn2) {
-      return pipeStreams(conn1.resultReader(), 
-                         conn2.resultWriter());
-  });
+        return pipeStreams(conn1.resultReader(), 
+                           conn2.resultWriter());
 }).done(function(res){
   // all resources are disposed of
 }, function(err) {
