@@ -114,7 +114,8 @@ function doQueries() {
     return tx.query(...).then(function() {
       return tx.otherQuery(...);
     }).then(function() {
-      return tx.resultQuery(...);
+      // this will be the value of the resulting promise.
+      return tx.resultQuery(...); 
     })
   });
 }
@@ -132,7 +133,7 @@ resources which will be automatically disposed. The API could look like this:
 ```js
 using(client.connect(host1), 
       client.connect(host2), function(conn1, conn2) {
-        return pipeStreams(conn1.resultReader(), 
+        return pipeStreams(conn1.resultReader(query), 
                            conn2.resultWriter());
 }).done(function(res){
   // all resources are disposed of
