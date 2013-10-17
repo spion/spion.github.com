@@ -131,9 +131,8 @@ The context manager idea can be extended further to allow us to add extra
 resources which will be automatically disposed. The API could look like this:
 
 ```js
-using(function(manage) {
-  return manage(client.connect(host1), client.connect(host2))
-    .spread(function(conn1, conn2) {
+using(client.connect(host1), 
+      client.connect(host2), function(conn1, conn2) {
       return pipeStreams(conn1.resultReader(), 
                          conn2.resultWriter());
   });
