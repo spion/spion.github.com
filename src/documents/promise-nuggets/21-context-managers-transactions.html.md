@@ -122,10 +122,9 @@ function doQueries() {
 
 ## Notes
 
-`.finally()` is a convenience function that allows you to schedule another
-operation to be executed without modifying the result or error from the 
-original promise. It works similarly to the sync `finally` in 
-`try / catch / finally`
+The method `.finally()` allows you to schedule another operation to be executed 
+without modifying the result or error from the original promise. It works 
+similarly to the sync `finally` in `try / catch / finally`
 
 The context manager idea can be extended further to allow us to add extra 
 resources which will be automatically disposed. The API could look like this:
