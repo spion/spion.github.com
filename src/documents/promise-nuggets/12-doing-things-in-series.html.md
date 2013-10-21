@@ -61,17 +61,4 @@ fulfilled or is rejected with an error when the first error is encountered.
 
 ## Notes
 
-async.parallel expects functions that take a single callback argument. 
-`Function.bind()` allows us to create such functions by binding some of the
-arguments with predefined values. Therefore 
-
-```js
-fs.readFile.bind(fs, file1)
-```
-
-returns a function that works like this:
-
-```js
-function(callback) { return fs.readFile(file1, callback); }
-```
-
+None
