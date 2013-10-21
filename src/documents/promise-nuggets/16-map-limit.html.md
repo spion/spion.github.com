@@ -25,6 +25,7 @@ async.mapLimit(ids, 3, function(id, callback) {
 }, function(err, results) {
 	// results is an array of names
 });
+```
 
 #### Promises
 

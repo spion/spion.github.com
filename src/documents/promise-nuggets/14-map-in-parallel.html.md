@@ -39,10 +39,10 @@ async.map(ids, function(id, callback) {
 
 Promises are actual values - that means no special tools are required. We can
 simply use Array.map to get an array of promises for the names, then apply the
-usual tool on that array - Bluebird.all.
+usual tool on that array - Promise.all.
 
 ```js
-Bluebird.all(ids.map(function(id) { 
+Promise.all(ids.map(function(id) { 
     return getItem(id).then(function(result) { 
         return result.name;
     });
