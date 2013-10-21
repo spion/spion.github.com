@@ -2,7 +2,7 @@
 ---
 title: Context managers and transactions
 layout: nuggets
-category: Advanced examles
+category: Advanced examples
 level: 2
 date: 2007-01-05
 ---
