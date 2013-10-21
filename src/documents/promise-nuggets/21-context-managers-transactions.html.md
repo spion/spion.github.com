@@ -58,7 +58,7 @@ Using promises, we can write our own context manager without using domains:
 ```js
 function using(resource, fn) {
   // wraps it in case the resource was not promise
-  var pResource = Bluebird.fulfilled(resource); 
+  var pResource = Promise.cast(resource); 
   return pResource.then(fn).finally(function() { 
     return pResource.then(resource) { 
       return resource.dispose(); 
