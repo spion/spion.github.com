@@ -1,5 +1,5 @@
 ---
-title: Complex task dependencies (async.auto)
+title: Complex task dependencies
 layout: nuggets
 category: Multiple operations
 date: 2007-01-05
