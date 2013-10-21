@@ -38,7 +38,7 @@ name.
 // start with current being an "empty" already-fulfilled promise
 var current = Promise.fulfilled();
 
-Bluebird.all(ids.map(function(id) { 
+Promise.all(ids.map(function(id) { 
     current = current.then(function() {
     	return getItem(id) 
     }).then(function(result) { 
@@ -50,7 +50,7 @@ Bluebird.all(ids.map(function(id) {
 })
 ```
 
-Again, `Bluebird.all` does the rest.
+Again, `Promise.all` does the rest.
 
 
 ## Notes
@@ -63,4 +63,4 @@ because those values have a powerful composition function that creates new tasks
 depending on old tasks - `.then`.
 
 If we want to control the level of parallelism, then [we need to cheange our 
-code a bit again](15-map-in-series.html)
+code a bit again](16-map-limit.html)
