@@ -66,11 +66,11 @@ In the callback example, we must explicitly handle the error. Since we can't
 deal with that error there, we must call the passed callback to pass that error. 
 
 In the promise example, we can skip the error handling function. If we do that,
-the error will automatically propagate with the returned promise.
+the error will automatically propagate with the returned promise for a line. 
+Yes, that means that you don't have to write `if (err) return callback(err)`
+anymore - promises do the equivalent of that by default.
 
-
-
-`Promise.done()` is the equivalent of `Array.forEach` while `Promise.then()` is
-the equivalent for `Array.map`. You use the first when you don't want to create
-a new promise, and the second when you do.
-
+Another useful way to think of `then` vs `done`: `Promise.done()` is the 
+equivalent of `Array.forEach` while `Promise.then()` is the equivalent for 
+`Array.map`. You use the first when you don't want to create a new promise, and 
+the second when you do.
