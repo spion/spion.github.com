@@ -46,7 +46,7 @@ function)
 ```js
 function readLine(file, line) {
 	return fs.readFileAsync(file).then(function(res) {
-		return res.split('\n')[line];
+		return res.toString().split('\n')[line];
 	});
 }
 readLine(file, line).done(function(line) {
