@@ -83,7 +83,11 @@ But wait, now the result needs to be inside that callback too.
 var first = files[0], other = files[1];
 diff(first, other, function(err, diffFirstOther) {
 	var diffLines = diffFirstOther.split('\n');
-	var result = {first: firstLines, second: secondLines, diff: diffLines};
+	var result = {
+		first: firstLines, 
+		second: secondLines, 
+		diff: diffLines
+	};
 });
 var firstLines = first.split('\n').length,
 	otherLines = other.split('\n').length;
