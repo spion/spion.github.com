@@ -98,7 +98,7 @@ var firstLines = first.split('\n').length,
 
 This works but its horribly unintuitive because it looks like you're using 
 the variables `firstLines` and `secondLines` before they are available. So you 
-decide its best to move that calculation at the top:
+decide its best to move those lines at the top:
 
 ```js
 var first = files[0], other = files[1];
@@ -117,8 +117,8 @@ diff(first, other, function(err, diffFirstOther) {
 
 #### Promises
 
-With promises our code can stay almost exactly the same. No reordering required.
-We combine:
+With promises our code can stay almost exactly the same. No need to move things
+around to make them more intuitive. Instead, we combine:
 
 * the ability to attach callbacks whenever we want, 
 * the power to create new promises by returning from `.then()`, and 
