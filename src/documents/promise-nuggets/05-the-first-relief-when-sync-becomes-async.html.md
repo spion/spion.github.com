@@ -12,7 +12,7 @@ create new promises.
 
 Okay then. Lets take things to the next level.
 
-Using .then(), you can attach the callbacks later if you want.
+Using `.then()`, you can attach the callbacks later if you want.
 
 For example `fs.readFileAsync(file)` returns a promise. That promise is a value, 
 so you can put that in a var, or return it from a function:
