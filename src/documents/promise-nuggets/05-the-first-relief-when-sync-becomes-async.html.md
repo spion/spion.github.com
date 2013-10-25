@@ -27,7 +27,9 @@ attach more than one callback to a promise if you like:
 
 ```js
 filePromise.done(function(res) { uploadData(url, res); });
-filePromise.done(function(res) { saveLocal(url, res); }, function(err), {});
+filePromise.done(function(res) { saveLocal(url, res); }, 
+	function(err), {});
+// etc
 ```
 
 Hey, this is beginning to look more and more like streams - they too can be 
