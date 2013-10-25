@@ -10,9 +10,7 @@ or event emitters, except that you use a second callback for the error. And
 you're still not convinced that there is any benefit to using `.then()` to 
 create new promises.
 
-I hear you.
-
-Lets take things to the next level.
+Okay then. Lets take things to the next level.
 
 Using .then(), you can attach the callbacks later if you want.
 
