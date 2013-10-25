@@ -148,8 +148,9 @@ Everything is exactly the same, except that we now have promises instead of
 values.
 
 Whenever we want to do some extra sync (or async) processing on these 
-promises, we unpack them with `.then()`. No need to move code around to make
-it fit under the same callback.
+promises, we can unpack them with `.then()` and apply our transformation inside
+the callback, then return a new value which will be packed in a new promise. 
+No need to move code around to make it fit under the same callback.
 
 Thats pretty great, isn't it? But [wait till you see what happens with 
 errors](06-safety-of-then-exceptions.html)
