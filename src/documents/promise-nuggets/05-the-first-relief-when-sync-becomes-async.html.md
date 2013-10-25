@@ -40,8 +40,8 @@ The promise will cache the value, and call your callback right after the next
 tick. The file reading operation is always done only once - no need to repeat 
 it.
 
-This also makes it easier to switch code that was previously sync but had to
-become async for some reason. 
+All of this makes it easier when you need to switch code that was previously 
+sync but had to become async for some reason. 
 
 For example: imagine that you need to get some stats about two file versions 
 - like number of lines in both versions and the number of lines in their diff:
