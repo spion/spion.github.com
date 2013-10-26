@@ -53,5 +53,6 @@ Promise.all(ids.map(function(id) {
 
 ## Notes
 
-What if we can't run everything in parallel? Then [we need to cheange our code
-a bit](15-map-in-series.html)
+What if we can't run everything in parallel? Perhaps if the operation is very 
+expensive, we would like to fetch the item in series. Then 
+[we need to change our code a bit](15-map-in-series.html)
