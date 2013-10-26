@@ -56,9 +56,48 @@ transformFile(fileIn, fileOut).done(function() {
 });
 ```
 
-The resulting promise is fulfilled when all the promises in the array are
+The resulting promise is fulfilled when all the promises in the chain are
 fulfilled or is rejected with an error when the first error is encountered.
 
 ## Notes
 
-None
+Admitedly, this code may be a bit hard to follow. Lets write it in a way that 
+makes it easier - first, `async.waterfall`
+
+```js
+function transformFile(inPath, outPath, done) {
+	async.waterfall([
+		function(callback) { 
+			fs.readFile(file1, 'utf8', callback); }		
+		function(data, callback) { 
+			service.transform(data, callback); },
+		function(transformed, callback) { 
+			fs.writeFile(transformed, callback); }
+	], done);
+}
+``` 
+
+and also, the promises implementation:
+
+```js
+function transformFile(input, output) {
+	return fs.readFileAsync(input, 'utf8')
+		.then(function(data) {
+			return service.transformAsync(data);
+		})
+		.then(function(transformed) {
+			return fs.writeFileAsync(transformed)
+		}); 
+}
+```
+
+`async.waterfall()` is pretty cool. It starts by giving us a callback, then
+when that callback is called with a result, it passes that result onto the next 
+function in the list. But it also passes another callback to that function,
+which it can use to pass a result to the 3rd function in the list and so on.
+
+Promises are also pretty cool. As we already know, when we return a promise 
+from inside `.then()`, we get a promise for the same value on the outside. We 
+can  immediately attach another `.then()` on the outside and continue chaining.
+
+Both of these patterns flatten our code.
