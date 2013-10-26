@@ -140,4 +140,21 @@ using(client.connect(host1),
 })
 ```
 
+Or perhaps if we want to be able to add resources dynamically:
+
+```js
+using(function(autodispose) {
+  var conn1 = autodispose(client.connect(host1)),
+      conn2 = autodispose(client.connect(host2));
+  return Promise.all(conn1, conn2).then(function() {
+    return pipeStreams(conn1.resultReader(query), 
+                       conn2.resultWriter());
+  })
+}).done(function(res){
+  // all resources are disposed of
+}, function(err) {
+  // all resources are disposed of
+})
+```
+
 The possibilities are... endless!
