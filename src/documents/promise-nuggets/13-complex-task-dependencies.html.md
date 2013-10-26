@@ -37,7 +37,7 @@ async.waterfall([
 #### Promises
 
 With promises we can simply return an array, then use `Promise.spread` 
-available in both bluebird and Q. It works on promises of arrays and resolves
+available in both bluebird and Q. It works on promises for arrays and resolves
 all the items in the array then passes them to the callback:
 
 ```js
@@ -53,3 +53,7 @@ files.getLastTwoVersions(filename)
         // voila, diff is ready. Do something with it.
     });
 ```
+
+## Notes
+
+TODO.
