@@ -118,7 +118,9 @@ diff(first, other, function(err, diffFirstOther) {
 #### Promises
 
 With promises our code can stay almost exactly the same. No need to move things
-around to make them more intuitive. Instead, we combine:
+around to make them more intuitive. No need to figure out whether we need to
+stuff other lines inside our callback because they have a dependency on the
+result of that callback. Instead, we combine:
 
 * the ability to attach callbacks whenever we want, 
 * the power to create new promises by returning from `.then()`, and 
