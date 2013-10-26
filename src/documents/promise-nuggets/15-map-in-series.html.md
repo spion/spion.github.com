@@ -62,5 +62,5 @@ between our tasks. The reason why its easier? Because the tasks are values, and
 because those values have a powerful composition function that creates new tasks 
 depending on old tasks - `.then`.
 
-If we want to control the level of parallelism, then [we need to cheange our 
-code a bit again](16-map-limit.html)
+If we want to control the level of parallelism, then [we will need to change 
+our code again](16-map-limit.html)
