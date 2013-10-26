@@ -40,8 +40,8 @@ function readConfig(file) {
 ## Notes
 
 In the callback example, we must be careful not to wrap the callback inside the
-try statement! Otherwise, if an error is thrown inside that callback, the 
-catch block will call it again.
+try block! Otherwise, an error thrown from inside that callback will cause the 
+catch block to call it again.
 
 In the promises example, any errors thrown inside then will be propagated
 as errors with the promise, and we can handle them in the error handler of that
