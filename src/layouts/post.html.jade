@@ -6,7 +6,8 @@ layout: default
     .date= document.date.toDateString()
     .content!= content
     a(name="_comments")
-    .social
+    if (!document.hidden)
+      .social
         script(src="https://apis.google.com/js/plusone.js")
         a(href="https://twitter.com/share",
             class="twitter-share-button",data-via="spion") Tweet

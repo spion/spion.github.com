@@ -1,7 +1,7 @@
 ---
 layout: empty
 ---
-var redirects = <%- JSON.stringify(@getFilesAtPath("posts").toJSON().sort((p1, p2) => p1.date.getTime() - p2.date.getTime()).slice(0, 8).map((p) => { words: p.basename.split('-'), url: p.url })) %>
+var redirects = <%- JSON.stringify(@getFilesAtPath("posts").toJSON().sort((p1, p2) => new Date(p1.date).getTime() - new Date(p2.date).getTime()).slice(0, 8).map((p) => { words: p.basename.split('-'), url: p.url })) %>
 
 var local = document.location.pathname;
 if (!local.lastIndexOf('/'))

@@ -40,15 +40,14 @@ var namePromises = ids.map(function(id) {
     // the parallel slots.
     var mustComplete = Math.max(0, queued.length - parallel + 1);
     // when enough items are complete, queue another request for an item    
-    return Promise.some(queued, mustComplete)
-        .then(function() {
-            var download = getItem(id);
-            queued.push(download);
-            return download;        
-        }).then(function(item) {
-            // after that new download completes, get the item's name.    
-            return item.name;
-        });
+    var download = Promise.some(queued, mustComplete)
+        .then(function() { return getItem(id); });
+    queued.push(download);
+    return download.then(function(item) {
+        // after that new download completes, get the item's name.    
+        return item.name;
+    });
+
   });
 Promise.all(namePromises).then(function(names) {
     // use all names here.
