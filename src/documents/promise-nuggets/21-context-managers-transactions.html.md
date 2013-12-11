@@ -60,7 +60,7 @@ function using(resource, fn) {
   // wraps it in case the resource was not promise
   var pResource = Promise.cast(resource); 
   return pResource.then(fn).finally(function() { 
-    return pResource.then(resource) { 
+    return pResource.then(function(resource) { 
       return resource.dispose(); 
     }); 
   });

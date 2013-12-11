@@ -3,11 +3,14 @@ layout: default
 title: A hint of chaos
 ---
 
-- var posts = getFilesAtPath("posts").toJSON().sort(function(p1, p2) {
--   p1.fuckingDate = new Date(p1.date); 
--   p2.fuckingDate = new Date(p2.date);
+- var posts = getFilesAtPath("posts").toJSON().map(function(p) {
+-   p.fuckingDate = new Date(p.date);
+-   return p;
+- }).sort(function(p1, p2) {
 -   return p2.fuckingDate.getTime() - p1.fuckingDate.getTime()
-- }).filter(function(p){ return !p.hidden });
+- }).filter(function(p) { 
+-   return !p.hidden;
+- });
 
 each post in posts.slice(0,5)
     .post
