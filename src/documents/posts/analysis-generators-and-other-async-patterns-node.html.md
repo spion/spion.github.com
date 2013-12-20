@@ -778,6 +778,11 @@ window.addEventListener('load', function() {
 Wow. Promises seem really, really slow. Fibers are also slow, with time 
 complexity \\( O(n^2) \\). Everything else seems to be much faster.
 
+__Update (Dec 20 2013)__: Promises not slow anymore. PetkaAntonov wrote
+Bluebird, which is faster than almost everything else and very low on
+memory usage. For more info read *[Why I am switching to Promises]
+(/posts/why-i-am-switching-to-promises.html)*
+
 Lets try removing all those promises and fibers to see whats down there.
 
 <div id="perf-time-2" class="plot">
