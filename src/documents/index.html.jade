@@ -4,10 +4,10 @@ title: A hint of chaos
 ---
 
 - var posts = getFilesAtPath("posts").toJSON().map(function(p) {
--   p.fuckingDate = new Date(p.date);
+-   p.myDate = new Date(p.date);
 -   return p;
 - }).sort(function(p1, p2) {
--   return p2.fuckingDate.getTime() - p1.fuckingDate.getTime()
+-   return p2.myDate.getTime() - p1.myDate.getTime()
 - }).filter(function(p) { 
 -   return !p.hidden;
 - });
@@ -16,7 +16,7 @@ each post in posts.slice(0,5)
     .post
         h1
             a(href=post.url)=post.title
-        .date= post.fuckingDate.toDateString()
+        .date= post.myDate.toDateString()
         .content!=post.contentRenderedWithoutLayouts
         .comments 
             hr
