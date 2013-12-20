@@ -1,6 +1,6 @@
 git commit -am "$1"
 git push
-docpad clean
+rm -rf ./out/*
 docpad generate
 cd out
 git add *
