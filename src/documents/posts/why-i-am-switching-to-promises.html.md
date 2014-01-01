@@ -31,7 +31,8 @@ callbacks, only that single promise chain will die. I can also attach error or
 "finally" handlers to do any clean up if necessary - transparently! The 
 process will happily continue to serve the rest of my users.
 
-For more info see [#5114][#5114] and [#5149][#5149] 
+For more info see [#5114][#5114] and [#5149][#5149]. To find out how promises
+can solve this, see [bluebird #51](https://github.com/petkaantonov/bluebird/issues/51)
 
 ### `if (err) return callback(err)`
 
