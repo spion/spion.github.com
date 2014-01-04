@@ -366,6 +366,8 @@ step.
 See [this post](/posts/closures-are-unavoidable-in-node.html) for details
 
 
+<a name="promises-failure"></a>
+
 **[promises.js](//github.com/spion/async-compare/blob/blog/examples-extra/promises.js)**
 
 I'll be honest. I've never written promise code in node before. Driven by 
