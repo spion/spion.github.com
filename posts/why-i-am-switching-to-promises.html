@@ -363,6 +363,10 @@ promises themselves are pretty simple - they&#39;re basically like lightweight
 streams for single values. </p>
 <p>Here is a straight-forward guide that uses known principles and analogies from 
 node (remember, the focus is on simplicity, not correctness):</p>
+<p><strong>Edit (2014-01-07)</strong>: I decided to re-do this tutorial into a series of short
+articles called <a href="http://promise-nuggets.github.io/">promise nuggets</a>. The 
+content is CC0 so feel free to fork, modify, improve or send pull requests.
+The old tutorial will remain available within this article.</p>
 <p>Promises are objects that have a <code>then</code> method. Unlike node functions, which 
 take a single callback, the <code>then</code> method of a promise can take two
 callbacks: a success callback and an error callback. When one of these two 
