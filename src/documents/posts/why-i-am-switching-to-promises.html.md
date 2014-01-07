@@ -320,6 +320,11 @@ streams for single values.
 Here is a straight-forward guide that uses known principles and analogies from 
 node (remember, the focus is on simplicity, not correctness):
 
+**Edit (2014-01-07)**: I decided to re-do this tutorial into a series of short
+articles called [promise nuggets](http://promise-nuggets.github.io/). The 
+content is CC0 so feel free to fork, modify, improve or send pull requests.
+The old tutorial will remain available within this article.
+
 Promises are objects that have a `then` method. Unlike node functions, which 
 take a single callback, the `then` method of a promise can take two
 callbacks: a success callback and an error callback. When one of these two 
@@ -752,6 +757,7 @@ function getItem(key) {
 
 That means that early returns are just as easy as with callbacks, and sometimes
 even easier (in case of errors)
+
 
 
 ## What about streams?
