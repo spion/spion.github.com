@@ -2,10 +2,10 @@
 if we don&#39;t need to do other stuff to the result. </p>
 <p>But what if we wanted to do additional processing? What if we want to read a 
 single line of a file? Then we&#39;ll need to add some code to split the file into 
-lines and get the specified line. Lets ses how we can do that.</p>
+lines and get the specified line. Lets see how we can do that.</p>
 <h4 id="callbacks">Callbacks</h4>
 <p>To do this with callbacks, we&#39;ll pass our custom callback that does the 
-splitting. </p>
+splitting. </p>s
 <p>The callback bails-out if there was an error reading the file,
 otherwise proceeds to split the content and call the original callback with 
 the line content:</p>
