@@ -153,6 +153,9 @@ a:active {
   line-height: 1.5;
   overflow: auto;
 }
+.post pre code {
+  font-family: Consolas, Monaco, "Liberation Mono", Courier, monospace !important;
+}
 .post p code {
   color: #333;
   padding: 0.05rem 0.1rem;
