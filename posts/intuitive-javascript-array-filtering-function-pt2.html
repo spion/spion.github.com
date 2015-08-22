@@ -1,4 +1,32 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Intuitive JavaScript array filtering function pt2</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></head><body><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><div class="main"><div class="info-tiny"><a href="/" class="img"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></div><div class="info"><a href="/" class="img"> <img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a><h1 class="first"> <a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><div class="rest"><div class="post"><h1>Intuitive JavaScript array filtering function pt2</h1><div class="date">Thu Jul 12 2012</div><div class="content"><p>Last time I wrote about my JavaScript array filtering function <code>intuitiveFilter</code>. It had one caveat: namely, the way it handles sub-arrays in the data. It doesn&#39;t allow the user to inspect a sub-array without writing a custom filtering function for the sub-array field.</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
+    <meta content="True" name="HandheldFriendly">
+    <title>Intuitive JavaScript array filtering function pt2</title>
+    <link rel="shortcut icon" href="/ico/favicon.ico">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+  </head>
+  <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <div class="main">
+      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
+        <p class="subtitle">code, music, math</p>
+      </div>
+      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
+        <p class="subtitle">code, music, math</p>
+        <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
+      </div>
+      <div class="rest">
+<div class="post">
+  <h1>Intuitive JavaScript array filtering function pt2</h1>
+  <div class="date">Thu Jul 12 2012</div>
+  <div class="content"><p>Last time I wrote about my JavaScript array filtering function <code>intuitiveFilter</code>. It had one caveat: namely, the way it handles sub-arrays in the data. It doesn&#39;t allow the user to inspect a sub-array without writing a custom filtering function for the sub-array field.</p>
 <p>To inspect an array field, one would need a filtering function which takes an array argument and returns true or false. For example, the function might check the contents of the array and see if the elements match certain rules. Depending on the number of elements matching the rules, it would return true or false.</p>
 <p>We can already filter the contents of an array with <code>intuitiveFilter</code>. That means we can easily use it to inspect the elements of a sub-array. All we need now is to specify how many results we would like to have. The following rules would be useful:</p>
 <ul>
@@ -110,25 +138,51 @@ don&#39;t satisfy the imposed conditions. This can be modified by adding
 console.log(intuitiveFilter(testArray,
     {children: checkif({all: { age: {gt: 12}}, atLeast: 1})}));</code></pre>
 <p>And now we&#39;ve extended our filter language with rich syntax to deal with sub-arrays without touching the original filtering function. Wasn&#39;t that great?</p>
-</div><a name="_comments"></a><div class="social"><script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a><script>(function(d, t) {
-    var g = d.createElement(t),
-        s = d.getElementsByTagName(t)[0];
-    g.src = '//hnbutton.appspot.com/static/hn.min.js';
-    s.parentNode.insertBefore(g, s);
-}(document, 'script'));    </script></div><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
-
-/* * * DON'T EDIT BELOW THIS LINE * * */
-(function() {
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><!--<a href="http://disqus.com" class="dsq-brink">comments powered by <span class="logo-disqus">Disqus</span></a>--></div></div></div><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
-prettyPrint();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-42872676-1', 'spion.github.io');
-ga('send', 'pageview');
-</script></body></html>
+</div><a name="_comments"></a>
+  <div class="social">
+    <script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a>
+    <script>
+      (function(d, t) {
+          var g = d.createElement(t),
+              s = d.getElementsByTagName(t)[0];
+          g.src = '//hnbutton.appspot.com/static/hn.min.js';
+          s.parentNode.insertBefore(g, s);
+      }(document, 'script'));    
+    </script>
+  </div>
+  <div id="disqus_thread"></div>
+  <script>
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <!--<a href="http://disqus.com" class="dsq-brink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  -->
+</div></div>
+    </div>
+    <!--script(src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')-->
+    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <script>
+      $('code').addClass('prettyprint');
+      prettyPrint();
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42872676-1', 'spion.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+  </body>
+</html>

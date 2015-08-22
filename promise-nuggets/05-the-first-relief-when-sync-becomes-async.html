@@ -1,4 +1,22 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>The first relief - when sync becomes async</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></head><body><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><div class="main"><link rel="stylesheet" href="/styles/nuggets.css"/><h1><a href="/promise-nuggets" class="back">↩</a><span>The first relief - when sync becomes async</span></h1><div class="content"><p>I hear you. Promise code doesn&#39;t look too different from regular node callbacks
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
+    <meta content="True" name="HandheldFriendly">
+    <title>The first relief - when sync becomes async</title>
+    <link rel="shortcut icon" href="/ico/favicon.ico">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+  </head>
+  <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <div class="main">
+<link rel="stylesheet" href="/styles/nuggets.css"/>
+<h1><a href="/promise-nuggets" class="back">↩</a><span>The first relief - when sync becomes async</span>
+</h1>
+<div class="content"><p>I hear you. Promise code doesn&#39;t look too different from regular node callbacks
 or event emitters, except that you use a second callback for the error. And 
 you&#39;re still not convinced that there is any benefit to using <code>.then()</code> to 
 create new promises.</p>
@@ -111,12 +129,22 @@ the callback, then return a new value which will be packed in a new promise.
 No need to move code around to make it fit under the same callback.</p>
 <p>Thats pretty great, isn&#39;t it? But <a href="06-safety-of-then-exceptions.html">wait till you see what happens with 
 errors</a></p>
-</div></div><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
-prettyPrint();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-42872676-1', 'spion.github.io');
-ga('send', 'pageview');
-</script></body></html>
+</div></div>
+    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <!--script(src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')-->
+    <script>
+      $('code').addClass('prettyprint');
+      prettyPrint();
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42872676-1', 'spion.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+  </body>
+</html>

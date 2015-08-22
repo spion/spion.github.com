@@ -1,4 +1,22 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>The power of then - sync processing</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"></head><body><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><div class="main"><link rel="stylesheet" href="/styles/nuggets.css"/><h1><a href="/promise-nuggets" class="back">↩</a><span>The power of then - sync processing</span></h1><div class="content"><p>Its easy to <a href="02-creating-new-functions.html">just pass the callback or return a promise</a> 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
+    <meta content="True" name="HandheldFriendly">
+    <title>The power of then - sync processing</title>
+    <link rel="shortcut icon" href="/ico/favicon.ico">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+  </head>
+  <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <div class="main">
+<link rel="stylesheet" href="/styles/nuggets.css"/>
+<h1><a href="/promise-nuggets" class="back">↩</a><span>The power of then - sync processing</span>
+</h1>
+<div class="content"><p>Its easy to <a href="02-creating-new-functions.html">just pass the callback or return a promise</a> 
 if we don&#39;t need to do other stuff to the result. </p>
 <p>But what if we wanted to do additional processing? What if we want to read a 
 single line of a file? Then we&#39;ll need to add some code to split the file into 
@@ -49,12 +67,22 @@ anymore - promises do the equivalent of that by default.</p>
 equivalent of <code>Array.forEach</code> while <code>Promise.then()</code> is the equivalent for 
 <code>Array.map</code>. You use the first when you don&#39;t want to create a new promise, and 
 the second when you do.</p>
-</div></div><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script><script>$('code').addClass('prettyprint');
-prettyPrint();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-42872676-1', 'spion.github.io');
-ga('send', 'pageview');
-</script></body></html>
+</div></div>
+    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <!--script(src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')-->
+    <script>
+      $('code').addClass('prettyprint');
+      prettyPrint();
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42872676-1', 'spion.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+  </body>
+</html>
