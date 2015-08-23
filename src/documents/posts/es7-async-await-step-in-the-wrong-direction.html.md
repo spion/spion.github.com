@@ -332,13 +332,13 @@ query:
 and have myengine optimize the execution of parallel queries:
 
 ```js
-var results = queries.groupBy(table)
-.map(t => db.query(`select * from ${t} where id in ?`,
-                   [t.items.map(item => item.id)])
-          .execWithin(options.tx));
-return Promise.all(results).then(results => {
-    results.sort(byRequestOrder(queries))
-});
+if (isParallelQuery(query)) {
+    var results = queries.groupBy(table)
+    .map(t => db.query(`select * from ${t} where id in ?`,
+                    [t.items.map(item => item.id)])
+            .execWithin(options.tx));
+    return Promise.all(results).then(results => results.sort(byRequestOrder(queries)));
+}
 ```
 
 And voila, we've just implemented a query optimizer. We can do this on the
