@@ -192,10 +192,9 @@ BlockerIssue.insert = async function(data) {
 }
 ```
 
-Our first implementation is simple. `Issue` and `BlockerIssues` are references
-to the corresponding tables in an SQL database. Their `insert` methods return
-a promise that indicate whether the query has been completed. The query is
-executed by a connection pool.
+`Issue` and `BlockerIssues` are references to the corresponding tables in an
+SQL database. Their `insert` methods return a promise that indicate whether
+the query has been completed. The query is executed by a connection pool.
 
 But then, we run into a problem. We don't want to partially save the issue if
 some of the data was not inserted successfuly. We want the entire save
@@ -234,8 +233,7 @@ service? Then we need to change the code again.
 We can reduce the extent of this issue by writing a base class that
 automatically initializes a transaction if one is not passed via the
 constructor, and then have `Issues`, `BlockerIssue` etc inherit from this
-class. Like many OO solutions, this only spreads the problem across the plate
-to make it look smaller but doesn't solve it.
+class.
 
 ```
 
@@ -256,6 +254,9 @@ class Issues extends Transactionable {
 }
 // etc
 ```
+
+Like many OO solutions, this only spreads the problem across the plate
+to make it look smaller but doesn't solve it.
 
 No, this simply doesn't work.
 
