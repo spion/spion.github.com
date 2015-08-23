@@ -255,8 +255,8 @@ class Issues extends Transactionable {
 // etc
 ```
 
-Like many OO solutions, this only spreads the problem across the plate
-to make it look smaller but doesn't solve it.
+Like many OO solutions, this only spreads the problem across the plate to make
+it look smaller but doesn't solve it.
 
 No, this simply doesn't work.
 
@@ -323,7 +323,9 @@ add support for parallel execution of queries:
 
 ```js
 let blocked = yield BlockerIssues.where({blocker: blockerId})
-yield myengine.parallelQuery(blocked.map(issue => issue.getOwner()))
+let owners  = yield myengine.parallelQuery(blocked.map(issue => issue.getOwner()))
+
+for (let owner of owners) yield owner.notifyResolved(issue)
 ```
 
 Instead of yielding raw SQL, we can have `getOwner()` return data about the
