@@ -271,6 +271,7 @@ promises, our engine let us also:
 3. Yield other generators: These will be run with the same engine and options
 4. Yield promises: These will be handled normally
 
+Lets take the original code:
 
 ```js
 
@@ -290,7 +291,7 @@ BlockerIssue.insert = function* (data) {
 }
 ```
 
-Then from the http handler, we can write
+From our http handler, we can write
 
 ```js
 var myengine = require('./my-engine');
@@ -316,6 +317,11 @@ function run(iterator, options) {
 
 The implementation is incomplete, but its quite easy to write using bluebird's
 `Promise.coroutine`, which [lets you specify a custom yield handler][bb-735]
+
+The best part: we did not have to change the original code at all. We didn't
+have to add the transaction parameter to every function, to take care to
+properly propagate it everywhere and to properly create those transactions.
+All we needed to do is just change our execution engine.
 
 But we can add much more! We can `yield` a request to get the current user if
 any, so we don't have to thread that throughout our code either. We can even
