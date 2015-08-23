@@ -263,13 +263,13 @@ yield myengine.parallelQuery(blocked.map(issue =&gt; issue.getOwner()))</code></
 query:</p>
 <pre><code class="lang-js">{table: &#39;users&#39;, id: issue.user_id}</code></pre>
 <p>and have myengine optimize the execution of parallel queries:</p>
-<pre><code class="lang-js">var results = queries.groupBy(table)
-.map(t =&gt; db.query(`select * from ${t} where id in ?`,
-                   [t.items.map(item =&gt; item.id)])
-          .execWithin(options.tx));
-return Promise.all(results).then(results =&gt; {
-    results.sort(byRequestOrder(queries))
-});</code></pre>
+<pre><code class="lang-js">if (isParallelQuery(query)) {
+    var results = queries.groupBy(table)
+    .map(t =&gt; db.query(`select * from ${t} where id in ?`,
+                    [t.items.map(item =&gt; item.id)])
+            .execWithin(options.tx));
+    return Promise.all(results).then(results =&gt; results.sort(byRequestOrder(queries)));
+}</code></pre>
 <p>And voila, we&#39;ve just implemented a query optimizer. We can do this on the
 client too, for GraphQL and other kinds of uses.</p>
 <p>Generators are JavaScript&#39;s programmable semicolons (well, not as powerful as
