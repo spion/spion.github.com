@@ -1,5 +1,5 @@
 ---
-title: ES7 asyc functions, a step in the wrong direction
+title: ES7 asyc functions - a step in the wrong direction?
 date: 2015-08-23
 layout: post
 hidden: true
