@@ -323,8 +323,8 @@ have to add the transaction parameter to every function, to take care to
 properly propagate it everywhere and to properly create those transactions.
 All we needed to do is just change our execution engine.
 
-And we can add much more! We can `yield` a request to get the current user if
-any, so we don't have to thread that throughout our code either. We can even
+And we can add so much more! We can `yield` a request to get the current user
+if any, so we don't have to thread that throughout our code either. We can even
 add support for parallel execution of queries:
 
 ```js
