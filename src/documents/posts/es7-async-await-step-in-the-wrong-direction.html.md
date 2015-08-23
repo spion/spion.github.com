@@ -88,13 +88,12 @@ asyncOperation()
 
 Since these constructs are not built in language features but a DSL built on
 top of higher order functions, we can impose any restrictions that we want
-instead of waiting for tc39 to fix the language.
+instead of waiting for TC39 to fix the language.
 
 ### Cannot use higher order functions
 
 Because generators and async-await are shallow, you cannot use `yield` or
-`await` within lambdas passed to higher order functions. Besides being
-very unintuitive, this is also limiting
+`await` within lambdas passed to higher order functions.
 
 This is [better explained here][gh-issue-asyncawait] - The example given
 there is
@@ -111,6 +110,11 @@ function
 To understand why, you need to read
 [this article][why-no-co-web]. In short: its much harder to implement
 deep coroutines so browsers probably wont do it.
+
+Besides being very unintuitive, this is also limiting. Higher order functions
+are succint and powerful, yet we cannot *really* use them inside async
+functions. Instead we have to resort to the clumsy built in for loops which
+often force us into writing ceremonial, stateful code.
 
 ### Arrow functions give us more power than ever before
 
@@ -157,8 +161,7 @@ But this is not why async functions are a step in the wrong direction. The
 problems above are not unique to async functions. The same problems apply to
 generators: async functions merely inherit them.
 
-However, they also add a new major problem: they destroy the only redeeming
-quality that generators had.
+However, they also add a new major problem: loss of generality.
 
 ## Async functions: another step back
 
