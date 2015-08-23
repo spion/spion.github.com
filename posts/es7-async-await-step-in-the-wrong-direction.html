@@ -84,11 +84,10 @@ predicate filter when we invoke the catch method</p>
 });</code></pre>
 <p>Since these constructs are not built in language features but a DSL built on
 top of higher order functions, we can impose any restrictions that we want
-instead of waiting for tc39 to fix the language.</p>
+instead of waiting for TC39 to fix the language.</p>
 <h3 id="cannot-use-higher-order-functions">Cannot use higher order functions</h3>
 <p>Because generators and async-await are shallow, you cannot use <code>yield</code> or
-<code>await</code> within lambdas passed to higher order functions. Besides being
-very unintuitive, this is also limiting</p>
+<code>await</code> within lambdas passed to higher order functions.</p>
 <p>This is <a href="https://github.com/tc39/ecmascript-asyncawait/issues/7">better explained here</a> - The example given
 there is</p>
 <pre><code class="lang-js">async function renderChapters(urls) {
@@ -99,6 +98,10 @@ function</p>
 <p>To understand why, you need to read
 <a href="http://calculist.org/blog/2011/12/14/why-coroutines-wont-work-on-the-web/">this article</a>. In short: its much harder to implement
 deep coroutines so browsers probably wont do it.</p>
+<p>Besides being very unintuitive, this is also limiting. Higher order functions
+are succint and powerful, yet we cannot <em>really</em> use them inside async
+functions. Instead we have to resort to the clumsy built in for loops which
+often force us into writing ceremonial, stateful code.</p>
 <h3 id="arrow-functions-give-us-more-power-than-ever-before">Arrow functions give us more power than ever before</h3>
 <p>Functional DSLs were very powerful even before JS had short lambda syntax. But
 with arrow functions, things got even cleaner. The amount of code one needs to
@@ -132,8 +135,7 @@ even though (admittedly) they may take some getting used to.</p>
 <p>But this is not why async functions are a step in the wrong direction. The
 problems above are not unique to async functions. The same problems apply to
 generators: async functions merely inherit them.</p>
-<p>However, they also add a new major problem: they destroy the only redeeming
-quality that generators had.</p>
+<p>However, they also add a new major problem: loss of generality.</p>
 <h2 id="async-functions-another-step-back">Async functions: another step back</h2>
 <p>Despite their shortcomings, generator based coroutines have one redeeming
 quality: they allow you to redefine the coroutine execution engine. This is
