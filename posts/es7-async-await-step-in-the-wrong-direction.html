@@ -268,8 +268,7 @@ query:</p>
 <pre><code class="lang-js">{table: &#39;users&#39;, id: issue.user_id}</code></pre>
 <p>and have myengine optimize the execution of parallel queries:</p>
 <pre><code class="lang-js">if (isParallelQuery(query)) {
-    var results = queries
-      .groupBy(table)
+    var results = query.items.groupBy(table)
       .map(t =&gt; db.query(`select * from ${t} where id in ?`,
                          [t.items.map(item =&gt; item.id)])
                 .execWithin(options.tx));
