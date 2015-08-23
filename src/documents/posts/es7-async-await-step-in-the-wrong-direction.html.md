@@ -339,8 +339,7 @@ and have myengine optimize the execution of parallel queries:
 
 ```js
 if (isParallelQuery(query)) {
-    var results = queries
-      .groupBy(table)
+    var results = query.items.groupBy(table)
       .map(t => db.query(`select * from ${t} where id in ?`,
                          [t.items.map(item => item.id)])
                 .execWithin(options.tx));
