@@ -210,8 +210,8 @@ class Issues extends Transactionable {
   ...
 }
 // etc</code></pre>
-<p>Like many OO solutions, this only spreads the problem across the plate
-to make it look smaller but doesn&#39;t solve it.</p>
+<p>Like many OO solutions, this only spreads the problem across the plate to make
+it look smaller but doesn&#39;t solve it.</p>
 <p>No, this simply doesn&#39;t work.</p>
 <h2 id="generators-are-better">Generators are better</h2>
 <p>Generators let us define the execution engine. What if instead of yielding
@@ -260,7 +260,9 @@ app.post(&#39;/issues/save&#39;, function(req, res) {
 any, so we don&#39;t have to thread that throughout our code either. We can even
 add support for parallel execution of queries:</p>
 <pre><code class="lang-js">let blocked = yield BlockerIssues.where({blocker: blockerId})
-yield myengine.parallelQuery(blocked.map(issue =&gt; issue.getOwner()))</code></pre>
+let owners  = yield myengine.parallelQuery(blocked.map(issue =&gt; issue.getOwner()))
+
+for (let owner of owners) yield owner.notifyResolved(issue)</code></pre>
 <p>Instead of yielding raw SQL, we can have <code>getOwner()</code> return data about the
 query:</p>
 <pre><code class="lang-js">{table: &#39;users&#39;, id: issue.user_id}</code></pre>
