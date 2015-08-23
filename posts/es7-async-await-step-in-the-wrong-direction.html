@@ -158,10 +158,9 @@ Issues.insert = async function(data) {
 BlockerIssue.insert = async function(data) {
     return db.query(&quot;INSERT .... VALUES&quot;, data).execWithin(db.pool);
 }</code></pre>
-<p>Our first implementation is simple. <code>Issue</code> and <code>BlockerIssues</code> are references
-to the corresponding tables in an SQL database. Their <code>insert</code> methods return
-a promise that indicate whether the query has been completed. The query is
-executed by a connection pool.</p>
+<p><code>Issue</code> and <code>BlockerIssues</code> are references to the corresponding tables in an
+SQL database. Their <code>insert</code> methods return a promise that indicate whether
+the query has been completed. The query is executed by a connection pool.</p>
 <p>But then, we run into a problem. We don&#39;t want to partially save the issue if
 some of the data was not inserted successfuly. We want the entire save
 operation to be atomic. Fortnuately, SQL databases support this via
@@ -193,8 +192,7 @@ service? Then we need to change the code again.</p>
 <p>We can reduce the extent of this issue by writing a base class that
 automatically initializes a transaction if one is not passed via the
 constructor, and then have <code>Issues</code>, <code>BlockerIssue</code> etc inherit from this
-class. Like many OO solutions, this only spreads the problem across the plate
-to make it look smaller but doesn&#39;t solve it.</p>
+class.</p>
 <pre><code>
 class Transactionable {
     constructor(tx) {
@@ -212,6 +210,8 @@ class Issues extends Transactionable {
   ...
 }
 // etc</code></pre>
+<p>Like many OO solutions, this only spreads the problem across the plate
+to make it look smaller but doesn&#39;t solve it.</p>
 <p>No, this simply doesn&#39;t work.</p>
 <h2 id="generators-are-better">Generators are better</h2>
 <p>Generators let us define the execution engine. What if instead of yielding
