@@ -308,28 +308,34 @@ function run(iterator, options) {
     function runNext(value) {
         var request = iterator.next(value)
         if (isIterator(request)) run(request, options).then(runNext)
-        else if (isQuery(request)) query.execWithin(options.tx).then(runNext)
+        else if (isQuery(request)) request.execWithin(options.tx).then(runNext)
         else if (isPromise(request)) promise.then(runNext);
     }
     runNext()
 }
 ```
 
-The implementation is incomplete, but its quite easy to write using bluebird's
-`Promise.coroutine`, which [lets you specify a custom yield handler][bb-735]
+This implementation is incomplete because it lacks error handling. Still, its
+quite easy to write a complete one using bluebird's `Promise.coroutine`,
+which [lets you specify a custom yield handler][bb-735]
 
-The best part: we did not have to change the original code at all. We didn't
-have to add the transaction parameter to every function, to take care to
-properly propagate it everywhere and to properly create those transactions.
-All we needed to do is just change our execution engine.
+The best part of this change is that we did not have to change the original
+code at all. We didn't have to add the transaction parameter to every function,
+to take care to properly propagate it everywhere and to properly create those
+transactions. All we needed to do is just change our execution engine.
 
 And we can add so much more! We can `yield` a request to get the current user
-if any, so we don't have to thread that throughout our code either. We can even
-add support for parallel execution of queries:
+if any, so we don't have to thread that throughout our code either. Infact, we
+can implement the entire [continuation local storage][cls] with only a few
+lines of code!
+
+We can even do advanced things like, say, a query optimizer that supports
+aggregate execution of queries. If we replace `Promise.all` with our own
+implementaiton:
 
 ```js
 let blocked = yield BlockerIssues.where({blocker: blockerId})
-let owners  = yield myengine.parallelQuery(blocked.map(issue => issue.getOwner()))
+let owners  = yield myengine.parallel(blocked.map(issue => issue.getOwner()))
 
 for (let owner of owners) yield owner.notifyResolved(issue)
 ```
@@ -345,16 +351,20 @@ and have myengine optimize the execution of parallel queries:
 
 ```js
 if (isParallelQuery(query)) {
-    var results = query.items.groupBy(table)
-      .map(t => db.query(`select * from ${t} where id in ?`,
-                         [t.items.map(item => item.id)])
+    var results = _(query.items).groupBy('table')
+      .map((items, t) => db.query(`select * from ${t} where id in ?`,
+                                  [items.map(it => it.id)])
                 .execWithin(options.tx));
     return Promise.all(results).then(results => results.sort(byRequestOrder(queries)));
 }
 ```
 
 And voila, we've just implemented a query optimizer. We can do this on the
-client too, for GraphQL and other kinds of uses.
+client too, to build a single GraphQL query by aggregating multiple ones. We
+can easily add support for regular promises too, fully replacing `Promise.all`.
+We can even add support for iterators. which would let the optimization
+become deep: we would be able to aggregate queries that are several layers
+within other generator functions.
 
 Generators are JavaScript's programmable semicolons (well, not as powerful as
 monads, but they go quite far). Lets not take away that power by taking away
@@ -365,3 +375,4 @@ the programmability. Lets drop async await and write our own interpreters.
 [gh-issue-asyncawait]: https://github.com/tc39/ecmascript-asyncawait/issues/7
 [why-no-co-web]: http://calculist.org/blog/2011/12/14/why-coroutines-wont-work-on-the-web/
 [bb-735]: https://github.com/petkaantonov/bluebird/issues/735#issuecomment-133699326
+[cls]: https://github.com/othiym23/node-continuation-local-storage
