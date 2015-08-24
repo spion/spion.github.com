@@ -280,9 +280,10 @@ query:</p>
 <pre><code class="lang-js">if (isParallelQuery(query)) {
     var results = _(query.items).groupBy(&#39;table&#39;)
       .map((items, t) =&gt; db.query(`select * from ${t} where id in ?`,
-                                  [items.map(it =&gt; it.id)])
-                .execWithin(options.tx));
-    return Promise.all(results).then(results =&gt; results.sort(byRequestOrder(queries)));
+                                  items.map(it =&gt; it.id))
+                .execWithin(options.tx)).toArray();
+    Promise.all(results).then(results =&gt; results.sort(byRequestOrder(queries)))
+        .then(runNext)
 }</code></pre>
 <p>And voila, we&#39;ve just implemented a query optimizer. We can do this on the
 client too, to build a single GraphQL query by aggregating multiple ones. We
