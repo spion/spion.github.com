@@ -353,9 +353,10 @@ and have myengine optimize the execution of parallel queries:
 if (isParallelQuery(query)) {
     var results = _(query.items).groupBy('table')
       .map((items, t) => db.query(`select * from ${t} where id in ?`,
-                                  [items.map(it => it.id)])
-                .execWithin(options.tx));
-    return Promise.all(results).then(results => results.sort(byRequestOrder(queries)));
+                                  items.map(it => it.id))
+                .execWithin(options.tx)).toArray();
+    Promise.all(results).then(results => results.sort(byRequestOrder(queries)))
+        .then(runNext)
 }
 ```
 
