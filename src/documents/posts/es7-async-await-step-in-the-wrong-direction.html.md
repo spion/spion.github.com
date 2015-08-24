@@ -109,7 +109,7 @@ function
 
 To understand why, you need to read
 [this article][why-no-co-web]. In short: its much harder to implement
-deep coroutines so browsers probably wont do it.
+deep coroutines so browser vendors probably wont do it.
 
 Besides being very unintuitive, this is also limiting. Higher order functions
 are succint and powerful, yet we cannot *really* use them inside async
@@ -169,9 +169,9 @@ Despite their shortcomings, generator based coroutines have one redeeming
 quality: they allow you to redefine the coroutine execution engine. This is
 extremely powerful, and I will demonstrate by giving the following example:
 
-Lets say we were given the task to write an issue tracker. The issue author
-can specify the issue's title and text, as well as any other issues that are
-blocking the solution of the newly entered issue.
+Lets say we were given the task to write the save function for an issue
+tracker. The issue author can specify the issue's title and text, as well
+as any other issues that are blocking the solution of the newly entered issue.
 
 Our initial implementation is simple:
 
