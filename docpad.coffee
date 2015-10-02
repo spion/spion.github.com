@@ -25,6 +25,10 @@ docpadConfig = {
     }
 
   }
+
+  templateData: {
+    site: {url: 'https://spion.github.io'}
+  }
 	# ...
 }
 
