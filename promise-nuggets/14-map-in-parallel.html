@@ -1,0 +1,72 @@
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
+    <title>Parallel map (async.map)</title>
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
+  </head>
+  <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <div class="main">
+<link rel="stylesheet" href="/styles/nuggets.css"/>
+<h1><a href="/promise-nuggets" class="back">↩</a><span>Parallel map (async.map)</span>
+</h1>
+<div class="content"><p>When we want to apply the same function to every item in an array of values, 
+we use <code>Array.map</code></p>
+<pre><code class="lang-js">[1,2,3,4].map(function square(x) { 
+    return x * x; 
+});
+</code></pre>
+<p>What if we want to do the same for async transforms? For example, we have an
+array of item IDs and we want to get the item names.</p>
+<p>Note: the items are large so we don&#39;t want to keep them entirely in memory.</p>
+<h4 id="callbacks">Callbacks</h4>
+<p>Callback based functions don&#39;t return a value. That means we have
+to use a special tool again - namely <code>async.map</code></p>
+<pre><code class="lang-js">async.map(ids, function(id, callback) {
+    getFromStorage(id, function (err, res) {
+        if (err) return callback(err);
+        callback(null, res.name);
+    })
+}, function(err, results) {
+    // results is an array of names
+});
+</code></pre>
+<h4 id="promises">Promises</h4>
+<p>Promises are actual values - that means no special tools are required. We can
+simply use Array.map to get an array of promises for the names, then apply the
+usual tool on that array - Promise.all.</p>
+<pre><code class="lang-js">Promise.all(ids.map(function(id) { 
+    return getItem(id).then(function(result) { 
+        return result.name;
+    });
+})).then(function(results) {
+    // results is an array of names
+})
+</code></pre>
+<h2 id="notes">Notes</h2>
+<p>What if we can&#39;t run everything in parallel? Perhaps the operation is very 
+expensive and therefore we would like to fetch the items in series instead of
+parallel. Then <a href="15-map-in-series.html">we will need to change our code a bit</a></p>
+</div></div>
+    <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <script>
+      $('code').addClass('prettyprint');
+      prettyPrint();
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42872676-1', 'spion.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

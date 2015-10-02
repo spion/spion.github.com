@@ -1,0 +1,71 @@
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
+    <title>The power of then - async operations</title>
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
+  </head>
+  <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <div class="main">
+<link rel="stylesheet" href="/styles/nuggets.css"/>
+<h1><a href="/promise-nuggets" class="back">↩</a><span>The power of then - async operations</span>
+</h1>
+<div class="content"><p>In the <a href="03-power-of-then-sync-processing.html">previous example</a> we learned 
+how to apply sync transformations to the result. But what if we need to do 
+another async operation instead? </p>
+<p>For example, what if we want to fetch the user from  a database, then fetch all
+of his friends?</p>
+<h4 id="callbacks">Callbacks</h4>
+<p>With callbacks we can nest the friend fetching operation and pass the original 
+callback</p>
+<pre><code class="lang-js">function getUserFriends(id, callback) {
+    User.findOne({id: id}, function(err, user) {
+        if (err) return callback(err);
+        User.find({id: {$in: user.friends}}, callback);
+    });
+}
+</code></pre>
+<h4 id="promises">Promises</h4>
+<p>With promises, we can return the promise for the fetched friends from inside 
+<code>.then</code></p>
+<pre><code class="lang-js">function getUserFriends(id) {
+    return User.findOne({id: id}).then(function(user) {
+        return User.find({id: {$in: user.friends}});
+    });
+}
+</code></pre>
+<p>And we get a promise for the fetched friends outside of <code>.then</code></p>
+<h2 id="notes">Notes</h2>
+<p>How come this works? If we return a promise from <code>.then()</code> won&#39;t we get a 
+promise for a promise inside <code>.then()</code>? </p>
+<p>The answer is no. When <code>.then()</code> sees that we have returned a promise, it will 
+also try to &quot;unpack&quot; it to get to an actual value. As long as the unpacking 
+results with another promise, <code>.then()</code> will continue to unpack them.</p>
+<p>In the callback example, we must explicitly handle the error. Since we can&#39;t
+deal with that error there, we must call the passed callback to pass that error. </p>
+<p>In the promise example, if at any point <code>.then</code> encounters a promise that
+resolved with an error, it will stop unpacking and propagate that error through
+the returned promise.</p>
+</div></div>
+    <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <script>
+      $('code').addClass('prettyprint');
+      prettyPrint();
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42872676-1', 'spion.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>
