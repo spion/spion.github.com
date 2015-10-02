@@ -1,23 +1,23 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Introducing npmsearch</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
       </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
         <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
@@ -36,7 +36,7 @@ npm http GET https://registry.npmjs.org/-
 npm http 200 https://registry.npmjs.org/-
 /all/since?stale=update_after&amp;amp;startkey=1353539108378
 
-NAME                  DESCRIPTION             
+NAME                  DESCRIPTION
 2csv                  A pluggable file format converter into Co...
 abnf                  Augmented Backus-Naur Form (ABNF) parsing.
 accounting            number, money and currency parsing/formatt..
@@ -44,29 +44,29 @@ activerecord          An ORM that supports multiple database sys..
 addressit             Freeform Street Address Parser
 ...
 [snip]
-...</code></pre>
-<p>What just happened here?</p>
+...
+</code></pre><p>What just happened here?</p>
 <p>Here is what happened: npm search gave us all packages that contain the substring &quot;orm&quot;. Anywhere.</p>
 <p>You might argue that this works well with bigger words. Its true that results are slightly better with bigger words but they&#39;re still not sorted in any meaningful way (alphabetically sorting search results isn&#39;t very meaningful)</p>
 <pre><code>9144 % npm search mysql
-NAME                  DESCRIPTION            
+NAME                  DESCRIPTION
 Accessor_MySQL        A MySQL database wrapper, provide ...
 any-db                Database-agnostic connection pool ...
 autodafe              mvc framework for node with mysql ...
 connect-mysql         a MySQL session store for connect ...
-connect-mysql-session A MySQL session store for node.js ... 
+connect-mysql-session A MySQL session store for node.js ...
 cormo                 ORM framework for Node.js...
 ...
 [snip]
-...</code></pre>
-<p>Hence one of the common activities to do when researching node modules is to go to the #node.js IRC channel and ask the people there for a <strong>good</strong> library that does X.</p>
+...
+</code></pre><p>Hence one of the common activities to do when researching node modules is to go to the #node.js IRC channel and ask the people there for a <strong>good</strong> library that does X.</p>
 <p>I decided to make a package that helps with this, called npmsearch. Its a command-line tool that allows you to search the npm registry by keywords and it sorts the results using relevance and the number of downloads that the package has.</p>
 <p>Install it using npm:</p>
-<pre><code>[sudo] npm install -g npmsearch</code></pre>
-<p>then use it from the command line:</p>
+<pre><code>[sudo] npm install -g npmsearch
+</code></pre><p>then use it from the command line:</p>
 <pre><code>9147 % npmsearch mysql
 * mysql (6 15862)
-     A node.js driver for mysql. It is written in JavaScript, does 
+     A node.js driver for mysql. It is written in JavaScript, does
      not  require compiling, and is 100% MIT licensed.
      by Felix Geisendörfer &lt;felix@debuggable.com&gt;
 
@@ -95,21 +95,21 @@ cormo                 ORM framework for Node.js...
 
 * sequelize (2 2715)
      Multi dialect ORM for Node.JS
-     by Sascha Depold </code></pre>
-<p>If you want to try it out without installing it, 
-<a href="http://npmsearch.docucalc.com/">you can try it online</a>, or you can 
+     by Sascha Depold
+</code></pre><p>If you want to try it out without installing it,
+<a href="http://npmsearch.docucalc.com/">you can try it online</a>, or you can
 <a href="https://github.com/spion/npmsearch">visit the project page on github</a></p>
-<p>The implemented keyword search is non-trivial: it applies the 
+<p>The implemented keyword search is non-trivial: it applies the
 <a href="http://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to the keywords and
-expands the set provided by you with statistically picked commonly co-occuring 
+expands the set provided by you with statistically picked commonly co-occuring
 keywords. (e.g. mongo will expand to mongo mongodb)</p>
-<p>Results are sorted by a combined factor which incorporates keyword relevance 
-and &quot;half-lifed&quot; downloads. You can control the importance of each factor in 
+<p>Results are sorted by a combined factor which incorporates keyword relevance
+and &quot;half-lifed&quot; downloads. You can control the importance of each factor in
 the sorting process using command-line options - and there are many:</p>
 <ul>
 <li>relevance - how big of a factor should keyword relevance be, default 2</li>
 <li>downloads - how big of a factor is the number of downloads, default 0.25</li>
-<li>halflife  - the halflife of downloads e.g. 7 means downloads that are 7 
+<li>halflife  - the halflife of downloads e.g. 7 means downloads that are 7
 days old lose half of their value, default 30</li>
 <li>limit     - number of results to display, default 7</li>
 <li>freshness - update the database if older than &quot;freshness&quot; days, default 1.5</li>
@@ -142,7 +142,9 @@ days old lose half of their value, default 30</li>
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   </script>
-  <!--<a href="http://disqus.com" class="dsq-brink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  <!--
+  a.dsq-brink(href="http://disqus.com") comments powered by 
+    span.logo-disqus Disqus
   -->
 </div></div>
     </div>
@@ -159,7 +161,6 @@ days old lose half of their value, default 30</li>
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

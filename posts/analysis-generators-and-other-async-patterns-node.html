@@ -1,23 +1,23 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Analysis of generators and other async patterns in node</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
       </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
         <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
@@ -61,19 +61,22 @@ the <a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">ECMAScri
         [prev, curr] = [curr, prev + curr];
         yield curr;
     }
-}</code></pre>
+}
+</code></pre>
 <p>And here is how we iterate through this generator:</p>
 <pre><code class="lang-js">for (n of fibonacci()) {
     // truncate the sequence at 1000
     if (n &gt; 1000) break;
     console.log(n);
-}</code></pre>
+}
+</code></pre>
 <p>What happens behind the scene?</p>
 <p>Generator functions are actually constructors of iterators. The returned
 iterator object has a <code>next()</code> method. We can invoke that method manually:</p>
 <pre><code class="lang-js">var seq = fibonacci();
 console.log(seq.next()); // 1
-console.log(seq.next()); // 2 etc.</code></pre>
+console.log(seq.next()); // 2 etc.
+</code></pre>
 <p>When <code>next</code> is invoked, it starts the execution of the generator. The generator
 runs until it encounters a <code>yield</code> expression. Then it pauses and the execution
 goes back to the code that called <code>next</code></p>
@@ -93,7 +96,8 @@ it receives. When it gets two things it prints them using <code>console.log</cod
         stuffIgot.push(itemReceived);
     }
     console.log(stuffIgot);
-}</code></pre>
+}
+</code></pre>
 <p>This generator gives us 3 numbers using yield. Can we give something back?</p>
 <p>Let&#39;s give two things to this generator:</p>
 <pre><code class="lang-js">var iterator = numbers();
@@ -102,7 +106,8 @@ console.log(iterator.next()); // logs 0
 console.log(iterator.next(&#39;present&#39;)); // logs 1
 fs.readFile(&#39;file.txt&#39;, function(err, resultFromAnAsyncTask) {
     console.log(iterator.next(resultFromAnAsyncTask)); // logs 2
-});</code></pre>
+});
+</code></pre>
 <p>The generator will log the string <code>&#39;present&#39;</code> and the contents of <code>file.txt</code></p>
 <p>Uh-oh.</p>
 <p>Seems that we can keep the generator paused across the event loop boundary.</p>
@@ -112,7 +117,8 @@ fs.readFile(&#39;file.txt&#39;, function(err, resultFromAnAsyncTask) {
     for (var k = 0; k &lt; files.length; ++k)
         results.push(yield files[k]);
     return results;
-}</code></pre>
+}
+</code></pre>
 <p>We could process those file reading tasks asynchronously.</p>
 <pre><code class="lang-js">var iterator = files();
 function process(iterator, sendValue) {
@@ -122,7 +128,8 @@ function process(iterator, sendValue) {
         else process(iterator, res);
     });
 }
-process(iterator);</code></pre>
+process(iterator);
+</code></pre>
 <p>But from the generator&#39;s point of view, everything seems to be happening
 synchronously: it gives us the file using <code>yield</code>, then it waits to be resumed,
 then it receives the contents of the file and makes a push to the results
@@ -139,7 +146,8 @@ is an example from one of the earliest ES6 async generators library
     yield status.fadeIn().promise();
     yield sleep(2000);
     status.fadeOut();
-});</code></pre>
+});
+</code></pre>
 <p>This generator yields promises, which causes it to suspend execution. The <code>spawn</code>
 function that runs the generator takes those promises and waits until they&#39;re
 fulfilled. Then it resumes the generator by sending it the resulting value.</p>
@@ -223,8 +231,8 @@ Lots of mixed sync / async action.</p>
             }
         });
     });
-}</code></pre>
-<p>Slightly pyramidal code full of callbacks.</p>
+}
+</code></pre><p>Slightly pyramidal code full of callbacks.</p>
 <p>This is how it looks like when written with generators:</p>
 <pre><code>var genny = require(&#39;genny&#39;);
 module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
@@ -264,8 +272,8 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
         tx.rollback();
         throw e;
     }
-});</code></pre>
-<p>Shorter, very straight-forward code and absolutely no nesting of callback
+});
+</code></pre><p>Shorter, very straight-forward code and absolutely no nesting of callback
 functions. Awesome.</p>
 <p>Yet subjective adjectives are not very convincing. I want to have a measure of
 complexity, a number that tells me what I&#39;m actually saving.</p>
@@ -308,11 +316,13 @@ step.</p>
 I concluded that everything should be a promise, and things that can&#39;t handle
 promises should also be rewritten.</p>
 <p>Take for example this particular line in the original:</p>
-<pre><code class="lang-js">var previousId = file ? file.version : null;</code></pre>
+<pre><code class="lang-js">var previousId = file ? file.version : null;
+</code></pre>
 <p>If file is a promise, we can&#39;t use the ternary operator or the property
 getter. Instead we need to write two helpers: a ternary operator helper and a
 property getter helper:</p>
-<pre><code class="lang-js">var previousIdP = p.ternary(fileP, p.get(fileP, &#39;version&#39;), null);</code></pre>
+<pre><code class="lang-js">var previousIdP = p.ternary(fileP, p.get(fileP, &#39;version&#39;), null);
+</code></pre>
 <p>Unfortunately this gets out of hand quickly:</p>
 <pre><code>var versionP = p.allObject({
     userAccountId: userAccount.id,
@@ -329,8 +339,8 @@ versionP = p.set(versionP, p.allObject({
 // promise  to resolve to invoke the function.
 var versionInsert = p.eventuallyCall(
     Version.insert(versionP), &#39;execWithinP&#39;, tx);
-var versionIdP = p.get(versionP, &#39;id&#39;);</code></pre>
-<p>So I decided to write a less aggressive version, <code>promiseish.js</code></p>
+var versionIdP = p.get(versionP, &#39;id&#39;);
+</code></pre><p>So I decided to write a less aggressive version, <code>promiseish.js</code></p>
 <p>note: I used <a href="//github.com/cujojs/when">when</a> because i liked its function
 lifting API better than Q&#39;s</p>
 <p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/promiseish.js">promiseish.js</a>
@@ -344,19 +354,19 @@ language all the time.</p>
 <p><a href="//github.com/goodeggs/fibrous">Fibrous</a> is a fibers library that creates
 &quot;sync&quot; methods out of your async ones, which you can then run in a fiber.</p>
 <p>So if for example you had:</p>
-<pre><code>fs.readFile(file, function(err, data){ ... });</code></pre>
-<p>Fibrous would generate a version that returns a future, suspends the running
+<pre><code>fs.readFile(file, function(err, data){ ... });
+</code></pre><p>Fibrous would generate a version that returns a future, suspends the running
 fiber and resumes execution when the value becomes available.</p>
-<pre><code>var data = fs.sync.readFile(file);</code></pre>
-<p>I also needed to wrap the entire upload function:</p>
-<pre><code>fibrous(function upload() { ... })</code></pre>
-<p>This felt very similar to the generators version above but with <code>sync</code> instead
+<pre><code>var data = fs.sync.readFile(file);
+</code></pre><p>I also needed to wrap the entire upload function:</p>
+<pre><code>fibrous(function upload() { ... })
+</code></pre><p>This felt very similar to the generators version above but with <code>sync</code> instead
 of <code>yield</code> to indicate the methods that will yield. The one benefit I can think
 of is that it feels more natural for chaining - less parenthesis are needed.</p>
 <pre><code>somefn.sync(arg).split(&#39;/&#39;)
 // vs
-(yield somefn(arg, resume)).split(&#39;/&#39;)</code></pre>
-<p>Major drawback: this will never be available outside of node.js or without
+(yield somefn(arg, resume)).split(&#39;/&#39;)
+</code></pre><p>Major drawback: this will never be available outside of node.js or without
 native modules.</p>
 <p>Library: <a href="//github.com/goodeggs/fibrous">fibrous</a></p>
 <p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/suspend.js">suspend.js</a>
@@ -1337,8 +1347,8 @@ work in a browser.</p>
 of the async functions, this is how the result looks like:</p>
 <pre><code>Error: Error happened
   at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
-  at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)</code></pre>
-<p>No mention of the original file, <code>examples/suspend.js</code></p>
+  at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
+</code></pre><p>No mention of the original file, <code>examples/suspend.js</code></p>
 <p>Unfortunately, if you throw an error to a generator using
 <code>iterator.throw(error)</code>, the last yield point will not be present in the
 resulting stack trace. This means you will have no idea which line in your
@@ -1366,16 +1376,16 @@ support for stack traces via <code>Q.longStackSupport = true;</code> is good:</p
     at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
 From previous event:
     at /home/spion/Documents/tests/async-compare/examples/qasync.js:41:18
-    at GeneratorFunctionPrototype.next (native)</code></pre>
-<p>So, does this mean that its possible to add long stack traces support to a
+    at GeneratorFunctionPrototype.next (native)
+</code></pre><p>So, does this mean that its possible to add long stack traces support to a
 callbacks-based generator library the way that Q does it?</p>
 <p>Yes it does! Genny is in this category too:</p>
 <pre><code>Error: Error happened
     at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
     at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
 From generator:
-    at upload (/home/spion/Documents/tests/async-compare/examples/genny.js:38:35)</code></pre>
-<p>However it incurs about 50-70% memory overhead and is about 6 times slower.</p>
+    at upload (/home/spion/Documents/tests/async-compare/examples/genny.js:38:35)
+</code></pre><p>However it incurs about 50-70% memory overhead and is about 6 times slower.</p>
 <p>Catcher is also in this category, with 100% memory overhead and about
 10 times slower.</p>
 </li>
@@ -1557,7 +1567,9 @@ for their input on the draft version of this analysis.</p>
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   </script>
-  <!--<a href="http://disqus.com" class="dsq-brink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  <!--
+  a.dsq-brink(href="http://disqus.com") comments powered by 
+    span.logo-disqus Disqus
   -->
 </div></div>
     </div>
@@ -1574,7 +1586,6 @@ for their input on the draft version of this analysis.</p>
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

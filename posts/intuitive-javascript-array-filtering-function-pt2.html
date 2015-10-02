@@ -1,23 +1,23 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Intuitive JavaScript array filtering function pt2</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
       </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
         <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
@@ -43,33 +43,33 @@
     return function(item) {
         return intuitiveFilter(item, rules).length &gt; 0
     }
-}</code></pre>
-<p>What just happened here? We return a filter function which applies <code>intiuitiveFilter</code> to the array <code>item</code> and checks if it contains at least one element matching the rules. We&#39;ve returned exactly what intuitiveFilter could use - a filter function that takes an array item and returns a boolean. It looks as if we wrote a shorter alias to replace some boilerplate code.</p>
+}
+</code></pre><p>What just happened here? We return a filter function which applies <code>intiuitiveFilter</code> to the array <code>item</code> and checks if it contains at least one element matching the rules. We&#39;ve returned exactly what intuitiveFilter could use - a filter function that takes an array item and returns a boolean. It looks as if we wrote a shorter alias to replace some boilerplate code.</p>
 <p>Remember the old way to write an array filter?</p>
 <pre><code>intuitiveFilter(arrayArray, {children: function(arr) { 
     return intuitiveFilter(arr, {age:{gt:10}}).length &gt; 0; }
-});</code></pre>
-<p>We can now write it like so:</p>
-<pre><code>intuitiveFilter(arrayArray, {children: has({age:{gt:10}})});</code></pre>
-<p>Isn&#39;t that beautiful? We&#39;ve removed a lot of boilerplate code and the result is elegant and simple. Admittedly, it has a lot of braces and parentheses, but then again, so does Lisp. Now lets see if we can provide a richer set of filtering rules.</p>
+});
+</code></pre><p>We can now write it like so:</p>
+<pre><code>intuitiveFilter(arrayArray, {children: has({age:{gt:10}})});
+</code></pre><p>Isn&#39;t that beautiful? We&#39;ve removed a lot of boilerplate code and the result is elegant and simple. Admittedly, it has a lot of braces and parentheses, but then again, so does Lisp. Now lets see if we can provide a richer set of filtering rules.</p>
 <p>Lets start with some intuitive syntax ideas:</p>
 <pre><code>checkif(array, [ {has: filter,
-    atLeast: 2, atMost:2}, ...]);</code></pre>
-<p>There are two possible interpretations for the usage of the array here. One of 
-them would be the equivalent of an <code>or</code> operator. For example, 
-<code>[{has: {age: {gt:10}}, atLeast:1}, {has: {age: {lt: 8}}, atLeast: 1}]</code> would 
-mean the following: has at least one child older than 10 or has at least one 
-child younger than 8. This is consistent with the meaning of arrays as they are 
-used in intuitiveFilter. However, in this case, the <code>or</code> operator is a lot less 
-useful to as than the <code>and</code> operator. Using the <code>or</code> operator on a single field 
-is already possible through intuitiveFilter. Using the <code>and</code> operator isn&#39;t, 
+    atLeast: 2, atMost:2}, ...]);
+</code></pre><p>There are two possible interpretations for the usage of the array here. One of
+them would be the equivalent of an <code>or</code> operator. For example,
+<code>[{has: {age: {gt:10}}, atLeast:1}, {has: {age: {lt: 8}}, atLeast: 1}]</code> would
+mean the following: has at least one child older than 10 or has at least one
+child younger than 8. This is consistent with the meaning of arrays as they are
+used in intuitiveFilter. However, in this case, the <code>or</code> operator is a lot less
+useful to as than the <code>and</code> operator. Using the <code>or</code> operator on a single field
+is already possible through intuitiveFilter. Using the <code>and</code> operator isn&#39;t,
 even though that would be useful for array fields.</p>
-<p>We&#39;re going to break consistency for the sake of completeness. The rule array 
-argument of <code>checkif</code> will mean <code>and</code> instead of <code>or</code>, which means that all of 
-the rules must be satisfied. We&#39;re going to have a slightly shaky abstraction 
+<p>We&#39;re going to break consistency for the sake of completeness. The rule array
+argument of <code>checkif</code> will mean <code>and</code> instead of <code>or</code>, which means that all of
+the rules must be satisfied. We&#39;re going to have a slightly shaky abstraction
 this way, but its going to be a more useful one.</p>
 <p>Finally, lets define some shorthand variants:</p>
-<p><code>checkif(array, {has: filter, atLeast:2});</code> - if we only need one rule, the 
+<p><code>checkif(array, {has: filter, atLeast:2});</code> - if we only need one rule, the
 argument can be the rule.</p>
 <p><code>checkif(array, {has: filter});</code> - default meaning is &quot;atLeast: 1&quot;</p>
 <p><code>checkif(array, {none: filter});</code> - shorthand for exactly: 0</p>
@@ -78,7 +78,7 @@ argument can be the rule.</p>
 <pre><code>function checkif(rules) {
     if (!$.isArray(rules)) { rules = [ rules ]; }
     for (var k = 0; k &lt; rules.length; ++k) {
-        if (rules[k].has &amp;&amp; !(&quot;atLeast&quot; in rules[k] 
+        if (rules[k].has &amp;&amp; !(&quot;atLeast&quot; in rules[k]
                     || &quot;atMost&quot; in rules[k])) {
             rules[k].atLeast = 1;
         }
@@ -94,23 +94,23 @@ argument can be the rule.</p>
     var checkRule = function(filtered, total, rule) {
         return ((rule.has &amp;&amp; checkLimits(filtered, rule))
                 || (rule.none &amp;&amp; !filtered)
-                || (rule.all 
-                    &amp;&amp; filtered == total 
+                || (rule.all
+                    &amp;&amp; filtered == total
                     &amp;&amp; checkLimits(filtered, rule)))
 
     }
     return function(array) {
         for (var k = 0; k &lt; rules.length; ++k) {
-            if (!checkRule(intuitiveFilter(array, 
-                    rules[k].has ? rules[k].has 
+            if (!checkRule(intuitiveFilter(array,
+                    rules[k].has ? rules[k].has
                     : rules[k].none ? rules[k].none
-                    : rules[k].all).length, 
+                    : rules[k].all).length,
                 array.length, rules[k])) return false;
         }
         return true;
     }
-}</code></pre>
-<p>Some fun examples follow:</p>
+}
+</code></pre><p>Some fun examples follow:</p>
 <pre><code>var testArray = [
     {name:&quot;John&quot;,  age: 40, children: [{name:&quot;Merlin&quot;, age:10}],
   company:{ name: &quot;MegaCorp&quot;, employees: 200}},
@@ -130,14 +130,14 @@ console.log(intuitiveFilter(testArray,
     {children: checkif({none: { }})})); // Jack
 
 console.log(intuitiveFilter(testArray,
-    {children: checkif({all: { age: {gt: 12}}})})); // Jack and Mary&lt;</code></pre>
-<p>Note: &quot;all&quot; will always return true for empty arrays, as there are no items that 
-don&#39;t satisfy the imposed conditions. This can be modified by adding 
+    {children: checkif({all: { age: {gt: 12}}})})); // Jack and Mary&lt;
+</code></pre><p>Note: &quot;all&quot; will always return true for empty arrays, as there are no items that
+don&#39;t satisfy the imposed conditions. This can be modified by adding
 <code>atLeast: 1</code>:</p>
 <pre><code>// Just Mary
 console.log(intuitiveFilter(testArray,
-    {children: checkif({all: { age: {gt: 12}}, atLeast: 1})}));</code></pre>
-<p>And now we&#39;ve extended our filter language with rich syntax to deal with sub-arrays without touching the original filtering function. Wasn&#39;t that great?</p>
+    {children: checkif({all: { age: {gt: 12}}, atLeast: 1})}));
+</code></pre><p>And now we&#39;ve extended our filter language with rich syntax to deal with sub-arrays without touching the original filtering function. Wasn&#39;t that great?</p>
 </div><a name="_comments"></a>
   <div class="social">
     <script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a>
@@ -164,7 +164,9 @@ console.log(intuitiveFilter(testArray,
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   </script>
-  <!--<a href="http://disqus.com" class="dsq-brink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  <!--
+  a.dsq-brink(href="http://disqus.com") comments powered by 
+    span.logo-disqus Disqus
   -->
 </div></div>
     </div>
@@ -181,7 +183,6 @@ console.log(intuitiveFilter(testArray,
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

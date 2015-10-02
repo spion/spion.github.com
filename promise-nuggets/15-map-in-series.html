@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Series map (async.mapSeries)</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -30,7 +30,8 @@ the next download?</p>
     })
 }, function(err, results) {
     // results is an array of names
-});</code></pre>
+});
+</code></pre>
 <h4 id="promises">Promises</h4>
 <p>With promises, we just say what we mean. Create a promise that first waits for 
 the current download to complete, then download the next item, then extract its 
@@ -47,7 +48,8 @@ Promise.all(ids.map(function(id) {
     return current;
 })).then(function(results) {
     // results is an array of names
-})</code></pre>
+})
+</code></pre>
 <p>Again, <code>Promise.all</code> does the rest.</p>
 <h2 id="notes">Notes</h2>
 <p>This example illustrates how promises compose really well. Instead of using a
@@ -72,7 +74,6 @@ our code again</a></p>
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

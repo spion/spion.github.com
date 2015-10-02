@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Safety of then - thrown errors</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -29,14 +29,16 @@ it throws errors:</p>
         catch (error) { return callback(err); }
         callback(null, parsed);
     })
-}</code></pre>
+}
+</code></pre>
 <h4 id="promises">Promises</h4>
 <p>With promises no special treatment is required:</p>
 <pre><code class="lang-js">function readConfig(file) {
     return fs.readFile(file).then(function(res) {
         return JSON.parse(content.toString());
     });
-}</code></pre>
+}
+</code></pre>
 <h2 id="notes">Notes</h2>
 <p>In the callback example, we must be careful not to wrap the callback inside the
 try block! Otherwise, an error thrown from inside that callback will cause the 
@@ -48,7 +50,8 @@ promise:</p>
     // Got configuration.
 }, function(error) {
     // JSON parse error or file read error.
-})</code></pre>
+})
+</code></pre>
 </div></div>
     <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
     <script>
@@ -63,7 +66,6 @@ promise:</p>
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

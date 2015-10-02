@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>The simplest example</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -21,14 +21,16 @@ functions?</p>
 <p>The first call the callback with the error and the result:</p>
 <pre><code class="lang-js">fs.readFile(path, function(error, content) {
     // handle error or do something with content
-})</code></pre>
+})
+</code></pre>
 <p>The second return promises. We can attach two callbacks - one for the value, 
 another to handle the error:</p>
 <pre><code class="lang-js">fs.readFileAsync(path).done(function(content) {
     // do something with content
 }, function(error) {
     // handle error
-})</code></pre>
+})
+</code></pre>
 <h2 id="notes">Notes</h2>
 <p>Whats going on here? </p>
 <p><code>fs.readFileAsync(file)</code> starts a file reading operation. 
@@ -41,7 +43,8 @@ And that operation is represanted with a promise.</p>
     doStuffWith(res); 
 }).on(&#39;error&#39;, function(err) { 
     hadnleError(); 
-});</code></pre>
+});
+</code></pre>
 <p>But there are also some important differences which are going to be covered
 later on.</p>
 </div></div>
@@ -58,7 +61,6 @@ later on.</p>
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

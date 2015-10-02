@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Doing things in series (async.waterfall)</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -23,7 +23,8 @@ support streams, then write the transformed file somewhere else.</p>
 <h4 id="callbacks">Callbacks</h4>
 <p><a href="//github.com/caolan/async">caolan&#39;s async</a> gives us <code>async.waterfall</code></p>
 <p>Assuming that </p>
-<pre><code class="lang-js">service.transform = function(string, callback)</code></pre>
+<pre><code class="lang-js">service.transform = function(string, callback)
+</code></pre>
 <pre><code class="lang-js">function transformFile(inPath, outPath, callback) {
     async.waterfall([
         fs.readFile.bind(fs, file1, &#39;utf8&#39;),    
@@ -33,7 +34,8 @@ support streams, then write the transformed file somewhere else.</p>
 }
 transformFile(input, output, function(err) {
     if (!err) console.log(&quot;All ok!&quot;);
-})</code></pre>
+})
+</code></pre>
 <p>The callback is called with no error and an array of results after all 
 operations are complete, or when the first error is encountered.</p>
 <h4 id="promises">Promises</h4>
@@ -48,7 +50,8 @@ transformFile(fileIn, fileOut).done(function() {
     console.log(&quot;All ok!&quot;);
 }, function(err) { 
     console.error(err);
-});</code></pre>
+});
+</code></pre>
 <p>The resulting promise is fulfilled when all the promises in the chain are
 fulfilled or is rejected with an error when the first error is encountered.</p>
 <h2 id="notes">Notes</h2>
@@ -63,7 +66,8 @@ makes it easier - first, <code>async.waterfall</code></p>
         function(transformed, callback) { 
             fs.writeFile(transformed, callback); }
     ], done);
-}</code></pre>
+}
+</code></pre>
 <p>and also, the promises implementation:</p>
 <pre><code class="lang-js">function transformFile(input, output) {
     return fs.readFileAsync(input, &#39;utf8&#39;)
@@ -73,7 +77,8 @@ makes it easier - first, <code>async.waterfall</code></p>
         .then(function(transformed) {
             return fs.writeFileAsync(transformed)
         }); 
-}</code></pre>
+}
+</code></pre>
 <p><code>async.waterfall()</code> is pretty cool. It starts by giving us a callback, then
 when that callback is called with a result, it passes that result onto the next 
 function in the list. But it also passes another callback to that function,
@@ -96,7 +101,6 @@ can  immediately attach another <code>.then()</code> on the outside and continue
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

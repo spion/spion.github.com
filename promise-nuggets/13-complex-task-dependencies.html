@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Complex task dependencies</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -37,7 +37,8 @@ finally do something with the result.</p>
     }], 
     function(err, diff) {
         // voila, diff is ready. Do something with it.
-    })</code></pre>
+    })
+</code></pre>
 <h4 id="promises">Promises</h4>
 <p>With promises we can simply return an array, then use <code>Promise.spread</code> 
 available in both bluebird and Q. It works on promises for arrays and resolves
@@ -52,7 +53,8 @@ all the items in the array then passes them to the callback:</p>
     })
     .then(function(diff) {
         // voila, diff is ready. Do something with it.
-    });</code></pre>
+    });
+</code></pre>
 <h2 id="notes">Notes</h2>
 <p>TODO.</p>
 </div></div>
@@ -69,7 +71,6 @@ all the items in the array then passes them to the callback:</p>
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>

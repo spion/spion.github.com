@@ -1,23 +1,23 @@
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
     <title>Closures are unavoidable in node</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
   </head>
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
       </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"></a>
+      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
         <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
@@ -26,22 +26,22 @@
 <div class="post">
   <h1>Closures are unavoidable in node</h1>
   <div class="date">Fri Aug 23 2013</div>
-  <div class="content"><p>A couple of weeks ago I wrote a <a href="/posts/analysis-generators-and-other-async-patterns-node.html">giant comparison of node.js async code 
-patterns</a> that 
+  <div class="content"><p>A couple of weeks ago I wrote a <a href="/posts/analysis-generators-and-other-async-patterns-node.html">giant comparison of node.js async code
+patterns</a> that
 mostly focuses on the new generators feature in EcmaScript 6 (Harmony)</p>
-<p>Among other implementations there were two callback versions: <a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a>, 
+<p>Among other implementations there were two callback versions: <a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a>,
 which contains nested callbacks, and <a href="//github.com/spion/async-compare/blob/blog/examples/flattened.js">flattened.js</a>, which flattens the nesting a
 little bit. Both make extensive use of JavaScript closures: every time
 the benchmarked function is invoked, a lot of closures are created.</p>
 <p>Then <a href="http://blog.trevnorris.com/2013/08/long-live-callbacks.html">Trevor Norris wrote</a>
 that we should be avoiding closures when writing performance-sensitive code,
 hinting that my benchmark may be an example of &quot;doing it wrong&quot;</p>
-<p>I decided to try and write two more flattened variants. The idea is to 
+<p>I decided to try and write two more flattened variants. The idea is to
 minimize performance loss and memory usage by avoiding the creation of closures.</p>
 <p>You can see the code here: <strong><a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js">flattened-noclosure.js</a></strong></p>
 <p>Of course, this made complexity skyrocket. Lets see what it did for performance.</p>
-<p>These are the results for 50 000 parallel invocations of the upload function, 
-with simulated I/O operations that always take 1ms. Note: suspend is currently 
+<p>These are the results for 50 000 parallel invocations of the upload function,
+with simulated I/O operations that always take 1ms. Note: suspend is currently
 the fastest generator based library</p>
 <table>
 <thead>
@@ -80,32 +80,32 @@ the fastest generator based library</p>
 </tbody>
 </table>
 <p>No performance gains. Why?</p>
-<p>Because this kind of code requires that results from previous callbacks are 
-passed to the next callback. And unfortunately, in node this means creating 
-closures. </p>
-<p>There really is no other option. Node core functions only take callback 
-functions. This means we <em>have</em> to create a closure: its the only mechanism in 
+<p>Because this kind of code requires that results from previous callbacks are
+passed to the next callback. And unfortunately, in node this means creating
+closures.</p>
+<p>There really is no other option. Node core functions only take callback
+functions. This means we <em>have</em> to create a closure: its the only mechanism in
 JS that allows you to include context together with a function.</p>
 <p>And yeah, <code>bind</code> also creates a closure:</p>
 <pre><code>function bind(fn, ctx) {
     return function bound() {
         return fn.apply(ctx, arguments);
     }
-}</code></pre>
-<p>Notice how <code>bound</code> is a closure over ctx and fn. </p>
-<p>Now, if node core functions were also able to take a context argument, things 
+}
+</code></pre><p>Notice how <code>bound</code> is a closure over ctx and fn.</p>
+<p>Now, if node core functions were also able to take a context argument, things
 could have been different. For example, instead of writing:</p>
-<pre><code>fs.readFile(f, bind(this.afterFileRead, this));</code></pre>
-<p>if we were able to write:</p>
-<pre><code>fs.readFile(f, this.afterFileRead, this);</code></pre>
-<p>then we would be able to write code that avoids closures and 
-<a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a> could have been much faster. </p>
+<pre><code>fs.readFile(f, bind(this.afterFileRead, this));
+</code></pre><p>if we were able to write:</p>
+<pre><code>fs.readFile(f, this.afterFileRead, this);
+</code></pre><p>then we would be able to write code that avoids closures and
+<a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a> could have been much faster.</p>
 <p>But we can&#39;t do that.</p>
-<p>What if we could though? Lets fork 
-<a href="https://github.com/joyent/node/blob/blog/lib/timers.js">timers.js</a> from 
+<p>What if we could though? Lets fork
+<a href="https://github.com/joyent/node/blob/blog/lib/timers.js">timers.js</a> from
 node core and find out:</p>
-<p>I added context passing support to the <code>Timeout</code> class. The result was 
-<a href="//github.com/spion/async-compare/blob/blog/lib/timers-ctx.js">timers-ctx.js</a> 
+<p>I added context passing support to the <code>Timeout</code> class. The result was
+<a href="//github.com/spion/async-compare/blob/blog/lib/timers-ctx.js">timers-ctx.js</a>
 which in turn resulted with <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js">flattened-class-ctx.js</a></p>
 <p>And here is how it performs:</p>
 <table>
@@ -144,7 +144,7 @@ which in turn resulted with <a href="//github.com/spion/async-compare/blob/blog/
 </tr>
 </tbody>
 </table>
-<p>Yeah. That shaved off a couple of 100s of miliseconds more. </p>
+<p>Yeah. That shaved off a couple of 100s of miliseconds more.</p>
 <p>Is it worth it?</p>
 <table>
 <thead>
@@ -204,7 +204,9 @@ which in turn resulted with <a href="//github.com/spion/async-compare/blob/blog/
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   </script>
-  <!--<a href="http://disqus.com" class="dsq-brink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  <!--
+  a.dsq-brink(href="http://disqus.com") comments powered by 
+    span.logo-disqus Disqus
   -->
 </div></div>
     </div>
@@ -221,7 +223,6 @@ which in turn resulted with <a href="//github.com/spion/async-compare/blob/blog/
       
       ga('create', 'UA-42872676-1', 'spion.github.io');
       ga('send', 'pageview');
-      
     </script>
   </body>
 </html>
