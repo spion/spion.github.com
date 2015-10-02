@@ -24,6 +24,284 @@
       </div>
       <div class="rest">
 <div class="post">
+  <h1><a href="/posts/es7-async-await-step-in-the-wrong-direction.html">ES7 asyc functions - a step in the wrong direction?</a></h1>
+  <div class="date">Sun Aug 23 2015</div>
+  <div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
+on top of previous capabilities made available by ES6 - promises, letting you
+write async code as though it were synchronous. At the moment, they&#39;re a
+<a href="https://github.com/lukehoban/ecmascript-asyncawait">stage 1 proposal for ES7</a> and supported by babel /
+regenerator.</p>
+<p>When generator functions were first made available in node, I was
+<a href="https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html">very exicted</a>. Finally, a way to write asynchronous JavaScript that
+doesn&#39;t descend into callback hell! At the time, I was unfamiliar with promises
+and the language power you get back by simply having async computations be
+first class values, so it seemed to me that generators are the best solution
+available.</p>
+<p>Turns out, they aren&#39;t. And the same limitations apply for async functions.</p>
+<h3 id="predicates-in-catch-statements">Predicates in catch statements</h3>
+<p>With generators, thrown errors bubble up the function chain until a catch
+statement is encountered, much like in other languages that support exceptions.
+On one hand, this is convenient, but on the other, you never know what you&#39;re
+catching once you write a catch statement.</p>
+<p>JavaScript catch doesn&#39;t support any mechanism to filter errors. This
+limitation isn&#39;t too hard to get around: we can write a function <code>guard</code></p>
+<pre><code class="lang-js">function guard(e, predicate) {
+  if (!predicate(e)) throw e;
+}</code></pre>
+<p>and then use it to e.g. only filter &quot;not found&quot; errors when downloading an
+image</p>
+<pre><code class="lang-js">try {
+    await downloadImage(url);
+} catch (e) { guard(e, e =&gt; e.code == 404);
+    handle404(...);
+}</code></pre>
+<p>But that only gets us so far. What if we want to have a second error handler?
+We must resort to using <code>if-then-else</code>, making sure that we don&#39;t forget to
+rethrow the error at the end</p>
+<pre><code class="lang-js">try {
+    await downloadImage(url);
+} catch (e) {
+    if (e.code == 404)  {
+        handle404(...)
+    } else if (e.code == 401) {
+        handle401(...);
+    } else {
+        throw e;
+    }
+}</code></pre>
+<p>Since promises are a userland library, restrictions like the above do not
+apply. We can write a userland library that demands us to always use a
+predicate filter when we invoke the catch method</p>
+<pre><code class="lang-js">downloadImage(url)
+.catch(e =&gt; e.code == 404, e =&gt; {
+    handle404(...);
+})
+.catch(e =&gt; e.code == 401, e =&gt; {
+    handle401(...)
+})</code></pre>
+<p>Now if we want all errors to be caught, we have to say it explicitly:</p>
+<pre><code class="lang-js">asyncOperation()
+.catch(e =&gt; true, e =&gt; {
+    handleAllErrors(...)
+});</code></pre>
+<p>Since these constructs are not built in language features but a DSL built on
+top of higher order functions, we can impose any restrictions that we want
+instead of waiting on TC39 to fix the language.</p>
+<h3 id="cannot-use-higher-order-functions">Cannot use higher order functions</h3>
+<p>Because generators and async-await are shallow, you cannot use <code>yield</code> or
+<code>await</code> within lambdas passed to higher order functions.</p>
+<p>This is <a href="https://github.com/tc39/ecmascript-asyncawait/issues/7">better explained here</a> - The example given
+there is</p>
+<pre><code class="lang-js">async function renderChapters(urls) {
+  urls.map(getJSON).forEach(j =&gt; addToPage((await j).html));
+}</code></pre>
+<p>and will not work, because you&#39;re not allowed to use await from within a nested
+function</p>
+<p>To understand why, you need to read <a href="http://calculist.org/blog/2011/12/14/why-coroutines-wont-work-on-the-web/">this article</a>. In short:
+its much harder to implement deep coroutines so browser vendors probably wont
+do it.</p>
+<p>Besides being very unintuitive, this is also limiting. Higher order functions
+are succint and powerful, yet we cannot <em>really</em> use them inside async
+functions. Instead we have to resort to the clumsy built in for loops which
+often force us into writing ceremonial, stateful code.</p>
+<h3 id="arrow-functions-give-us-more-power-than-ever-before">Arrow functions give us more power than ever before</h3>
+<p>Functional DSLs were very powerful even before JS had short lambda syntax. But
+with arrow functions, things get even cleaner. The amount of code one needs to
+write can be reduced greatly thanks to short lambda syntax and higher order
+functions. Lets take the motivating example from the async-await proposal</p>
+<pre><code class="lang-js">function chainAnimationsPromise(elem, animations) {
+    var ret = null;
+    var p = currentPromise;
+    for(var anim of animations) {
+        p = p.then(function(val) {
+            ret = val;
+            return anim(elem);
+        })
+    }
+    return p.catch(function(e) {
+        /* ignore and keep going */
+    }).then(function() {
+        return ret;
+    });
+}</code></pre>
+<p>With bluebird&#39;s <code>Promise.reduce</code>, this becomes</p>
+<pre><code class="lang-js">function chainAnimationsPromise(elem, animations) {
+  return Promise.reduce(animations,
+      (lastVal, anim) =&gt; anim(elem).catch(_ =&gt; Promise.reject(lastVal)),
+      Promise.resolve(null))
+  .catch(lastVal =&gt; lastVal);
+}</code></pre>
+<p>In short: functional DSLs are more powerful than built in constructs,
+even though (admittedly) they may take some getting used to.</p>
+<hr>
+<p>But this is not why async functions are a step in the wrong direction. The
+problems above are not unique to async functions. The same problems apply to
+generators: async functions merely inherit them as they&#39;re very similar.</p>
+<p>Async functions also add a new major problem: loss of generality.</p>
+<h2 id="async-functions-another-step-back">Async functions: another step back</h2>
+<p>Despite their shortcomings, generator based coroutines have one redeeming
+quality: they allow you to redefine the coroutine execution engine. This is
+extremely powerful, and I will demonstrate by giving the following example:</p>
+<p>Lets say we were given the task to write the save function for an issue
+tracker. The issue author can specify the issue&#39;s title and text, as well
+as any other issues that are blocking the solution of the newly entered issue.</p>
+<p>Our initial implementation is simple:</p>
+<pre><code class="lang-js">async function saveIssue(data, blockers) {
+    let issue = await Issues.insert(data);
+    for (let blockerId of blockers) {
+      await BlockerIssues.insert({blocker: blockerId, blocks: issue.id});
+    }
+}
+
+Issues.insert = async function(data) {
+    return db.query(&quot;INSERT ... VALUES&quot;, data).execWithin(db.pool);
+}
+
+BlockerIssue.insert = async function(data) {
+    return db.query(&quot;INSERT .... VALUES&quot;, data).execWithin(db.pool);
+}</code></pre>
+<p><code>Issue</code> and <code>BlockerIssues</code> are references to the corresponding tables in an
+SQL database. Their <code>insert</code> methods return a promise that indicate whether
+the query has been completed. The query is executed by a connection pool.</p>
+<p>But then, we run into a problem. We don&#39;t want to partially save the issue if
+some of the data was not inserted successfuly. We want the entire save
+operation to be atomic. Fortnuately, SQL databases support this via
+transactions, and our database library has a transaction abstraction. So we
+change our code:</p>
+<pre><code class="lang-js">async function saveIssue(data, blockers) {
+    let tx = db.beginTransaction();
+    let issue = await Issue.insert(tx, data);
+    for (let blockerId of blockers) {
+      await BlockerIssues.insert(tx, {blocker: blockerId, blocks: issue.id});
+    }
+}
+
+Issues.insert = async function(tx, data) {
+    return db.query(&quot;INSERT ... VALUES&quot;, data).execWithin(tx);
+}
+
+BlockerIssue.insert = async function(tx, data) {
+    return db.query(&quot;INSERT .... VALUES&quot;, data).execWithin(tx);
+}</code></pre>
+<p>Here, we changed the code in two ways. Firstly, we created a transaction within
+the saveIssue function. Secondly, we changed both insert methods to take this
+transaction as an argument.</p>
+<p>Immediately we can see that this solution doesn&#39;t scale very well. What if
+we need to use <code>saveIssue</code> as a part of a larger transaction? Then it has to
+take a transaction as an argument. Who will create the transactions? The top
+level service. What if the top level service becomes a part of a larger
+service? Then we need to change the code again.</p>
+<p>We can reduce the extent of this issue by writing a base class that
+automatically initializes a transaction if one is not passed via the
+constructor, and then have <code>Issues</code>, <code>BlockerIssue</code> etc inherit from this
+class.</p>
+<pre><code>
+class Transactionable {
+    constructor(tx) {
+        if (tx == null) tx = db.beginTransaction();
+    }
+}
+class IssueService extends Transactionable {
+    async saveIssue(data, blockers) {
+        issues = new Issues(this.transaction);
+        blockerIssues = new BlockerIssues(this.transaction);
+        ...
+    }
+}
+class Issues extends Transactionable {
+  ...
+}
+// etc</code></pre>
+<p>Like many OO solutions, this only spreads the problem across the plate to make
+it look smaller but doesn&#39;t solve it.</p>
+<h2 id="generators-are-better">Generators are better</h2>
+<p>Generators let us define the execution engine. If thats the case, then what if
+instead of yielding promises, our engine let us also:</p>
+<ol>
+<li>Specify additional options which are accessible from within</li>
+<li>Yield queries. These will be run in the transaction specified in the options
+above</li>
+<li>Yield other generator iterables: These will be run with the same engine and
+options</li>
+<li>Yield promises: These will be handled normally</li>
+</ol>
+<p>Lets take the original code:</p>
+<pre><code class="lang-js">
+function* saveIssue(data, blockers) {
+    let issue = yield Issues.insert(data);
+    for (var blockerId of blockers) {
+      yield BlockerIssues.insert({blocker: blockerId, blocks: issue.id});
+    }
+}
+
+function* (data) {
+    return db.query(&quot;INSERT ... VALUES&quot;, data)
+}
+
+BlockerIssue.insert = function* (data) {
+    return db.query(&quot;INSERT .... VALUES&quot;, data)
+}</code></pre>
+<p>From our http handler, we can write</p>
+<pre><code class="lang-js">var myengine = require(&#39;./my-engine&#39;);
+
+app.post(&#39;/issues/save&#39;, function(req, res) {
+  myengine.run(saveIssue(data, blockers), {tx: db.beginTransaction()})
+});</code></pre>
+<p>Lets implement this engine:</p>
+<pre><code class="lang-js">function run(iterator, options) {
+    function runNext(value) {
+        var request = iterator.next(value)
+        if (isIterator(request)) run(request, options).then(runNext)
+        else if (isQuery(request)) request.execWithin(options.tx).then(runNext)
+        else if (isPromise(request)) promise.then(runNext);
+    }
+    runNext()
+}</code></pre>
+<p>This implementation is incomplete because it lacks error handling. Still, its
+quite easy to write a complete one using bluebird&#39;s <code>Promise.coroutine</code>,
+which <a href="https://github.com/petkaantonov/bluebird/issues/735#issuecomment-133699326">lets you specify a custom yield handler</a></p>
+<p>The best part of this change is that we did not have to change the original
+code at all. We didn&#39;t have to add the transaction parameter to every function,
+to take care to properly propagate it everywhere and to properly create those
+transactions. All we needed to do is just change our execution engine.</p>
+<p>And we can add so much more! We can <code>yield</code> a request to get the current user
+if any, so we don&#39;t have to thread that throughout our code either. Infact, we
+can implement <a href="https://github.com/othiym23/node-continuation-local-storage">continuation local storage</a> with only a few lines of code!</p>
+<p>We can even do advanced things like, say, a query optimizer that supports
+aggregate execution of queries. If we replace <code>Promise.all</code> with our own
+implementaiton:</p>
+<pre><code class="lang-js">let blocked = yield BlockerIssues.where({blocker: blockerId})
+let owners  = yield myengine.parallel(blocked.map(issue =&gt; issue.getOwner()))
+
+for (let owner of owners) yield owner.notifyResolved(issue)</code></pre>
+<p>Instead of yielding raw SQL, we can have <code>getOwner()</code> return data about the
+query:</p>
+<pre><code class="lang-js">{table: &#39;users&#39;, id: issue.user_id}</code></pre>
+<p>and have myengine optimize the execution of parallel queries:</p>
+<pre><code class="lang-js">if (isParallelQuery(query)) {
+    var results = _(query.items).groupBy(&#39;table&#39;)
+      .map((items, t) =&gt; db.query(`select * from ${t} where id in ?`,
+                                  items.map(it =&gt; it.id))
+                .execWithin(options.tx)).toArray();
+    Promise.all(results).then(results =&gt; results.sort(byRequestOrder(queries)))
+        .then(runNext)
+}</code></pre>
+<p>And voila, we&#39;ve just implemented a query optimizer. We can do this on the
+client too, to build a single GraphQL query by aggregating multiple ones. We
+can easily add support for regular promises too, fully replacing <code>Promise.all</code>.
+We can add support for iterators. which would let the optimization become deep:
+we would be able to aggregate queries that are several layers within other
+generator functions, without those functions knowing anything about it (thus,
+without breaking modularity)</p>
+<p>Generators are JavaScript&#39;s programmable semicolons (well, not as powerful as
+monads, but they go quite far). Lets not take away that power by taking away
+the programmability. Lets drop async await and write our own interpreters.</p>
+</div>
+  <div class="comments"> 
+    <hr/><a href="/posts/es7-async-await-step-in-the-wrong-direction.html#_comments">comment or share</a>
+  </div>
+</div>
+<div class="post">
   <h1><a href="/posts/why-i-am-switching-to-promises.html">Why I am switching to promises</a></h1>
   <div class="date">Mon Oct 07 2013</div>
   <div class="content"><p>I&#39;m switching my node code from callbacks to promises. The reasons aren&#39;t
@@ -2468,109 +2746,12 @@ facilities and the iPad screen has plenty of resolution and size.</p>
     <hr/><a href="/posts/make-most-webapps-work-on-ipad.html#_comments">comment or share</a>
   </div>
 </div>
-<div class="post">
-  <h1><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h1>
-  <div class="date">Tue Nov 27 2012</div>
-  <div class="content"><p>Node&#39;s package manager <a href="https://npmjs.org/">npm</a> is a wonderful tool.</p>
-<p>It handles dependencies and versions the right way. It requires simple, easy to write package metadata. It uses a central registry (by default) which makes installing modules easier. The central registry is <a href="http://couchdb.apache.org/">CouchDB</a> which basically makes it completely transparent and available to everyone.</p>
-<p>It does many things right.</p>
-<p>But it doesn&#39;t do search that well.</p>
-<pre><code>9134 % npm search orm
-npm http GET https://registry.npmjs.org/-
-/all/since?stale=update_after&amp;amp;startkey=1353539108378
-npm http 200 https://registry.npmjs.org/-
-/all/since?stale=update_after&amp;amp;startkey=1353539108378
-
-NAME                  DESCRIPTION             
-2csv                  A pluggable file format converter into Co...
-abnf                  Augmented Backus-Naur Form (ABNF) parsing.
-accounting            number, money and currency parsing/formatt..
-activerecord          An ORM that supports multiple database sys..
-addressit             Freeform Street Address Parser
-...
-[snip]
-...</code></pre>
-<p>What just happened here?</p>
-<p>Here is what happened: npm search gave us all packages that contain the substring &quot;orm&quot;. Anywhere.</p>
-<p>You might argue that this works well with bigger words. Its true that results are slightly better with bigger words but they&#39;re still not sorted in any meaningful way (alphabetically sorting search results isn&#39;t very meaningful)</p>
-<pre><code>9144 % npm search mysql
-NAME                  DESCRIPTION            
-Accessor_MySQL        A MySQL database wrapper, provide ...
-any-db                Database-agnostic connection pool ...
-autodafe              mvc framework for node with mysql ...
-connect-mysql         a MySQL session store for connect ...
-connect-mysql-session A MySQL session store for node.js ... 
-cormo                 ORM framework for Node.js...
-...
-[snip]
-...</code></pre>
-<p>Hence one of the common activities to do when researching node modules is to go to the #node.js IRC channel and ask the people there for a <strong>good</strong> library that does X.</p>
-<p>I decided to make a package that helps with this, called npmsearch. Its a command-line tool that allows you to search the npm registry by keywords and it sorts the results using relevance and the number of downloads that the package has.</p>
-<p>Install it using npm:</p>
-<pre><code>[sudo] npm install -g npmsearch</code></pre>
-<p>then use it from the command line:</p>
-<pre><code>9147 % npmsearch mysql
-* mysql (6 15862)
-     A node.js driver for mysql. It is written in JavaScript, does 
-     not  require compiling, and is 100% MIT licensed.
-     by Felix Geisendörfer &lt;felix@debuggable.com&gt;
-
-* mongoose (2 28197)
-     Mongoose MongoDB ODM
-     by Guillermo Rauch &lt;guillermo@learnboost.com&gt;
-     http://github.com/LearnBoost/mongoose.git
-
-* patio (10 174)
-     Patio query engine and ORM
-     by Doug Martin &lt;undefined&gt;
-     git@github.com:c2fo/patio.git
-
-* mysql-libmysqlclient (5 1019)
-     Binary MySQL bindings for Node.JS
-     by Oleg Efimov &lt;efimovov@gmail.com&gt;
-     https://github.com/Sannis/node-mysql-libmysqlclient.git
-
-* db-mysql (3 918)
-     MySQL database bindings for Node.JS
-
-* sql (6 51)
-     sql builder
-     by brianc &lt;brian.m.carlson@gmail.com&gt;
-     http://github.com/brianc/node-sql.git
-
-* sequelize (2 2715)
-     Multi dialect ORM for Node.JS
-     by Sascha Depold </code></pre>
-<p>If you want to try it out without installing it, 
-<a href="http://npmsearch.docucalc.com/">you can try it online</a>, or you can 
-<a href="https://github.com/spion/npmsearch">visit the project page on github</a></p>
-<p>The implemented keyword search is non-trivial: it applies the 
-<a href="http://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to the keywords and
-expands the set provided by you with statistically picked commonly co-occuring 
-keywords. (e.g. mongo will expand to mongo mongodb)</p>
-<p>Results are sorted by a combined factor which incorporates keyword relevance 
-and &quot;half-lifed&quot; downloads. You can control the importance of each factor in 
-the sorting process using command-line options - and there are many:</p>
-<ul>
-<li>relevance - how big of a factor should keyword relevance be, default 2</li>
-<li>downloads - how big of a factor is the number of downloads, default 0.25</li>
-<li>halflife  - the halflife of downloads e.g. 7 means downloads that are 7 
-days old lose half of their value, default 30</li>
-<li>limit     - number of results to display, default 7</li>
-<li>freshness - update the database if older than &quot;freshness&quot; days, default 1.5</li>
-</ul>
-<p>I hope this will help fellow nodesters find their next favorite modules</p>
-<p>Have fun!</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/introducing-npmsearch.html#_comments">comment or share</a>
-  </div>
-</div>
 <hr/>
 <h1>Older posts</h1>
+<h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4>
 <h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h4>
-<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
 <h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
+<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
 <h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>

@@ -27,9 +27,10 @@
   <h1>ES7 asyc functions - a step in the wrong direction?</h1>
   <div class="date">Sun Aug 23 2015</div>
   <div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
-on top of previous capabilities made available by ES6 - generator functions. At
-the moment, they&#39;re a <a href="https://github.com/lukehoban/ecmascript-asyncawait">stage 1 proposal for ES7</a> and
-supported by babel / regenerator.</p>
+on top of previous capabilities made available by ES6 - promises, letting you
+write async code as though it were synchronous. At the moment, they&#39;re a
+<a href="https://github.com/lukehoban/ecmascript-asyncawait">stage 1 proposal for ES7</a> and supported by babel /
+regenerator.</p>
 <p>When generator functions were first made available in node, I was
 <a href="https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html">very exicted</a>. Finally, a way to write asynchronous JavaScript that
 doesn&#39;t descend into callback hell! At the time, I was unfamiliar with promises
@@ -55,7 +56,8 @@ image</p>
     handle404(...);
 }</code></pre>
 <p>But that only gets us so far. What if we want to have a second error handler?
-We must resort to <code>if-then-else</code></p>
+We must resort to using <code>if-then-else</code>, making sure that we don&#39;t forget to
+rethrow the error at the end</p>
 <pre><code class="lang-js">try {
     await downloadImage(url);
 } catch (e) {
@@ -84,7 +86,7 @@ predicate filter when we invoke the catch method</p>
 });</code></pre>
 <p>Since these constructs are not built in language features but a DSL built on
 top of higher order functions, we can impose any restrictions that we want
-instead of waiting for TC39 to fix the language.</p>
+instead of waiting on TC39 to fix the language.</p>
 <h3 id="cannot-use-higher-order-functions">Cannot use higher order functions</h3>
 <p>Because generators and async-await are shallow, you cannot use <code>yield</code> or
 <code>await</code> within lambdas passed to higher order functions.</p>
@@ -95,16 +97,16 @@ there is</p>
 }</code></pre>
 <p>and will not work, because you&#39;re not allowed to use await from within a nested
 function</p>
-<p>To understand why, you need to read
-<a href="http://calculist.org/blog/2011/12/14/why-coroutines-wont-work-on-the-web/">this article</a>. In short: its much harder to implement
-deep coroutines so browser vendors probably wont do it.</p>
+<p>To understand why, you need to read <a href="http://calculist.org/blog/2011/12/14/why-coroutines-wont-work-on-the-web/">this article</a>. In short:
+its much harder to implement deep coroutines so browser vendors probably wont
+do it.</p>
 <p>Besides being very unintuitive, this is also limiting. Higher order functions
 are succint and powerful, yet we cannot <em>really</em> use them inside async
 functions. Instead we have to resort to the clumsy built in for loops which
 often force us into writing ceremonial, stateful code.</p>
 <h3 id="arrow-functions-give-us-more-power-than-ever-before">Arrow functions give us more power than ever before</h3>
 <p>Functional DSLs were very powerful even before JS had short lambda syntax. But
-with arrow functions, things got even cleaner. The amount of code one needs to
+with arrow functions, things get even cleaner. The amount of code one needs to
 write can be reduced greatly thanks to short lambda syntax and higher order
 functions. Lets take the motivating example from the async-await proposal</p>
 <pre><code class="lang-js">function chainAnimationsPromise(elem, animations) {
@@ -134,8 +136,8 @@ even though (admittedly) they may take some getting used to.</p>
 <hr>
 <p>But this is not why async functions are a step in the wrong direction. The
 problems above are not unique to async functions. The same problems apply to
-generators: async functions merely inherit them.</p>
-<p>However, they also add a new major problem: loss of generality.</p>
+generators: async functions merely inherit them as they&#39;re very similar.</p>
+<p>Async functions also add a new major problem: loss of generality.</p>
 <h2 id="async-functions-another-step-back">Async functions: another step back</h2>
 <p>Despite their shortcomings, generator based coroutines have one redeeming
 quality: they allow you to redefine the coroutine execution engine. This is
@@ -212,15 +214,15 @@ class Issues extends Transactionable {
 // etc</code></pre>
 <p>Like many OO solutions, this only spreads the problem across the plate to make
 it look smaller but doesn&#39;t solve it.</p>
-<p>No, this simply doesn&#39;t work.</p>
 <h2 id="generators-are-better">Generators are better</h2>
-<p>Generators let us define the execution engine. What if instead of yielding
-promises, our engine let us also:</p>
+<p>Generators let us define the execution engine. If thats the case, then what if
+instead of yielding promises, our engine let us also:</p>
 <ol>
 <li>Specify additional options which are accessible from within</li>
 <li>Yield queries. These will be run in the transaction specified in the options
 above</li>
-<li>Yield other generators: These will be run with the same engine and options</li>
+<li>Yield other generator iterables: These will be run with the same engine and
+options</li>
 <li>Yield promises: These will be handled normally</li>
 </ol>
 <p>Lets take the original code:</p>
@@ -264,8 +266,7 @@ to take care to properly propagate it everywhere and to properly create those
 transactions. All we needed to do is just change our execution engine.</p>
 <p>And we can add so much more! We can <code>yield</code> a request to get the current user
 if any, so we don&#39;t have to thread that throughout our code either. Infact, we
-can implement the entire <a href="https://github.com/othiym23/node-continuation-local-storage">continuation local storage</a> with only a few
-lines of code!</p>
+can implement <a href="https://github.com/othiym23/node-continuation-local-storage">continuation local storage</a> with only a few lines of code!</p>
 <p>We can even do advanced things like, say, a query optimizer that supports
 aggregate execution of queries. If we replace <code>Promise.all</code> with our own
 implementaiton:</p>
@@ -288,13 +289,27 @@ query:</p>
 <p>And voila, we&#39;ve just implemented a query optimizer. We can do this on the
 client too, to build a single GraphQL query by aggregating multiple ones. We
 can easily add support for regular promises too, fully replacing <code>Promise.all</code>.
-We can even add support for iterators. which would let the optimization
-become deep: we would be able to aggregate queries that are several layers
-within other generator functions.</p>
+We can add support for iterators. which would let the optimization become deep:
+we would be able to aggregate queries that are several layers within other
+generator functions, without those functions knowing anything about it (thus,
+without breaking modularity)</p>
 <p>Generators are JavaScript&#39;s programmable semicolons (well, not as powerful as
 monads, but they go quite far). Lets not take away that power by taking away
 the programmability. Lets drop async await and write our own interpreters.</p>
 </div><a name="_comments"></a>
+  <div class="social">
+    <script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a>
+    <script>
+      (function(d, t) {
+          var g = d.createElement(t),
+              s = d.getElementsByTagName(t)[0];
+          g.src = '//hnbutton.appspot.com/static/hn.min.js';
+          s.parentNode.insertBefore(g, s);
+      }(document, 'script'));    
+    </script>
+  </div>
   <div id="disqus_thread"></div>
   <script>
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
