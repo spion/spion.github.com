@@ -2,13 +2,14 @@
 title: ES7 asyc functions - a step in the wrong direction?
 date: 2015-08-23
 layout: post
-hidden: true
+hidden: false
 ---
 
 Async functions are a new feature scheduled to become a part of ES7. They build
-on top of previous capabilities made available by ES6 - generator functions. At
-the moment, they're a [stage 1 proposal for ES7][async-await-github] and
-supported by babel / regenerator.
+on top of previous capabilities made available by ES6 - promises, letting you
+write async code as though it were synchronous. At the moment, they're a
+[stage 1 proposal for ES7][async-await-github] and supported by babel /
+regenerator.
 
 When generator functions were first made available in node, I was
 [very exicted][gen-funs]. Finally, a way to write asynchronous JavaScript that
@@ -47,7 +48,8 @@ try {
 ```
 
 But that only gets us so far. What if we want to have a second error handler?
-We must resort to `if-then-else`
+We must resort to using `if-then-else`, making sure that we don't forget to
+rethrow the error at the end
 
 ```js
 try {
@@ -88,7 +90,7 @@ asyncOperation()
 
 Since these constructs are not built in language features but a DSL built on
 top of higher order functions, we can impose any restrictions that we want
-instead of waiting for TC39 to fix the language.
+instead of waiting on TC39 to fix the language.
 
 ### Cannot use higher order functions
 
@@ -107,9 +109,9 @@ async function renderChapters(urls) {
 and will not work, because you're not allowed to use await from within a nested
 function
 
-To understand why, you need to read
-[this article][why-no-co-web]. In short: its much harder to implement
-deep coroutines so browser vendors probably wont do it.
+To understand why, you need to read [this article][why-no-co-web]. In short:
+its much harder to implement deep coroutines so browser vendors probably wont
+do it.
 
 Besides being very unintuitive, this is also limiting. Higher order functions
 are succint and powerful, yet we cannot *really* use them inside async
@@ -119,7 +121,7 @@ often force us into writing ceremonial, stateful code.
 ### Arrow functions give us more power than ever before
 
 Functional DSLs were very powerful even before JS had short lambda syntax. But
-with arrow functions, things got even cleaner. The amount of code one needs to
+with arrow functions, things get even cleaner. The amount of code one needs to
 write can be reduced greatly thanks to short lambda syntax and higher order
 functions. Lets take the motivating example from the async-await proposal
 
@@ -159,9 +161,9 @@ even though (admittedly) they may take some getting used to.
 
 But this is not why async functions are a step in the wrong direction. The
 problems above are not unique to async functions. The same problems apply to
-generators: async functions merely inherit them.
+generators: async functions merely inherit them as they're very similar.
 
-However, they also add a new major problem: loss of generality.
+Async functions also add a new major problem: loss of generality.
 
 ## Async functions: another step back
 
@@ -258,17 +260,16 @@ class Issues extends Transactionable {
 Like many OO solutions, this only spreads the problem across the plate to make
 it look smaller but doesn't solve it.
 
-No, this simply doesn't work.
-
 ## Generators are better
 
-Generators let us define the execution engine. What if instead of yielding
-promises, our engine let us also:
+Generators let us define the execution engine. If thats the case, then what if
+instead of yielding promises, our engine let us also:
 
 1. Specify additional options which are accessible from within
 2. Yield queries. These will be run in the transaction specified in the options
    above
-3. Yield other generators: These will be run with the same engine and options
+3. Yield other generator iterables: These will be run with the same engine and
+   options
 4. Yield promises: These will be handled normally
 
 Lets take the original code:
@@ -326,8 +327,7 @@ transactions. All we needed to do is just change our execution engine.
 
 And we can add so much more! We can `yield` a request to get the current user
 if any, so we don't have to thread that throughout our code either. Infact, we
-can implement the entire [continuation local storage][cls] with only a few
-lines of code!
+can implement [continuation local storage][cls] with only a few lines of code!
 
 We can even do advanced things like, say, a query optimizer that supports
 aggregate execution of queries. If we replace `Promise.all` with our own
@@ -363,9 +363,10 @@ if (isParallelQuery(query)) {
 And voila, we've just implemented a query optimizer. We can do this on the
 client too, to build a single GraphQL query by aggregating multiple ones. We
 can easily add support for regular promises too, fully replacing `Promise.all`.
-We can even add support for iterators. which would let the optimization
-become deep: we would be able to aggregate queries that are several layers
-within other generator functions.
+We can add support for iterators. which would let the optimization become deep:
+we would be able to aggregate queries that are several layers within other
+generator functions, without those functions knowing anything about it (thus,
+without breaking modularity)
 
 Generators are JavaScript's programmable semicolons (well, not as powerful as
 monads, but they go quite far). Lets not take away that power by taking away
