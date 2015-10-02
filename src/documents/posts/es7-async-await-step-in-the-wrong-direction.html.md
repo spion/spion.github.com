@@ -1,5 +1,9 @@
 ---
-title: ES7 asyc functions - a step in the wrong direction?
+title: ES7 async functions - a step in the wrong direction?
+description: >
+  ES7 will include async/await, a new feature that builds on top of ES6
+  promises. Are they the right solution to the async problem? Or is their
+  lack of generality a step in the wrong direction?
 date: 2015-08-23
 layout: post
 hidden: false
@@ -19,6 +23,7 @@ first class values, so it seemed to me that generators are the best solution
 available.
 
 Turns out, they aren't. And the same limitations apply for async functions.
+
 
 ### Predicates in catch statements
 

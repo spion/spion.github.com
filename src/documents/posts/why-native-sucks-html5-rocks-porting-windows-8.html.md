@@ -1,31 +1,32 @@
 ---
 layout: post
 title: Why native sucks and HTML5 rocks: porting
+description: Despite all the bashing of HTML5 mobile apps, they definitely deliver when it comes to portability.
 date: 2012-08-10
 ---
 
-
-Lately, HTML5 mobile app development has received 
-[a lot](http://blog.mobtest.com/2012/05/heres-why-the-facebook-ios-app-is-so-bad-uiwebviews-and-no-nitro/) 
-of [bashing](http://www.wooga.com/2012/06/woogas-html5-adventure/) all over the 
-[Internet](http://www.bgr.com/2012/07/25/html5-native-apps-ios-android/). Most 
-developers only quickly skim over the benefits and proceed to bash all the 
-downsides. The conclusions they usually arrive at: HTML5 slow, inconsistent, 
-limited and doesn't have a native look and feel. Therefore, native development 
+Lately, HTML5 mobile app development has received
+[a lot](http://blog.mobtest.com/2012/05/heres-why-the-facebook-ios-app-is-so-bad-uiwebviews-and-no-nitro/)
+of [bashing](http://www.wooga.com/2012/06/woogas-html5-adventure/) all over the
+[Internet](http://www.bgr.com/2012/07/25/html5-native-apps-ios-android/). Most
+developers only quickly skim over the benefits and proceed to bash all the
+downsides. The conclusions they usually arrive at: HTML5 slow, inconsistent,
+limited and doesn't have a native look and feel. Therefore, native development
 is superior.
 
-I'm not going to go point by point to defend or debunk these claims today. 
+I'm not going to go point by point to defend or debunk these claims today.
 Instead, I'd like to give an example of the benefits of HTML5.
 
-Here at CreationPal, we make [SportyPal](http://sportypal.com/) - a reasonably 
-popular mobile app that tracks your workouts. Its a native non-trivial app 
+
+Here at CreationPal, we make [SportyPal](http://sportypal.com/) - a reasonably
+popular mobile app that tracks your workouts. Its a native non-trivial app
 implemented for multiple platforms, so we do have some experience with native
 technologies.
 
-When we were discussing our new product [DoxOut](http://doxout.com/), we 
+When we were discussing our new product [DoxOut](http://doxout.com/), we
 concluded that the best way to go is to use HTML5. As a result of this decision,
-it didn't take much time to port our 
-[prototype presentation app](http://docucalc.com/app/present-main.html) to the 
+it didn't take much time to port our
+[prototype presentation app](http://docucalc.com/app/present-main.html) to the
 new Windows 8 UI (formerly codenamed Metro)
 
 The time needed: **1 hour**.
@@ -40,12 +41,12 @@ Well, not quite.
 
 We quickly got the following error:
 
-> JavaScript runtime error: Unable to add dynamic content. A script attempted 
-> to inject dynamic content, or elements previously modified dynamically, that 
-> might be unsafe. For example, using the innerHTML property to add script or 
-> malformed HTML will generate this exception. Use the toStaticHTML method to 
-> filter dynamic content, or explicitly create elements and attributes with a 
-> method such as createElement.  For more information, see 
+> JavaScript runtime error: Unable to add dynamic content. A script attempted
+> to inject dynamic content, or elements previously modified dynamically, that
+> might be unsafe. For example, using the innerHTML property to add script or
+> malformed HTML will generate this exception. Use the toStaticHTML method to
+> filter dynamic content, or explicitly create elements and attributes with a
+> method such as createElement.  For more information, see
 > [http://go.microsoft.com/fwlink/?LinkID=247104](http://go.microsoft.com/fwlink/?LinkID=247104).
 
 The new Windows 8 UI has a strict html security model. Directly inserting potentially-unsafe HTML is not allowed, and since we are using a jQuery-based micro-templating library that does exactly that, we quickly ran into the error.

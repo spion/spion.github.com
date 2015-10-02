@@ -1,12 +1,14 @@
 ---
 layout: post
 title: Intuitive JavaScript array filtering function pt2
+description: Part 2: higher order functions make powerful DSLs
 date: 2012-07-12
 ---
 
 Last time I wrote about my JavaScript array filtering function `intuitiveFilter`. It had one caveat: namely, the way it handles sub-arrays in the data. It doesn't allow the user to inspect a sub-array without writing a custom filtering function for the sub-array field.
 
 To inspect an array field, one would need a filtering function which takes an array argument and returns true or false. For example, the function might check the contents of the array and see if the elements match certain rules. Depending on the number of elements matching the rules, it would return true or false.
+
 
 We can already filter the contents of an array with `intuitiveFilter`. That means we can easily use it to inspect the elements of a sub-array. All we need now is to specify how many results we would like to have. The following rules would be useful:
 
@@ -49,24 +51,24 @@ Lets start with some intuitive syntax ideas:
     checkif(array, [ {has: filter,
         atLeast: 2, atMost:2}, ...]);
 
-There are two possible interpretations for the usage of the array here. One of 
-them would be the equivalent of an `or` operator. For example, 
-`[{has: {age: {gt:10}}, atLeast:1}, {has: {age: {lt: 8}}, atLeast: 1}]` would 
-mean the following: has at least one child older than 10 or has at least one 
-child younger than 8. This is consistent with the meaning of arrays as they are 
-used in intuitiveFilter. However, in this case, the `or` operator is a lot less 
-useful to as than the `and` operator. Using the `or` operator on a single field 
-is already possible through intuitiveFilter. Using the `and` operator isn't, 
+There are two possible interpretations for the usage of the array here. One of
+them would be the equivalent of an `or` operator. For example,
+`[{has: {age: {gt:10}}, atLeast:1}, {has: {age: {lt: 8}}, atLeast: 1}]` would
+mean the following: has at least one child older than 10 or has at least one
+child younger than 8. This is consistent with the meaning of arrays as they are
+used in intuitiveFilter. However, in this case, the `or` operator is a lot less
+useful to as than the `and` operator. Using the `or` operator on a single field
+is already possible through intuitiveFilter. Using the `and` operator isn't,
 even though that would be useful for array fields.
 
-We're going to break consistency for the sake of completeness. The rule array 
-argument of `checkif` will mean `and` instead of `or`, which means that all of 
-the rules must be satisfied. We're going to have a slightly shaky abstraction 
+We're going to break consistency for the sake of completeness. The rule array
+argument of `checkif` will mean `and` instead of `or`, which means that all of
+the rules must be satisfied. We're going to have a slightly shaky abstraction
 this way, but its going to be a more useful one.
 
 Finally, lets define some shorthand variants:
 
-`checkif(array, {has: filter, atLeast:2});` - if we only need one rule, the 
+`checkif(array, {has: filter, atLeast:2});` - if we only need one rule, the
 argument can be the rule.
 
 `checkif(array, {has: filter});` - default meaning is "atLeast: 1"
@@ -80,7 +82,7 @@ And here is the code:
     function checkif(rules) {
         if (!$.isArray(rules)) { rules = [ rules ]; }
         for (var k = 0; k < rules.length; ++k) {
-            if (rules[k].has && !("atLeast" in rules[k] 
+            if (rules[k].has && !("atLeast" in rules[k]
                         || "atMost" in rules[k])) {
                 rules[k].atLeast = 1;
             }
@@ -96,17 +98,17 @@ And here is the code:
         var checkRule = function(filtered, total, rule) {
             return ((rule.has && checkLimits(filtered, rule))
                     || (rule.none && !filtered)
-                    || (rule.all 
-                        && filtered == total 
+                    || (rule.all
+                        && filtered == total
                         && checkLimits(filtered, rule)))
 
         }
         return function(array) {
             for (var k = 0; k < rules.length; ++k) {
-                if (!checkRule(intuitiveFilter(array, 
-                        rules[k].has ? rules[k].has 
+                if (!checkRule(intuitiveFilter(array,
+                        rules[k].has ? rules[k].has
                         : rules[k].none ? rules[k].none
-                        : rules[k].all).length, 
+                        : rules[k].all).length,
                     array.length, rules[k])) return false;
             }
             return true;
@@ -136,8 +138,8 @@ Some fun examples follow:
     console.log(intuitiveFilter(testArray,
         {children: checkif({all: { age: {gt: 12}}})})); // Jack and Mary<
 
-Note: "all" will always return true for empty arrays, as there are no items that 
-don't satisfy the imposed conditions. This can be modified by adding 
+Note: "all" will always return true for empty arrays, as there are no items that
+don't satisfy the imposed conditions. This can be modified by adding
 `atLeast: 1`:
 
     // Just Mary

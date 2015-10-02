@@ -2,6 +2,17 @@
 hidden: false
 title: Analysis of generators and other async patterns in node
 layout: post
+description: >
+  Async coding patterns are the subject of never-ending debates for us node.js
+  developers. Everyone has their own favorite method or pet library as well as
+  strong feelings and opinions on all the other methods and libraries. Debates
+  can be heated: sometimes social pariahs may be declared or grave rolling
+  may be induced.<br>
+  <br>
+  The reason for this is that JavaScript never had any continuation
+  mechanism to allow code to pause and resume across the event loop boundary.<br>
+  <br>
+  Until now.
 date: 2013-08-09
 ---
 
@@ -17,7 +28,6 @@ Table of contents:
     - [Stack trace accuracy](#stack-trace-accuracy)
 - [Conclusion](#conclusion)
 
-
 Async coding patterns are the subject of never-ending debates for us node.js
 developers. Everyone has their own favorite method or pet library as well as
 strong feelings and opinions on all the other methods and libraries. Debates
@@ -28,6 +38,7 @@ The reason for this is that JavaScript never had any continuation
 mechanism to allow code to pause and resume across the event loop boundary.
 
 Until now.
+
 
 <a name="a-gentle-introduction-to-generators"></a>
 

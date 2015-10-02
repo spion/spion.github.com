@@ -1,0 +1,17 @@
+{
+  "name": "docpad-plugin-myrss",
+  "version": "2.0.0",
+  "description": "Generate RSS",
+  "main": "myrss.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "docpad-plugin"
+  ],
+  "author": "spion",
+  "license": "ISC",
+  "dependencies": {
+    "rss": "^1.1.1"
+  }
+}

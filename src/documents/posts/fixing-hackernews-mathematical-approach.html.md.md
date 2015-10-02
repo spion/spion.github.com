@@ -1,9 +1,11 @@
 ---
 layout: post
 title: Fixing Hacker News: A mathematical approach
+description: >
+  Is it possible to fix "Endles September" by simply changing the way that
+  comment and submission ratings are being calculated?
 date: 2012-08-21
 ---
-
 
 There is a certain phenomenon that seems to happen in almost every online
 community of user-generated content. A community is created: the initial users
@@ -12,6 +14,7 @@ growth in numbers. As a result of that growth, users that joined before it feel
 like its no longer the same community with the same values. The latest widely
 discussed example seems to be
 [Hacker News](http://news.ycombinator.com/item?id=4396747).
+
 
 [Paul Graham responds](http://news.ycombinator.com/item?id=4397542) that the
 reasons are mostly: a shift in values, increase of anonymity and the fact that

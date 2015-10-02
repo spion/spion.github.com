@@ -6,6 +6,7 @@ date: 2012-08-10
 
 I thought I'd post my javascript snow one-liner. Note that it doesn't work in firefox due to the new protection mechanisms. In Chrome it does, however you will need to type in the "javascript:" part manually because it automatically strips it off from the pasted text
 
+
 1.  Open a website
 
 2.  Delete the address from the address bar, replace it with "javascript:" (without the quotes)

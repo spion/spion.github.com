@@ -8,12 +8,11 @@
   },
   "dependencies": {
     "docpad": "*",
-    "docpad-plugin-jade": "*",
-    "docpad-plugin-ghpages": "*",
-    "docpad-plugin-less": "*",
     "docpad-plugin-eco": "*",
-    "docpad-plugin-marked": "*",
-    "rss": "*"
+    "docpad-plugin-ghpages": "*",
+    "docpad-plugin-jade": "*",
+    "docpad-plugin-less": "*",
+    "docpad-plugin-marked": "*"
   },
   "main": "node_modules/docpad/bin/docpad-server",
   "scripts": {

@@ -17,9 +17,13 @@ docpadConfig = {
     ghpages: {
       deployBranch: 'master'
     }
-    rss: {
-      collection: 'posts'
+    myrss: {
+      default: {
+        collection: 'posts',
+        url: '/rss.xml'
+      }
     }
+
   }
 	# ...
 }
