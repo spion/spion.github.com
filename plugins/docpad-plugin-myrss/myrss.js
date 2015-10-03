@@ -32,13 +32,12 @@ module.exports = function(BasePlugin) {
         });
         var items = [];
         feedCollection.forEach(function(document) {
-            items.push(document)
+            items.push(document.toJSON())
         })
         items.sort(function(doc1, doc2) {
-            return doc1.date > doc2.date ?  1 :
-                   doc1.date < doc2.date ? -1 : 0;
-        }).slice(0, 10).forEach(function(document) {
-          document = document.toJSON();
+            return doc1.date > doc2.date ? -1 :
+                   doc1.date < doc2.date ?  1 : 0;
+        }).slice(0, 10).forEach(function(document, k) {
           if (document.hidden) return;
           return feed.item({
             title: document.title,
