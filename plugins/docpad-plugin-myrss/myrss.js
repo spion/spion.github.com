@@ -43,7 +43,7 @@ module.exports = function(BasePlugin) {
           return feed.item({
             title: document.title,
             author: document.author,
-            description: document.description || document.content,
+            description: document.contentRenderedWithoutLayouts,
             url: site.url + document.url,
             date: document.date.toISOString()
           });

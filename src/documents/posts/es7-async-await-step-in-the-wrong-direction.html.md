@@ -1,8 +1,8 @@
 ---
-title: ES7 async functions - a step in the wrong direction?
+title: ES7 async functions - a step in the wrong direction
 description: >
   ES7 will include async/await, a new feature that builds on top of ES6
-  promises. Are they the right solution to the async problem? Or is their
+  promises. Is it the right solution to the async problem? Or is the
   lack of generality a step in the wrong direction?
 date: 2015-08-23
 layout: post
@@ -112,7 +112,13 @@ async function renderChapters(urls) {
 ```
 
 and will not work, because you're not allowed to use await from within a nested
-function
+function. The following will work, but will execute in parallel:
+
+```js
+async function renderChapters(urls) {
+  urls.map(getJSON).forEach(async j => addToPage((await j).html));
+}
+```
 
 To understand why, you need to read [this article][why-no-co-web]. In short:
 its much harder to implement deep coroutines so browser vendors probably wont
@@ -120,8 +126,8 @@ do it.
 
 Besides being very unintuitive, this is also limiting. Higher order functions
 are succint and powerful, yet we cannot *really* use them inside async
-functions. Instead we have to resort to the clumsy built in for loops which
-often force us into writing ceremonial, stateful code.
+functions. To get sequential execution we have to resort to the clumsy built
+in for loops which often force us into writing ceremonial, stateful code.
 
 ### Arrow functions give us more power than ever before
 
@@ -159,7 +165,7 @@ function chainAnimationsPromise(elem, animations) {
 }
 ```
 
-In short: functional DSLs are more powerful than built in constructs,
+In short: functional DSLs are now more powerful than built in constructs,
 even though (admittedly) they may take some getting used to.
 
 -----
@@ -237,7 +243,7 @@ take a transaction as an argument. Who will create the transactions? The top
 level service. What if the top level service becomes a part of a larger
 service? Then we need to change the code again.
 
-We can reduce the extent of this issue by writing a base class that
+We can reduce the extent of this problem by writing a base class that
 automatically initializes a transaction if one is not passed via the
 constructor, and then have `Issues`, `BlockerIssue` etc inherit from this
 class.
@@ -267,8 +273,9 @@ it look smaller but doesn't solve it.
 
 ## Generators are better
 
-Generators let us define the execution engine. If thats the case, then what if
-instead of yielding promises, our engine let us also:
+Generators let us define the execution engine. The iteration is driven by the
+function that consumes the generator, which decides what to do with the yielded
+values. What if instead of only allowing promises, our engine let us also:
 
 1. Specify additional options which are accessible from within
 2. Yield queries. These will be run in the transaction specified in the options
@@ -277,7 +284,7 @@ instead of yielding promises, our engine let us also:
    options
 4. Yield promises: These will be handled normally
 
-Lets take the original code:
+Lets take the original code and simplify it:
 
 ```js
 
@@ -297,7 +304,7 @@ BlockerIssue.insert = function* (data) {
 }
 ```
 
-From our http handler, we can write
+From our http handler, we can now write
 
 ```js
 var myengine = require('./my-engine');
@@ -332,7 +339,15 @@ transactions. All we needed to do is just change our execution engine.
 
 And we can add so much more! We can `yield` a request to get the current user
 if any, so we don't have to thread that throughout our code either. Infact, we
-can implement [continuation local storage][cls] with only a few lines of code!
+can implement [continuation local storage][cls] with only a few lines of code.
+
+> What about async generators? Surely thats not possible with just generators,
+> as you would need both yield and await at the same time
+
+Yes, thats possible too. Here is a very simple proof-of-concept project:
+[github.com/spion/async-generators](https://github.com/spion/async-generators).
+Not a complete solution by any measure, but enough to demonstrate that its
+quite possible.
 
 We can even do advanced things like, say, a query optimizer that supports
 aggregate execution of queries. If we replace `Promise.all` with our own
@@ -371,7 +386,7 @@ can easily add support for regular promises too, fully replacing `Promise.all`.
 We can add support for iterators. which would let the optimization become deep:
 we would be able to aggregate queries that are several layers within other
 generator functions, without those functions knowing anything about it (thus,
-without breaking modularity)
+without breaking modularity).
 
 Generators are JavaScript's programmable semicolons (well, not as powerful as
 monads, but they go quite far). Lets not take away that power by taking away
