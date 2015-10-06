@@ -317,16 +317,16 @@ query:</p>
 }
 </code></pre>
 <p>And voila, we&#39;ve just implemented a query optimizer. We can do this on the
-client too, to build a single GraphQL query by aggregating multiple ones. We
-can easily add support for regular promises too, fully replacing <code>Promise.all</code>.
-We can add support for iterators. which would let the optimization become deep:
-we would be able to aggregate queries that are several layers within other
-generator functions, without those functions knowing anything about it (thus,
-without breaking modularity).</p>
+client too, to build a single GraphQL query by aggregating multiple individual
+queries. We can easily add support for regular promises too, fully replacing
+<code>Promise.all</code>. We can add support for iterators. which would let the
+optimization become deep: we would be able to aggregate queries that are
+several layers within other generator functions, without those functions
+knowing anything about it (thus, without breaking modularity).</p>
 <p>Async functions wont let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
-to the ridiculously short-sighted <a href="https://mail.mozilla.org/pipermail/es-discuss/2013-April/030258.html">recursive thenable assimilation</a> design
-decision, we can&#39;t simply create our own thenable that will support
+to the ridiculously short-sighted <a href="https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures">recursive thenable assimilation</a>
+design decision, we can&#39;t simply create our own thenable that will support
 the above extra features. If we try to do that, we will be
 <a href="https://github.com/Reactive-Extensions/RxJS/issues/470">unable to safely use it with Promises</a>.
 We&#39;re stuck with what we get by default in async functions, and
@@ -2824,8 +2824,8 @@ facilities and the iPad screen has plenty of resolution and size.</p>
 <h1>Older posts</h1>
 <h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4>
 <h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h4>
-<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
 <h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
+<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
 <h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>
