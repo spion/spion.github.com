@@ -1,0 +1,72 @@
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
+    <meta content="True" name="HandheldFriendly"/>
+    <title>Safety of then - thrown errors</title>
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
+    <link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"/>
+  </head>
+  <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <div class="main">
+<link rel="stylesheet" href="/styles/nuggets.css"/>
+<h1><a href="/promise-nuggets" class="back">↩</a><span>Safety of then - thrown errors</span>
+</h1>
+<div class="content"><p>We need to write a function that reads a config file and parses it as JSON. 
+How can we do that safely?</p>
+<h4 id="callbacks">Callbacks</h4>
+<p>With callbacks we will need to wrap JSON.parse in a <code>try catch</code> block because
+it throws errors:</p>
+<pre><code class="lang-js">function readConfig(file, callback) {
+    fs.readFile(file, function(err, content) {
+        if (err) return callback(err);
+        var parsed;
+        try { parsed = JSON.parse(content.toString()) }
+        catch (error) { return callback(err); }
+        callback(null, parsed);
+    })
+}
+</code></pre>
+<h4 id="promises">Promises</h4>
+<p>With promises no special treatment is required:</p>
+<pre><code class="lang-js">function readConfig(file) {
+    return fs.readFile(file).then(function(res) {
+        return JSON.parse(content.toString());
+    });
+}
+</code></pre>
+<h2 id="notes">Notes</h2>
+<p>In the callback example, we must be careful not to wrap the callback inside the
+try block! Otherwise, an error thrown from inside that callback will cause the 
+catch block to call it again.</p>
+<p>In the promises example, any errors thrown inside then will be propagated
+as errors with the promise, and we can handle them in the error handler of that
+promise:</p>
+<pre><code class="lang-js">readConfig(file).done(function(config) {
+    // Got configuration.
+}, function(error) {
+    // JSON parse error or file read error.
+})
+</code></pre>
+</div></div>
+    <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <script>
+      $('code').addClass('prettyprint');
+      prettyPrint();
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42872676-1', 'spion.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>
