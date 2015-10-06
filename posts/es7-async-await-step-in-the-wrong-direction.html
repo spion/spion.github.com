@@ -328,8 +328,8 @@ engine that only knows how to await promises. To make matters worse, thanks
 to the ridiculously short-sighted <a href="https://mail.mozilla.org/pipermail/es-discuss/2013-April/030258.html">recursive thenable assimilation</a> design
 decision, we can&#39;t simply create our own thenable that will support
 the above extra features. If we try to do that, we will be
-<a href="https://github.com/Reactive-Extensions/RxJS/issues/470">unable to safely use it with Promises</a>
-Consequently, we&#39;re stuck with what we get by default in async functions, and
+<a href="https://github.com/Reactive-Extensions/RxJS/issues/470">unable to safely use it with Promises</a>.
+We&#39;re stuck with what we get by default in async functions, and
 thats it.</p>
 <p>Generators are JavaScript&#39;s programmable semicolons. Lets not take away that
 power by taking away the programmability. Lets drop async/await and write our
