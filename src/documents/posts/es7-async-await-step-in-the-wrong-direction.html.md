@@ -381,17 +381,17 @@ if (isParallelQuery(query)) {
 ```
 
 And voila, we've just implemented a query optimizer. We can do this on the
-client too, to build a single GraphQL query by aggregating multiple ones. We
-can easily add support for regular promises too, fully replacing `Promise.all`.
-We can add support for iterators. which would let the optimization become deep:
-we would be able to aggregate queries that are several layers within other
-generator functions, without those functions knowing anything about it (thus,
-without breaking modularity).
+client too, to build a single GraphQL query by aggregating multiple individual
+queries. We can easily add support for regular promises too, fully replacing
+`Promise.all`. We can add support for iterators. which would let the
+optimization become deep: we would be able to aggregate queries that are
+several layers within other generator functions, without those functions
+knowing anything about it (thus, without breaking modularity).
 
 Async functions wont let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
-to the ridiculously short-sighted [recursive thenable assimilation](https://mail.mozilla.org/pipermail/es-discuss/2013-April/030258.html) design
-decision, we can't simply create our own thenable that will support
+to the ridiculously short-sighted [recursive thenable assimilation](https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures)
+design decision, we can't simply create our own thenable that will support
 the above extra features. If we try to do that, we will be
 [unable to safely use it with Promises](https://github.com/Reactive-Extensions/RxJS/issues/470).
 We're stuck with what we get by default in async functions, and
