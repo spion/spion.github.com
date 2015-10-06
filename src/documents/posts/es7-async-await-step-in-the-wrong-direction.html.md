@@ -174,9 +174,9 @@ But this is not why async functions are a step in the wrong direction. The
 problems above are not unique to async functions. The same problems apply to
 generators: async functions merely inherit them as they're very similar.
 
-Async functions also add a new major problem: loss of generality.
+Async functions also go another step backwards.
 
-## Async functions: another step back
+## Loss of generality and power
 
 Despite their shortcomings, generator based coroutines have one redeeming
 quality: they allow you to redefine the coroutine execution engine. This is
@@ -388,9 +388,18 @@ we would be able to aggregate queries that are several layers within other
 generator functions, without those functions knowing anything about it (thus,
 without breaking modularity).
 
-Generators are JavaScript's programmable semicolons (well, not as powerful as
-monads, but they go quite far). Lets not take away that power by taking away
-the programmability. Lets drop async await and write our own interpreters.
+Async functions wont let us do any of this. All we get is a single execution
+engine that only knows how to await promises. To make matters worse, thanks
+to the ridiculously short-sighted [recursive thenable assimilation](https://mail.mozilla.org/pipermail/es-discuss/2013-April/030258.html) design
+decision, we can't simply create our own thenable that will support
+the above extra features. If we try to do that, we will be
+[unable to safely use it with Promises](https://github.com/Reactive-Extensions/RxJS/issues/470)
+Consequently, we're stuck with what we get by default in async functions, and
+thats it.
+
+Generators are JavaScript's programmable semicolons. Lets not take away that
+power by taking away the programmability. Lets drop async/await and write our
+own interpreters.
 
 [async-await-github]: https://github.com/lukehoban/ecmascript-asyncawait
 [gen-funs]: https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html
