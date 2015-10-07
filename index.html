@@ -267,13 +267,16 @@ app.post(&#39;/issues/save&#39;, function(req, res) {
 </code></pre>
 <p>Lets implement this engine:</p>
 <pre><code class="lang-js">function run(iterator, options) {
-    function runNext(value) {
-        var request = iterator.next(value)
-        if (isIterator(request)) run(request, options).then(runNext)
-        else if (isQuery(request)) request.execWithin(options.tx).then(runNext)
-        else if (isPromise(request)) promise.then(runNext);
+    function id(x) { return x; }
+    function iterate(value) {
+        var next = iterator.next(value)
+        var request = next.value;
+        var nextAction = next.done ? id : iterate;
+        if (isIterator(request)) return run(request, options).then(nextAction)
+        else if (isQuery(request)) return request.execWithin(options.tx).then(nextAction)
+        else if (isPromise(request)) return request.then(nextAction);
     }
-    runNext()
+    return iterate()
 }
 </code></pre>
 <p>This implementation is incomplete because it lacks error handling. Still, its
@@ -2828,8 +2831,8 @@ facilities and the iPad screen has plenty of resolution and size.</p>
 <h1>Older posts</h1>
 <h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4>
 <h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h4>
-<h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
 <h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
+<h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
 <h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>
