@@ -28,7 +28,7 @@
   <h1><a href="/posts/es7-async-await-step-in-the-wrong-direction.html">ES7 async functions - a step in the wrong direction</a></h1>
   <div class="date">Sun Aug 23 2015</div>
   <div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
-on top of previous capabilities made available by ES6 - promises, letting you
+on top of previous capabilities made available by ES6 (promises), letting you
 write async code as though it were synchronous. At the moment, they&#39;re a
 <a href="https://github.com/lukehoban/ecmascript-asyncawait">stage 1 proposal for ES7</a> and supported by babel /
 regenerator.</p>
@@ -332,7 +332,7 @@ consolidate their first queries into a single query. All this is done without
 those functions knowing anything about it (thus, without breaking modularity).</p>
 <p>Async functions cant let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
-to the ridiculously short-sighted <a href="https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures">recursive thenable assimilation</a>
+to the unfortunately short-sighted <a href="https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures">recursive thenable assimilation</a>
 design decision, we can&#39;t simply create our own thenable that will support
 the above extra features. If we try to do that, we will be
 <a href="https://github.com/Reactive-Extensions/RxJS/issues/470">unable to safely use it with Promises</a>.
@@ -2831,8 +2831,8 @@ facilities and the iPad screen has plenty of resolution and size.</p>
 <h1>Older posts</h1>
 <h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4>
 <h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h4>
-<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
 <h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
+<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
 <h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>
