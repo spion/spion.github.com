@@ -318,13 +318,16 @@ Lets implement this engine:
 
 ```js
 function run(iterator, options) {
-    function runNext(value) {
-        var request = iterator.next(value)
-        if (isIterator(request)) run(request, options).then(runNext)
-        else if (isQuery(request)) request.execWithin(options.tx).then(runNext)
-        else if (isPromise(request)) promise.then(runNext);
+    function id(x) { return x; }
+    function iterate(value) {
+        var next = iterator.next(value)
+        var request = next.value;
+        var nextAction = next.done ? id : iterate;
+        if (isIterator(request)) return run(request, options).then(nextAction)
+        else if (isQuery(request)) return request.execWithin(options.tx).then(nextAction)
+        else if (isPromise(request)) return request.then(nextAction);
     }
-    runNext()
+    return iterate()
 }
 ```
 
