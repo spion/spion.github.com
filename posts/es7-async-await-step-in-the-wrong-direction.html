@@ -279,25 +279,23 @@ app.post(&#39;/issues/save&#39;, function(req, res) {
     return iterate()
 }
 </code></pre>
-<p>This implementation is incomplete because it lacks error handling. Still, its
-quite easy to write a complete one using bluebird&#39;s <code>Promise.coroutine</code>,
-which <a href="https://github.com/petkaantonov/bluebird/issues/735#issuecomment-133699326">lets you specify a custom yield handler</a></p>
 <p>The best part of this change is that we did not have to change the original
 code at all. We didn&#39;t have to add the transaction parameter to every function,
-to take care to properly propagate it everywhere and to properly create those
-transactions. All we needed to do is just change our execution engine.</p>
+to take care to properly propagate it everywhere and to properly create the
+transaction. All we needed to do is just change our execution engine.</p>
 <p>And we can add much more! We can <code>yield</code> a request to get the current user
 if any, so we don&#39;t have to thread that through our code. Infact we can
-implement <a href="https://github.com/othiym23/node-continuation-local-storage">continuation local storage</a> with a few lines of code.</p>
-<p>An often mentioned reason why we need async functions are async generators,
-which are considered impossible to implement. The reason being, its impossible
-to use <code>yield</code> as await and to generate values at the same time.</p>
-<p>Yes, thats possible without async/await too. Here is a simple proof-of-concept:
-<a href="https://github.com/spion/async-generators">github.com/spion/async-generators</a>.</p>
-<p>We can do much more advanced things with generators too. An example worth
-exploring is a query optimizer that supports aggregate execution of queries.
-If we replace <code>Promise.all</code> with our own implementaiton caled <code>parallel</code>, then
-we can add support for non-promise arguments.</p>
+implement <a href="https://github.com/othiym23/node-continuation-local-storage">continuation local storage</a> with only a few lines of code.</p>
+<p>Async generators are often given as a reason why we need async functions. If
+yield is already being used as await, how can we get both working at the same
+time without adding a new keyword? Is that even possible?</p>
+<p>Yes. Here is a simple proof-of-concept.
+<a href="https://github.com/spion/async-generators">github.com/spion/async-generators</a>.
+All we needed to do is change the execution engine to support a mechanism
+to distinguish between awaited and yielded values.</p>
+<p>Another example worth exploring is a query optimizer that supports aggregate
+execution of queries. If we replace <code>Promise.all</code> with our own implementaiton
+caled <code>parallel</code>, then we can add support for non-promise arguments.</p>
 <p>Lets say we have the following code to notify owners of blocked issues in
 parallel when an issue is resolved:</p>
 <pre><code class="lang-js">let blocked = yield BlockerIssues.where({blocker: blockerId})
@@ -321,15 +319,17 @@ a single query per table rather then per item.</p>
 }
 </code></pre>
 <p>And voila, we&#39;ve just implemented a query optimizer. It will fetch all issue
-owners with a single query.</p>
-<p>We can do this on the client too, to build a single GraphQL query by aggregating
+owners with a single query. If we add an SQL parser into the mix, it should
+be possible to rewrite real SQL queries.</p>
+<p>We can do something similar on the client too with GraphQL queries by aggregating
 multiple individual queries.</p>
-<p>We can add support for iterators. which would let the optimization become deep:
+<p>And if we can add support for iterators, the optimization become deep:
 we would be able to aggregate queries that are several layers within other
-generator functions, without those functions knowing anything about it (thus,
-without breaking modularity).</p>
-<p>Finally we would also add support regular promises too making <code>Promise.all</code>
-obsolete.</p>
+generator functions,  In the above example, <code>getOwner()</code> could be another
+generatator which produces a query for the user as a first result. Our
+implementation of <code>parallel</code> will run all those getOwner() iterators and
+consolidate their first queries into a single query. All this is done without
+those functions knowing anything about it (thus, without breaking modularity).</p>
 <p>Async functions cant let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
 to the ridiculously short-sighted <a href="https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures">recursive thenable assimilation</a>
