@@ -10,7 +10,7 @@ hidden: false
 ---
 
 Async functions are a new feature scheduled to become a part of ES7. They build
-on top of previous capabilities made available by ES6 - promises, letting you
+on top of previous capabilities made available by ES6 (promises), letting you
 write async code as though it were synchronous. At the moment, they're a
 [stage 1 proposal for ES7][async-await-github] and supported by babel /
 regenerator.
@@ -401,7 +401,7 @@ those functions knowing anything about it (thus, without breaking modularity).
 
 Async functions cant let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
-to the ridiculously short-sighted [recursive thenable assimilation](https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures)
+to the unfortunately short-sighted [recursive thenable assimilation](https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures)
 design decision, we can't simply create our own thenable that will support
 the above extra features. If we try to do that, we will be
 [unable to safely use it with Promises](https://github.com/Reactive-Extensions/RxJS/issues/470).
