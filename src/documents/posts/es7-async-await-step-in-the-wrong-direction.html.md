@@ -331,30 +331,27 @@ function run(iterator, options) {
 }
 ```
 
-This implementation is incomplete because it lacks error handling. Still, its
-quite easy to write a complete one using bluebird's `Promise.coroutine`,
-which [lets you specify a custom yield handler][bb-735]
-
 The best part of this change is that we did not have to change the original
 code at all. We didn't have to add the transaction parameter to every function,
-to take care to properly propagate it everywhere and to properly create those
-transactions. All we needed to do is just change our execution engine.
+to take care to properly propagate it everywhere and to properly create the
+transaction. All we needed to do is just change our execution engine.
 
 And we can add much more! We can `yield` a request to get the current user
 if any, so we don't have to thread that through our code. Infact we can
-implement [continuation local storage][cls] with a few lines of code.
+implement [continuation local storage][cls] with only a few lines of code.
 
-An often mentioned reason why we need async functions are async generators,
-which are considered impossible to implement. The reason being, its impossible
-to use `yield` as await and to generate values at the same time.
+Async generators are often given as a reason why we need async functions. If
+yield is already being used as await, how can we get both working at the same
+time without adding a new keyword? Is that even possible?
 
-Yes, thats possible without async/await too. Here is a simple proof-of-concept:
+Yes. Here is a simple proof-of-concept.
 [github.com/spion/async-generators](https://github.com/spion/async-generators).
+All we needed to do is change the execution engine to support a mechanism
+to distinguish between awaited and yielded values.
 
-We can do much more advanced things with generators too. An example worth
-exploring is a query optimizer that supports aggregate execution of queries.
-If we replace `Promise.all` with our own implementaiton caled `parallel`, then
-we can add support for non-promise arguments.
+Another example worth exploring is a query optimizer that supports aggregate
+execution of queries. If we replace `Promise.all` with our own implementaiton
+caled `parallel`, then we can add support for non-promise arguments.
 
 Lets say we have the following code to notify owners of blocked issues in
 parallel when an issue is resolved:
@@ -388,18 +385,19 @@ if (isParallelQuery(query)) {
 ```
 
 And voila, we've just implemented a query optimizer. It will fetch all issue
-owners with a single query.
+owners with a single query. If we add an SQL parser into the mix, it should
+be possible to rewrite real SQL queries.
 
-We can do this on the client too, to build a single GraphQL query by aggregating
+We can do something similar on the client too with GraphQL queries by aggregating
 multiple individual queries.
 
-We can add support for iterators. which would let the optimization become deep:
+And if we can add support for iterators, the optimization become deep:
 we would be able to aggregate queries that are several layers within other
-generator functions, without those functions knowing anything about it (thus,
-without breaking modularity).
-
-Finally we would also add support regular promises too making `Promise.all`
-obsolete.
+generator functions,  In the above example, `getOwner()` could be another
+generatator which produces a query for the user as a first result. Our
+implementation of `parallel` will run all those getOwner() iterators and
+consolidate their first queries into a single query. All this is done without
+those functions knowing anything about it (thus, without breaking modularity).
 
 Async functions cant let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
