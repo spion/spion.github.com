@@ -337,21 +337,24 @@ code at all. We didn't have to add the transaction parameter to every function,
 to take care to properly propagate it everywhere and to properly create those
 transactions. All we needed to do is just change our execution engine.
 
-And we can add so much more! We can `yield` a request to get the current user
-if any, so we don't have to thread that throughout our code either. Infact, we
-can implement [continuation local storage][cls] with only a few lines of code.
+And we can add much more! We can `yield` a request to get the current user
+if any, so we don't have to thread that through our code. Infact we can
+implement [continuation local storage][cls] with a few lines of code.
 
-> What about async generators? Surely thats not possible with just generators,
-> as you would need both yield and await at the same time
+An often mentioned reason why we need async functions are async generators,
+which are considered impossible to implement. The reason being, its impossible
+to use `yield` as await and to generate values at the same time.
 
-Yes, thats possible too. Here is a very simple proof-of-concept project:
+Yes, thats possible without async/await too. Here is a simple proof-of-concept:
 [github.com/spion/async-generators](https://github.com/spion/async-generators).
-Not a complete solution by any measure, but enough to demonstrate that its
-quite possible.
 
-We can even do advanced things like, say, a query optimizer that supports
-aggregate execution of queries. If we replace `Promise.all` with our own
-implementaiton:
+We can do much more advanced things with generators too. An example worth
+exploring is a query optimizer that supports aggregate execution of queries.
+If we replace `Promise.all` with our own implementaiton caled `parallel`, then
+we can add support for non-promise arguments.
+
+Lets say we have the following code to notify owners of blocked issues in
+parallel when an issue is resolved:
 
 ```js
 let blocked = yield BlockerIssues.where({blocker: blockerId})
@@ -360,14 +363,15 @@ let owners  = yield myengine.parallel(blocked.map(issue => issue.getOwner()))
 for (let owner of owners) yield owner.notifyResolved(issue)
 ```
 
-Instead of yielding raw SQL, we can have `getOwner()` return data about the
-query:
+Instead of returning an SQL based query, we can have `getOwner()` return data
+about the query:
 
 ```js
 {table: 'users', id: issue.user_id}
 ```
 
-and have myengine optimize the execution of parallel queries:
+and have myengine optimize the execution of parallel queries, by sending
+a single query per table rather then per item.
 
 ```js
 if (isParallelQuery(query)) {
@@ -380,15 +384,21 @@ if (isParallelQuery(query)) {
 }
 ```
 
-And voila, we've just implemented a query optimizer. We can do this on the
-client too, to build a single GraphQL query by aggregating multiple individual
-queries. We can easily add support for regular promises too, fully replacing
-`Promise.all`. We can add support for iterators. which would let the
-optimization become deep: we would be able to aggregate queries that are
-several layers within other generator functions, without those functions
-knowing anything about it (thus, without breaking modularity).
+And voila, we've just implemented a query optimizer. It will fetch all issue
+owners with a single query.
 
-Async functions wont let us do any of this. All we get is a single execution
+We can do this on the client too, to build a single GraphQL query by aggregating
+multiple individual queries.
+
+We can add support for iterators. which would let the optimization become deep:
+we would be able to aggregate queries that are several layers within other
+generator functions, without those functions knowing anything about it (thus,
+without breaking modularity).
+
+Finally we would also add support regular promises too making `Promise.all`
+obsolete.
+
+Async functions cant let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
 to the ridiculously short-sighted [recursive thenable assimilation](https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures)
 design decision, we can't simply create our own thenable that will support
