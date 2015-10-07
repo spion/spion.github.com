@@ -252,7 +252,7 @@ class.
 
 class Transactionable {
     constructor(tx) {
-        if (tx == null) tx = db.beginTransaction();
+        this.transaction = tx || db.beginTransaction();
     }
 }
 class IssueService extends Transactionable {
