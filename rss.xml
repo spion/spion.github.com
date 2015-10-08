@@ -5,9 +5,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Thu, 08 Oct 2015 12:27:25 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 08 Oct 2015 20:03:32 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Thu, 08 Oct 2015 12:27:20 GMT</pubDate>
+        <pubDate>Thu, 08 Oct 2015 20:03:28 GMT</pubDate>
         <item>
             <title><![CDATA[ES7 async functions - a step in the wrong direction]]></title>
             <description><![CDATA[<p>Async functions are a new feature scheduled to become a part of ES7. They build
@@ -306,7 +306,7 @@ owners with a single query. If we add an SQL parser into the mix, it should
 be possible to rewrite real SQL queries.</p>
 <p>We can do something similar on the client too with GraphQL queries by aggregating
 multiple individual queries.</p>
-<p>And if we can add support for iterators, the optimization become deep:
+<p>And if we add support for iterators, the optimization becomes deep:
 we would be able to aggregate queries that are several layers within other
 generator functions,  In the above example, <code>getOwner()</code> could be another
 generatator which produces a query for the user as a first result. Our

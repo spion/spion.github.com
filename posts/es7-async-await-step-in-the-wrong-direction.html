@@ -1,6 +1,11 @@
 
 <html>
   <head>
+    <script>
+      var host = ".github.io";
+      if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:")
+        window.location.protocol = "https";
+    </script>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
     <meta content="True" name="HandheldFriendly"/>
@@ -323,7 +328,7 @@ owners with a single query. If we add an SQL parser into the mix, it should
 be possible to rewrite real SQL queries.</p>
 <p>We can do something similar on the client too with GraphQL queries by aggregating
 multiple individual queries.</p>
-<p>And if we can add support for iterators, the optimization become deep:
+<p>And if we add support for iterators, the optimization becomes deep:
 we would be able to aggregate queries that are several layers within other
 generator functions,  In the above example, <code>getOwner()</code> could be another
 generatator which produces a query for the user as a first result. Our
