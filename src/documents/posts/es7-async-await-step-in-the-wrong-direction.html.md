@@ -391,7 +391,7 @@ be possible to rewrite real SQL queries.
 We can do something similar on the client too with GraphQL queries by aggregating
 multiple individual queries.
 
-And if we can add support for iterators, the optimization become deep:
+And if we add support for iterators, the optimization becomes deep:
 we would be able to aggregate queries that are several layers within other
 generator functions,  In the above example, `getOwner()` could be another
 generatator which produces a query for the user as a first result. Our
