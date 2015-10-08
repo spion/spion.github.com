@@ -295,7 +295,7 @@ function* saveIssue(data, blockers) {
     }
 }
 
-function* (data) {
+Issues.insert = function* (data) {
     return db.query("INSERT ... VALUES", data)
 }
 
