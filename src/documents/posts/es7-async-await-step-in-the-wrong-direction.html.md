@@ -71,8 +71,8 @@ try {
 ```
 
 Since promises are a userland library, restrictions like the above do not
-apply. We can write a userland library that demands us to always use a
-predicate filter when we invoke the catch method
+apply. We can write our own promise implementation that demands the use of a
+predicate filter:
 
 ```js
 downloadImage(url)
@@ -93,9 +93,9 @@ asyncOperation()
 });
 ```
 
-Since these constructs are not built in language features but a DSL built on
-top of higher order functions, we can impose any restrictions that we want
-instead of waiting on TC39 to fix the language.
+Since these constructs are not built-in language features but a DSL built on
+top of higher order functions, we can impose any restrictions we like instead
+of waiting on TC39 to fix the language.
 
 ### Cannot use higher order functions
 
@@ -323,9 +323,16 @@ function run(iterator, options) {
         var next = iterator.next(value)
         var request = next.value;
         var nextAction = next.done ? id : iterate;
-        if (isIterator(request)) return run(request, options).then(nextAction)
-        else if (isQuery(request)) return request.execWithin(options.tx).then(nextAction)
-        else if (isPromise(request)) return request.then(nextAction);
+
+        if (isIterator(request)) {
+            return run(request, options).then(nextAction)
+        }
+        else if (isQuery(request)) {
+            return request.execWithin(options.tx).then(nextAction)
+        }
+        else if (isPromise(request)) {
+            return request.then(nextAction);
+        }
     }
     return iterate()
 }
@@ -358,7 +365,7 @@ parallel when an issue is resolved:
 
 ```js
 let blocked = yield BlockerIssues.where({blocker: blockerId})
-let owners  = yield myengine.parallel(blocked.map(issue => issue.getOwner()))
+let owners  = yield engine.parallel(blocked.map(issue => issue.getOwner()))
 
 for (let owner of owners) yield owner.notifyResolved(issue)
 ```
@@ -370,7 +377,7 @@ about the query:
 {table: 'users', id: issue.user_id}
 ```
 
-and have myengine optimize the execution of parallel queries, by sending
+and have `engine` optimize the execution of parallel queries, by sending
 a single query per table rather then per item.
 
 ```js
@@ -379,7 +386,8 @@ if (isParallelQuery(query)) {
       .map((items, t) => db.query(`select * from ${t} where id in ?`,
                                   items.map(it => it.id))
                 .execWithin(options.tx)).toArray();
-    Promise.all(results).then(results => results.sort(byRequestOrder(queries)))
+    Promise.all(results)
+        .then(results => results.sort(byOrderOf(query.items)))
         .then(runNext)
 }
 ```
