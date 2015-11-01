@@ -31,7 +31,7 @@
       <div class="rest">
 <div class="post">
   <h1><a href="/posts/es7-async-await-step-in-the-wrong-direction.html">ES7 async functions - a step in the wrong direction</a></h1>
-  <div class="date">Sun Aug 23 2015</div>
+  <div class="date">Sat Aug 22 2015</div>
   <div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
 on top of previous capabilities made available by ES6 (promises), letting you
 write async code as though it were synchronous. At the moment, they&#39;re a
@@ -79,8 +79,8 @@ rethrow the error at the end</p>
 }
 </code></pre>
 <p>Since promises are a userland library, restrictions like the above do not
-apply. We can write a userland library that demands us to always use a
-predicate filter when we invoke the catch method</p>
+apply. We can write our own promise implementation that demands the use of a
+predicate filter:</p>
 <pre><code class="lang-js">downloadImage(url)
 .catch(e =&gt; e.code == 404, e =&gt; {
     handle404(...);
@@ -95,9 +95,9 @@ predicate filter when we invoke the catch method</p>
     handleAllErrors(...)
 });
 </code></pre>
-<p>Since these constructs are not built in language features but a DSL built on
-top of higher order functions, we can impose any restrictions that we want
-instead of waiting on TC39 to fix the language.</p>
+<p>Since these constructs are not built-in language features but a DSL built on
+top of higher order functions, we can impose any restrictions we like instead
+of waiting on TC39 to fix the language.</p>
 <h3 id="cannot-use-higher-order-functions">Cannot use higher order functions</h3>
 <p>Because generators and async-await are shallow, you cannot use <code>yield</code> or
 <code>await</code> within lambdas passed to higher order functions.</p>
@@ -277,9 +277,16 @@ app.post(&#39;/issues/save&#39;, function(req, res) {
         var next = iterator.next(value)
         var request = next.value;
         var nextAction = next.done ? id : iterate;
-        if (isIterator(request)) return run(request, options).then(nextAction)
-        else if (isQuery(request)) return request.execWithin(options.tx).then(nextAction)
-        else if (isPromise(request)) return request.then(nextAction);
+
+        if (isIterator(request)) {
+            return run(request, options).then(nextAction)
+        }
+        else if (isQuery(request)) {
+            return request.execWithin(options.tx).then(nextAction)
+        }
+        else if (isPromise(request)) {
+            return request.then(nextAction);
+        }
     }
     return iterate()
 }
@@ -304,7 +311,7 @@ caled <code>parallel</code>, then we can add support for non-promise arguments.<
 <p>Lets say we have the following code to notify owners of blocked issues in
 parallel when an issue is resolved:</p>
 <pre><code class="lang-js">let blocked = yield BlockerIssues.where({blocker: blockerId})
-let owners  = yield myengine.parallel(blocked.map(issue =&gt; issue.getOwner()))
+let owners  = yield engine.parallel(blocked.map(issue =&gt; issue.getOwner()))
 
 for (let owner of owners) yield owner.notifyResolved(issue)
 </code></pre>
@@ -312,14 +319,15 @@ for (let owner of owners) yield owner.notifyResolved(issue)
 about the query:</p>
 <pre><code class="lang-js">{table: &#39;users&#39;, id: issue.user_id}
 </code></pre>
-<p>and have myengine optimize the execution of parallel queries, by sending
+<p>and have <code>engine</code> optimize the execution of parallel queries, by sending
 a single query per table rather then per item.</p>
 <pre><code class="lang-js">if (isParallelQuery(query)) {
     var results = _(query.items).groupBy(&#39;table&#39;)
       .map((items, t) =&gt; db.query(`select * from ${t} where id in ?`,
                                   items.map(it =&gt; it.id))
                 .execWithin(options.tx)).toArray();
-    Promise.all(results).then(results =&gt; results.sort(byRequestOrder(queries)))
+    Promise.all(results)
+        .then(results =&gt; results.sort(byOrderOf(query.items)))
         .then(runNext)
 }
 </code></pre>
@@ -353,7 +361,7 @@ own interpreters.</p>
 </div>
 <div class="post">
   <h1><a href="/posts/why-i-am-switching-to-promises.html">Why I am switching to promises</a></h1>
-  <div class="date">Mon Oct 07 2013</div>
+  <div class="date">Sun Oct 06 2013</div>
   <div class="content"><p>I&#39;m switching my node code from callbacks to promises. The reasons aren&#39;t
 merely aesthetical, they&#39;re rather practical:</p>
 <p><a name="throw-crash"></a></p>
@@ -1097,7 +1105,7 @@ future.</p>
 </div>
 <div class="post">
   <h1><a href="/posts/closures-are-unavoidable-in-node.html">Closures are unavoidable in node</a></h1>
-  <div class="date">Fri Aug 23 2013</div>
+  <div class="date">Thu Aug 22 2013</div>
   <div class="content"><p>A couple of weeks ago I wrote a <a href="/posts/analysis-generators-and-other-async-patterns-node.html">giant comparison of node.js async code
 patterns</a> that
 mostly focuses on the new generators feature in EcmaScript 6 (Harmony)</p>
@@ -1257,7 +1265,7 @@ which in turn resulted with <a href="//github.com/spion/async-compare/blob/blog/
 </div>
 <div class="post">
   <h1><a href="/posts/analysis-generators-and-other-async-patterns-node.html">Analysis of generators and other async patterns in node</a></h1>
-  <div class="date">Fri Aug 09 2013</div>
+  <div class="date">Thu Aug 08 2013</div>
   <div class="content"><p>Table of contents:</p>
 <ul>
 <li><a href="#a-gentle-introduction-to-generators">A gentle introduction to generators</a></li>
@@ -2780,7 +2788,7 @@ for their input on the draft version of this analysis.</p>
 </div>
 <div class="post">
   <h1><a href="/posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h1>
-  <div class="date">Thu Dec 13 2012</div>
+  <div class="date">Wed Dec 12 2012</div>
   <div class="content"><iframe allowfullscreen="allowfullscreen" frameborder="0" height="360"
     src="http://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
 
@@ -2836,8 +2844,8 @@ facilities and the iPad screen has plenty of resolution and size.</p>
 <h1>Older posts</h1>
 <h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4>
 <h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News: A mathematical approach</a></h4>
-<h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
 <h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
+<h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
 <h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>
