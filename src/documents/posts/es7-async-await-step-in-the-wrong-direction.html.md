@@ -211,7 +211,7 @@ the query has been completed. The query is executed by a connection pool.
 
 But then, we run into a problem. We don't want to partially save the issue if
 some of the data was not inserted successfuly. We want the entire save
-operation to be atomic. Fortnuately, SQL databases support this via
+operation to be atomic. Fortunately, SQL databases support this via
 transactions, and our database library has a transaction abstraction. So we
 change our code:
 
