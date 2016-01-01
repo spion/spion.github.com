@@ -19,11 +19,11 @@
   <body>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
+      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
       </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=420"/></a>
+      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"/></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
         <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
@@ -31,7 +31,7 @@
       <div class="rest">
 <div class="post">
   <h1>Intuitive JavaScript array filtering function pt2</h1>
-  <div class="date">Wed Jul 11 2012</div>
+  <div class="date">Thu Jul 12 2012</div>
   <div class="content"><p>Last time I wrote about my JavaScript array filtering function <code>intuitiveFilter</code>. It had one caveat: namely, the way it handles sub-arrays in the data. It doesn&#39;t allow the user to inspect a sub-array without writing a custom filtering function for the sub-array field.</p>
 <p>To inspect an array field, one would need a filtering function which takes an array argument and returns true or false. For example, the function might check the contents of the array and see if the elements match certain rules. Depending on the number of elements matching the rules, it would return true or false.</p>
 <p>We can already filter the contents of an array with <code>intuitiveFilter</code>. That means we can easily use it to inspect the elements of a sub-array. All we need now is to specify how many results we would like to have. The following rules would be useful:</p>

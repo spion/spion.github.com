@@ -176,6 +176,7 @@ hr {
   border: solid 2px #f3ecdf;
   border-collapse: collapse;
   border-spacing: 0;
+  font-size: 1rem;
 }
 .content > table td,
 .content > table th {

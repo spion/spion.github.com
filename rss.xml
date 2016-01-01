@@ -5,9 +5,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sun, 01 Nov 2015 05:59:42 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 01 Jan 2016 13:13:24 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sun, 01 Nov 2015 05:59:38 GMT</pubDate>
+        <pubDate>Fri, 01 Jan 2016 13:13:20 GMT</pubDate>
         <item>
             <title><![CDATA[ES7 async functions - a step in the wrong direction]]></title>
             <description><![CDATA[<p>Async functions are a new feature scheduled to become a part of ES7. They build
@@ -162,7 +162,7 @@ SQL database. Their <code>insert</code> methods return a promise that indicate w
 the query has been completed. The query is executed by a connection pool.</p>
 <p>But then, we run into a problem. We don&#39;t want to partially save the issue if
 some of the data was not inserted successfuly. We want the entire save
-operation to be atomic. Fortnuately, SQL databases support this via
+operation to be atomic. Fortunately, SQL databases support this via
 transactions, and our database library has a transaction abstraction. So we
 change our code:</p>
 <pre><code class="lang-js">async function saveIssue(data, blockers) {
