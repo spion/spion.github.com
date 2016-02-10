@@ -2,7 +2,7 @@
 layout: post
 title: Fixing Hacker News: A mathematical approach
 description: >
-  Is it possible to fix "Endles September" by simply changing the way that
+  Is it possible to fix "Endless September" by simply changing the way that
   comment and submission ratings are being calculated?
 date: 2012-08-21
 ---

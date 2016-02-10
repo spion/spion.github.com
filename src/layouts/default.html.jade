@@ -15,7 +15,7 @@ html
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css')
     link(rel='alternate', type='application/rss+xml', title='spion.github.io', href='/rss.xml')
   body
-    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+
     .main
       .info-tiny
         a.img(href='/')
@@ -33,10 +33,13 @@ html
           a(href='http://twitter.com/spion') @spion
       .rest!=content
 
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
     script(src='//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js')
     script.
       $('code').addClass('prettyprint');
       prettyPrint();
+    script(src="/scripts/jquery.flot.js")
+    script(src="/scripts/jquery.flot.highlightSeries.js")
     script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

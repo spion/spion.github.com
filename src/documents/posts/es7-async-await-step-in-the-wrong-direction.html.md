@@ -16,7 +16,7 @@ write async code as though it were synchronous. At the moment, they're a
 regenerator.
 
 When generator functions were first made available in node, I was
-[very exicted][gen-funs]. Finally, a way to write asynchronous JavaScript that
+[very excited][gen-funs]. Finally, a way to write asynchronous JavaScript that
 doesn't descend into callback hell! At the time, I was unfamiliar with promises
 and the language power you get back by simply having async computations be
 first class values, so it seemed to me that generators are the best solution

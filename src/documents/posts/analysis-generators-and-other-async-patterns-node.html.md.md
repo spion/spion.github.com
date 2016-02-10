@@ -1502,5 +1502,3 @@ for their input on the draft version of this analysis.
 
 Thanks to [jmar777](//github.com/jmar777) for making suspend
 
-<script src="/scripts/jquery.flot.js"></script>
-<script src="/scripts/jquery.flot.highlightSeries.js"></script>
