@@ -5,9 +5,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Wed, 10 Feb 2016 14:19:00 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 10 Feb 2016 14:30:12 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 10 Feb 2016 14:18:55 GMT</pubDate>
+        <pubDate>Wed, 10 Feb 2016 14:30:06 GMT</pubDate>
         <item>
             <title><![CDATA[ES7 async functions - a step in the wrong direction]]></title>
             <description><![CDATA[<p>Async functions are a new feature scheduled to become a part of ES7. They build
