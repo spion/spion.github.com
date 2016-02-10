@@ -5,9 +5,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 01 Jan 2016 13:13:24 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 10 Feb 2016 14:13:58 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 01 Jan 2016 13:13:20 GMT</pubDate>
+        <pubDate>Wed, 10 Feb 2016 14:13:52 GMT</pubDate>
         <item>
             <title><![CDATA[ES7 async functions - a step in the wrong direction]]></title>
             <description><![CDATA[<p>Async functions are a new feature scheduled to become a part of ES7. They build
@@ -16,7 +16,7 @@ write async code as though it were synchronous. At the moment, they&#39;re a
 <a href="https://github.com/lukehoban/ecmascript-asyncawait">stage 1 proposal for ES7</a> and supported by babel /
 regenerator.</p>
 <p>When generator functions were first made available in node, I was
-<a href="https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html">very exicted</a>. Finally, a way to write asynchronous JavaScript that
+<a href="https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html">very excited</a>. Finally, a way to write asynchronous JavaScript that
 doesn&#39;t descend into callback hell! At the time, I was unfamiliar with promises
 and the language power you get back by simply having async computations be
 first class values, so it seemed to me that generators are the best solution
@@ -2755,8 +2755,7 @@ node.</p>
 and <a href="//github.com/DamonOehlman">damonoehlman</a>
 for their input on the draft version of this analysis.</p>
 <p>Thanks to <a href="//github.com/jmar777">jmar777</a> for making suspend</p>
-<script src="/scripts/jquery.flot.js"></script>
-<script src="/scripts/jquery.flot.highlightSeries.js"></script>]]></description>
+]]></description>
             <link>https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html</link>
             <guid isPermaLink="true">https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html</guid>
             <pubDate>Fri, 09 Aug 2013 00:00:00 GMT</pubDate>
