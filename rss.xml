@@ -5,9 +5,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Wed, 10 Feb 2016 14:13:58 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 10 Feb 2016 14:19:00 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 10 Feb 2016 14:13:52 GMT</pubDate>
+        <pubDate>Wed, 10 Feb 2016 14:18:55 GMT</pubDate>
         <item>
             <title><![CDATA[ES7 async functions - a step in the wrong direction]]></title>
             <description><![CDATA[<p>Async functions are a new feature scheduled to become a part of ES7. They build
@@ -1074,8 +1074,7 @@ it wont be able to join the party because it doesn&#39;t produce values.</p>
 <p>I&#39;m just kidding, of course. I don&#39;t know if thats going to happen. Either way,
 promises are useful and practical and will remain useful and practical in the
 future.</p>
-<script src="/scripts/jquery.flot.js"></script>
-<script src="/scripts/jquery.flot.highlightSeries.js"></script>]]></description>
+]]></description>
             <link>https://spion.github.io/posts/why-i-am-switching-to-promises.html</link>
             <guid isPermaLink="true">https://spion.github.io/posts/why-i-am-switching-to-promises.html</guid>
             <pubDate>Mon, 07 Oct 2013 00:00:00 GMT</pubDate>
