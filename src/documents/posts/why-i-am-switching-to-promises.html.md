@@ -813,6 +813,3 @@ future.
 [suspend]:https://github.com/jmar777/suspend
 [genny]:https://github.com/jmar777/genny
 
-<script src="/scripts/jquery.flot.js"></script>
-<script src="/scripts/jquery.flot.highlightSeries.js"></script>
-
