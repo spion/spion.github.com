@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Fixing Hacker News: A mathematical approach
+title: Fixing Hacker News with a reputation system
 description: >
   Is it possible to fix "Endless September" by simply changing the way that
   comment and submission ratings are being calculated?
@@ -36,9 +36,9 @@ or may not hold the same values as the majority before. The question is, how to
 preserve the old values of the group with minimum side-effects?
 
 As it happens, my master's thesis was an attempt to fix exactly this problem
-mathematically and implement an improved voting system tailored specifically
-for communities with user-submitted content. I won't provide a link to the
-thesis as its not written in English, but I'll try to summarize the gist of it.
+and implement an improved voting system tailored specifically for communities
+with user-submitted content. I won't provide a link to the thesis as its not
+written in English, but I'll try to summarize the gist of it.
 
 The voting system used in most communities today (democratic voting) is the one
 most susceptible to value shift when significant growth occurs. Its
@@ -56,9 +56,9 @@ variable voting influence and editor-like individuals are given as a
 "reference point" or exemplary users with maximum voting influence. The
 system attempts to find out what they value and recognize it in others.
 
-The system is based on the mathematics described in
+The system is largely based on
 [the beta reputation system](http://www.unik.no/people/josang/papers/JI2002-Bled.pdf),
-which is a system for measuring trust in online e-commerce communities.
+which is used to measure trust in online e-commerce communities.
 
 Here is a short description of the system:
 
