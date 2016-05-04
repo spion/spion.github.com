@@ -5,9 +5,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Wed, 10 Feb 2016 14:30:12 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 04 May 2016 04:50:16 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 10 Feb 2016 14:30:06 GMT</pubDate>
+        <pubDate>Wed, 04 May 2016 04:50:12 GMT</pubDate>
         <item>
             <title><![CDATA[ES7 async functions - a step in the wrong direction]]></title>
             <description><![CDATA[<p>Async functions are a new feature scheduled to become a part of ES7. They build
@@ -2910,7 +2910,7 @@ days old lose half of their value, default 30</li>
             <pubDate>Tue, 27 Nov 2012 00:00:00 GMT</pubDate>
         </item>
         <item>
-            <title><![CDATA[Fixing Hacker News: A mathematical approach]]></title>
+            <title><![CDATA[Fixing Hacker News with a reputation system]]></title>
             <description><![CDATA[<p>There is a certain phenomenon that seems to happen in almost every online
 community of user-generated content. A community is created: the initial users
 define the values of this new community. After a while the community experiences
@@ -2935,9 +2935,9 @@ consistently upvote nasty comments and if so count their votes less.</em></p>
 or may not hold the same values as the majority before. The question is, how to
 preserve the old values of the group with minimum side-effects?</p>
 <p>As it happens, my master&#39;s thesis was an attempt to fix exactly this problem
-mathematically and implement an improved voting system tailored specifically
-for communities with user-submitted content. I won&#39;t provide a link to the
-thesis as its not written in English, but I&#39;ll try to summarize the gist of it.</p>
+and implement an improved voting system tailored specifically for communities
+with user-submitted content. I won&#39;t provide a link to the thesis as its not
+written in English, but I&#39;ll try to summarize the gist of it.</p>
 <p>The voting system used in most communities today (democratic voting) is the one
 most susceptible to value shift when significant growth occurs. Its
 no surprise: democratic systems are designed to measure what the majority
@@ -2951,9 +2951,9 @@ publish.</p>
 variable voting influence and editor-like individuals are given as a
 &quot;reference point&quot; or exemplary users with maximum voting influence. The
 system attempts to find out what they value and recognize it in others.</p>
-<p>The system is based on the mathematics described in
+<p>The system is largely based on
 <a href="http://www.unik.no/people/josang/papers/JI2002-Bled.pdf">the beta reputation system</a>,
-which is a system for measuring trust in online e-commerce communities.</p>
+which is used to measure trust in online e-commerce communities.</p>
 <p>Here is a short description of the system:</p>
 <ul>
 <li>Voting influence is not the same for all users: its not 1 (+1 or -1) for

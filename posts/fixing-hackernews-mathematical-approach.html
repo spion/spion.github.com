@@ -9,10 +9,11 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
     <meta content="True" name="HandheldFriendly"/>
-    <title>Fixing Hacker News: A mathematical approach</title>
+    <title>Fixing Hacker News with a reputation system</title>
     <link rel="shortcut icon" href="/ico/favicon.ico"/>
     <link rel="stylesheet" href="/styles/style.css"/>
     <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
     <link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"/>
   </head>
   <body>
@@ -28,8 +29,8 @@
       </div>
       <div class="rest">
 <div class="post">
-  <h1>Fixing Hacker News: A mathematical approach</h1>
-  <div class="date">Tue Aug 21 2012</div>
+  <h1>Fixing Hacker News with a reputation system</h1>
+  <div class="date">Mon Aug 20 2012</div>
   <div class="content"><p>There is a certain phenomenon that seems to happen in almost every online
 community of user-generated content. A community is created: the initial users
 define the values of this new community. After a while the community experiences
@@ -54,9 +55,9 @@ consistently upvote nasty comments and if so count their votes less.</em></p>
 or may not hold the same values as the majority before. The question is, how to
 preserve the old values of the group with minimum side-effects?</p>
 <p>As it happens, my master&#39;s thesis was an attempt to fix exactly this problem
-mathematically and implement an improved voting system tailored specifically
-for communities with user-submitted content. I won&#39;t provide a link to the
-thesis as its not written in English, but I&#39;ll try to summarize the gist of it.</p>
+and implement an improved voting system tailored specifically for communities
+with user-submitted content. I won&#39;t provide a link to the thesis as its not
+written in English, but I&#39;ll try to summarize the gist of it.</p>
 <p>The voting system used in most communities today (democratic voting) is the one
 most susceptible to value shift when significant growth occurs. Its
 no surprise: democratic systems are designed to measure what the majority
@@ -70,9 +71,9 @@ publish.</p>
 variable voting influence and editor-like individuals are given as a
 &quot;reference point&quot; or exemplary users with maximum voting influence. The
 system attempts to find out what they value and recognize it in others.</p>
-<p>The system is based on the mathematics described in
+<p>The system is largely based on
 <a href="http://www.unik.no/people/josang/papers/JI2002-Bled.pdf">the beta reputation system</a>,
-which is a system for measuring trust in online e-commerce communities.</p>
+which is used to measure trust in online e-commerce communities.</p>
 <p>Here is a short description of the system:</p>
 <ul>
 <li>Voting influence is not the same for all users: its not 1 (+1 or -1) for
@@ -196,7 +197,6 @@ it into the existing scoring system.</p>
   -->
 </div></div>
     </div>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
     <script>
