@@ -18,7 +18,7 @@ discussed example seems to be
 
 [Paul Graham responds](http://news.ycombinator.com/item?id=4397542) that the
 reasons are mostly: a shift in values, increase of anonymity and the fact that
-its easier to vote than to contribute content:
+its easier to vote than to contribute content
 
 > _It's a genuine problem and has been growing gradually worse for a while. I think the cause is simply growth. When a good community grows, it becomes worse in two ways: (a) more recent arrivals don't have as much of whatever quality distinguished the original members, and (b) the large size of the group makes people behave worse, because there is more anonymity in a larger group._
 >
@@ -156,8 +156,8 @@ What does a 50% reduction in the difference mean? Let the score of a content
 item \\(C\\) be measured in 3 systems: democratic \\(D\\), reference-users-only
 \\(R\\) and hybrid \\(H\\) with direct influence of reference users to content items
 being turned off. By sorting the items according to those scores we can
-calculate their ranks in the 3 systems: \\(r_D\\), \\(r_R\\) and \\(r_H\\)
-respectively. The value of the rank is in the range \\(1\\) to \\(n\\), where \\(n\\)
+calculate their ranks in the 3 systems: \\(r_D\\), \\(r_R\\) and \\(r_H\\) respectively.
+ The value of the rank is in the range \\(1\\) to \\(n\\), where \\(n\\)
 is total number of content items. The absolute difference between the democratic
 ranking and the reference ranking \\(d_{DR}\\) is:
 
