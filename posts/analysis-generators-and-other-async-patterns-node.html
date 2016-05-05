@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html>
   <head>
     <script>
@@ -6,22 +6,22 @@
       if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:")
         window.location.protocol = "https";
     </script>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"/>
-    <meta content="True" name="HandheldFriendly"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
+    <meta content="True" name="HandheldFriendly">
     <title>Analysis of generators and other async patterns in node</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico"/>
-    <link rel="stylesheet" href="/styles/style.css"/>
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"/>
-    <link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"/>
+    <link rel="shortcut icon" href="/ico/favicon.ico">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
+    <link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml">
   </head>
   <body>
     <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"/></a>
+      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
       </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"/></a>
+      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a>
         <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
         <p class="subtitle">code, music, math</p>
         <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
@@ -548,7 +548,7 @@ because we&#39;re fighting the language all the time.</p>
 <li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.61508em;"></span><span class="strut bottom" style="height:0.61508em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">t</span></span></span></span> - average wait time per async I/O operation</li>
 </ul>
 <p>For the first test, I set the time for every async operation to 1ms then
-ran every solution for <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>∈</mo><mo>{</mo><mn>1</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>5</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mn>0</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mn>5</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn><mo>}</mo></mrow><annotation encoding="application/x-tex">n \in \lbrace 100, 500, 1000, 1500, 2000 \rbrace</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mrel">∈</span><span class="mopen">{</span><span class="mord">1</span><span class="mord">0</span><span class="mord">0</span><span class="mpunct">,</span><span class="mord">5</span><span class="mord">0</span><span class="mord">0</span><span class="mpunct">,</span><span class="mord">1</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span><span class="mpunct">,</span><span class="mord">1</span><span class="mord">5</span><span class="mord">0</span><span class="mord">0</span><span class="mpunct">,</span><span class="mord">2</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span><span class="mclose">}</span></span></span></span>.</p>
+ran every solution for <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>∈</mo><mo>{</mo><mn>1</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>5</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mn>0</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mn>5</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn><mo>}</mo></mrow><annotation encoding="application/x-tex">n \in \lbrace 100, 500, 1000, 1500, 2000 \rbrace</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mrel">∈</span><span class="mopen">{</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">5</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">1</span><span class="mord mathrm">5</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">2</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mclose">}</span></span></span></span>.</p>
 <p>note: hover over the legend to highlight the item on the chart.</p>
 <p><div id="perf-time-1" class="plot">
 </div></p>
@@ -729,7 +729,7 @@ window.addEventListener('load', function() {
 </script>
 
 <p>Wow. Promises seem really, really slow. Fibers are also slow, with time
-complexity <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>n</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">n</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>. Everything else seems to be much faster.</p>
+complexity <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>n</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">n</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>. Everything else seems to be much faster.</p>
 <p><strong>Update (Dec 20 2013)</strong>: Promises not slow anymore. PetkaAntonov wrote
 Bluebird, which is faster than almost everything else and very low on
 memory usage. For more info read <em><a href="/posts/why-i-am-switching-to-promises.html">Why I am switching to
@@ -1576,7 +1576,7 @@ for their input on the draft version of this analysis.</p>
   -->
 </div></div>
     </div>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
     <script>
