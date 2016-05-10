@@ -345,41 +345,39 @@ personal impressions before giving you the results of the analysis
 ### The examples
 
 
-**[original.js](//github.com/spion/async-compare/blob/blog/examples/original.js)**
+#### [original.js](//github.com/spion/async-compare/blob/blog/examples/original.js)
 
 The original solution, presented above. Vanilla callbacks. Slightly pyramidal.
 I consider it acceptable, if a bit mediocre.
 
-**[flattened.js](//github.com/spion/async-compare/blob/blog/examples/flattened.js)**
+#### [flattened.js](//github.com/spion/async-compare/blob/blog/examples/flattened.js)
 
 Flattened variant of the original via named functions. Taking the advice from
 [callback hell](http://callbackhell.com/), I flattened the pyramid a little
 bit. As I did that, I found that while the pyramid shrunk, the code actually
 grew.
 
-**[catcher.js](//github.com/spion/async-compare/blob/blog/examples/catcher.js)**
+#### [catcher.js](//github.com/spion/async-compare/blob/blog/examples/catcher.js)
 
 I noticed that the first two vanilla solutions had a lot of common error
 handling code everywhere. So I wrote a tiny library called catcher.js which
 works very much like node's `domain.intercept`. This reduced the complexity
 and the number of lines further, but the pyramidal looks remained.
 
-**[async.js](//github.com/spion/async-compare/blob/blog/examples/async.js)**
+#### [async.js](//github.com/spion/async-compare/blob/blog/examples/async.js)
 
 Uses the waterfall function from [caolan's async](//github.com/caolan/async).
 Very similar to flattened.js but without the need to handle errors at every
 step.
 
-**[flattened-class.js](//github.com/spion/async-compare/blob/blog/examples/flattened-class.js),
-[flattened-noclosure.js](//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js),
-[flattened-class-ctx.js](//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js)**
+#### [flattened-class.js](//github.com/spion/async-compare/blob/blog/examples/flattened-class.js), [flattened-noclosure.js](//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js), [flattened-class-ctx.js](//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js)
 
 See [this post](/posts/closures-are-unavoidable-in-node.html) for details
 
 
 <a name="promises-failure"></a>
 
-**[promises.js](//github.com/spion/async-compare/blob/blog/examples-extra/promises.js)**
+#### [promises.js](//github.com/spion/async-compare/blob/blog/examples-extra/promises.js)
 
 I'll be honest. I've never written promise code in node before. Driven by
 [Gozalla's excellent post](//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post)
@@ -427,8 +425,7 @@ note: I used [when](//github.com/cujojs/when) because i liked its function
 lifting API better than Q's
 
 
-**[promiseish.js](//github.com/spion/async-compare/blob/blog/examples/promiseish.js)
-and [promiseishQ.js](//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js)**
+#### [promiseish.js](//github.com/spion/async-compare/blob/blog/examples/promiseish.js) and [promiseishQ.js](//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js)
 
 Nothing fancy here, just some `.then()` chaining. In fact it feels less complex
 than the `promise.js` version, where I felt like I was trying to fight the
@@ -438,7 +435,7 @@ The second file `promiseishQ.js` uses [Q](//github.com/kriskowal/q) instead of
 [when](//github.com/cujojs/when). No big difference there.
 
 
-**[fibrous.js](//github.com/spion/async-compare/blob/blog/examples/fibrous.js)**
+#### [fibrous.js](//github.com/spion/async-compare/blob/blog/examples/fibrous.js)
 
 [Fibrous](//github.com/goodeggs/fibrous) is a fibers library that creates
 "sync" methods out of your async ones, which you can then run in a fiber.
@@ -477,8 +474,7 @@ native modules.
 
 Library: [fibrous](//github.com/goodeggs/fibrous)
 
-**[suspend.js](//github.com/spion/async-compare/blob/blog/examples/suspend.js)
-and [genny.js](//github.com/spion/async-compare/blob/blog/examples-extra/promises.js)**
+#### [suspend.js](//github.com/spion/async-compare/blob/blog/examples/suspend.js) and [genny.js](//github.com/spion/async-compare/blob/blog/examples-extra/promises.js)
 
 [suspend](https://github.com/jmar777/suspend) and
 [genny](http://github.com/spion/genny) are generator-based solutions that can
@@ -495,7 +491,7 @@ callback instead.
 Both suspend and genny use generators roughly the same way. The resulting code
 is very clean, very straightforward and completely devoid of callbacks.
 
-**[qasync.js](//github.com/spion/async-compare/blob/blog/examples/qasync.js)**
+#### [qasync.js](//github.com/spion/async-compare/blob/blog/examples/qasync.js)
 
 Q provides two methods that allow you to use generators: `Q.spawn` and
 `Q.async`. In both cases the generator yields promises and in turn receives
@@ -525,7 +521,7 @@ style functions is to use `co.wrap` for co and `fn.bind` for gens - so thats
 what I did.
 
 
-**[streamline.js](//github.com/spion/async-compare/blob/blog/examples/src-streamline._js)**
+#### [streamline.js](//github.com/spion/async-compare/blob/blog/examples/src-streamline._js)
 
 Uses [streamlinejs](http://github.com/Sage/streamlinejs) CPS transformer and
 works very much like co and qasync, except without needing to write yield

@@ -262,9 +262,8 @@ class IssueService extends Transactionable {
         ...
     }
 }
-class Issues extends Transactionable {
-  ...
-}
+class Issues extends Transactionable { ... }
+class BlockerIssues extends Transactionable { ... }
 // etc
 ```
 

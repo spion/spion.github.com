@@ -6,7 +6,7 @@ date: 2012-12-13
 ---
 
 <iframe allowfullscreen="allowfullscreen" frameborder="0" height="360"
-    src="http://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
+    src="https://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
 
 This is Appser for Google Docs. It allows you to run the full, web version of Google Docs on the iPad. And by that we mean all of it, even editing presentations (a feature which was recently completely disabled on the iPad by Google)
 
