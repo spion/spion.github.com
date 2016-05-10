@@ -226,9 +226,8 @@ class IssueService extends Transactionable {
         ...
     }
 }
-class Issues extends Transactionable {
-  ...
-}
+class Issues extends Transactionable { ... }
+class BlockerIssues extends Transactionable { ... }
 // etc
 </code></pre><p>Like many OO solutions, this only spreads the problem across the plate to make
 it look smaller but doesn&#39;t solve it.</p>
@@ -1525,29 +1524,27 @@ streamlinejs and promises (without generators).</p>
 personal impressions before giving you the results of the analysis</p>
 <p><a name="the-examples"></a></p>
 <h3 id="the-examples">The examples</h3>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a></strong></p>
+<h4 id="-original-js-github-com-spion-async-compare-blob-blog-examples-original-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a></h4>
 <p>The original solution, presented above. Vanilla callbacks. Slightly pyramidal.
 I consider it acceptable, if a bit mediocre.</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/flattened.js">flattened.js</a></strong></p>
+<h4 id="-flattened-js-github-com-spion-async-compare-blob-blog-examples-flattened-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/flattened.js">flattened.js</a></h4>
 <p>Flattened variant of the original via named functions. Taking the advice from
 <a href="http://callbackhell.com/">callback hell</a>, I flattened the pyramid a little
 bit. As I did that, I found that while the pyramid shrunk, the code actually
 grew.</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/catcher.js">catcher.js</a></strong></p>
+<h4 id="-catcher-js-github-com-spion-async-compare-blob-blog-examples-catcher-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/catcher.js">catcher.js</a></h4>
 <p>I noticed that the first two vanilla solutions had a lot of common error
 handling code everywhere. So I wrote a tiny library called catcher.js which
 works very much like node&#39;s <code>domain.intercept</code>. This reduced the complexity
 and the number of lines further, but the pyramidal looks remained.</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/async.js">async.js</a></strong></p>
+<h4 id="-async-js-github-com-spion-async-compare-blob-blog-examples-async-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/async.js">async.js</a></h4>
 <p>Uses the waterfall function from <a href="//github.com/caolan/async">caolan&#39;s async</a>.
 Very similar to flattened.js but without the need to handle errors at every
 step.</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a>,
-<a href="//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js">flattened-noclosure.js</a>,
-<a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js">flattened-class-ctx.js</a></strong></p>
+<h4 id="-flattened-class-js-github-com-spion-async-compare-blob-blog-examples-flattened-class-js-flattened-noclosure-js-github-com-spion-async-compare-blob-blog-examples-flattened-noclosure-js-flattened-class-ctx-js-github-com-spion-async-compare-blob-blog-examples-flattened-class-ctx-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js">flattened-noclosure.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js">flattened-class-ctx.js</a></h4>
 <p>See <a href="/posts/closures-are-unavoidable-in-node.html">this post</a> for details</p>
 <p><a name="promises-failure"></a></p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">promises.js</a></strong></p>
+<h4 id="-promises-js-github-com-spion-async-compare-blob-blog-examples-extra-promises-js-"><a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">promises.js</a></h4>
 <p>I&#39;ll be honest. I&#39;ve never written promise code in node before. Driven by
 <a href="//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post">Gozalla&#39;s excellent post</a>
 I concluded that everything should be a promise, and things that can&#39;t handle
@@ -1580,14 +1577,13 @@ var versionIdP = p.get(versionP, &#39;id&#39;);
 </code></pre><p>So I decided to write a less aggressive version, <code>promiseish.js</code></p>
 <p>note: I used <a href="//github.com/cujojs/when">when</a> because i liked its function
 lifting API better than Q&#39;s</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/promiseish.js">promiseish.js</a>
-and <a href="//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js">promiseishQ.js</a></strong></p>
+<h4 id="-promiseish-js-github-com-spion-async-compare-blob-blog-examples-promiseish-js-and-promiseishq-js-github-com-spion-async-compare-blob-blog-examples-promiseishq-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/promiseish.js">promiseish.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js">promiseishQ.js</a></h4>
 <p>Nothing fancy here, just some <code>.then()</code> chaining. In fact it feels less complex
 than the <code>promise.js</code> version, where I felt like I was trying to fight the
 language all the time.</p>
 <p>The second file <code>promiseishQ.js</code> uses <a href="//github.com/kriskowal/q">Q</a> instead of
 <a href="//github.com/cujojs/when">when</a>. No big difference there.</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/fibrous.js">fibrous.js</a></strong></p>
+<h4 id="-fibrous-js-github-com-spion-async-compare-blob-blog-examples-fibrous-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/fibrous.js">fibrous.js</a></h4>
 <p><a href="//github.com/goodeggs/fibrous">Fibrous</a> is a fibers library that creates
 &quot;sync&quot; methods out of your async ones, which you can then run in a fiber.</p>
 <p>So if for example you had:</p>
@@ -1606,8 +1602,7 @@ of is that it feels more natural for chaining - less parenthesis are needed.</p>
 </code></pre><p>Major drawback: this will never be available outside of node.js or without
 native modules.</p>
 <p>Library: <a href="//github.com/goodeggs/fibrous">fibrous</a></p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/suspend.js">suspend.js</a>
-and <a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">genny.js</a></strong></p>
+<h4 id="-suspend-js-github-com-spion-async-compare-blob-blog-examples-suspend-js-and-genny-js-github-com-spion-async-compare-blob-blog-examples-extra-promises-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/suspend.js">suspend.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">genny.js</a></h4>
 <p><a href="https://github.com/jmar777/suspend">suspend</a> and
 <a href="http://github.com/spion/genny">genny</a> are generator-based solutions that can
 work directly with node-style functions.</p>
@@ -1619,7 +1614,7 @@ to actually yield anything and can resume the generator using the placeholder
 callback instead.</p>
 <p>Both suspend and genny use generators roughly the same way. The resulting code
 is very clean, very straightforward and completely devoid of callbacks.</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/qasync.js">qasync.js</a></strong></p>
+<h4 id="-qasync-js-github-com-spion-async-compare-blob-blog-examples-qasync-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/qasync.js">qasync.js</a></h4>
 <p>Q provides two methods that allow you to use generators: <code>Q.spawn</code> and
 <code>Q.async</code>. In both cases the generator yields promises and in turn receives
 resolved values.</p>
@@ -1639,7 +1634,7 @@ in the format <code>function (err, result)</code></p>
 <p>The problem is, thunks still require wrapping. The recommended way to wrap node
 style functions is to use <code>co.wrap</code> for co and <code>fn.bind</code> for gens - so thats
 what I did.</p>
-<p><strong><a href="//github.com/spion/async-compare/blob/blog/examples/src-streamline._js">streamline.js</a></strong></p>
+<h4 id="-streamline-js-github-com-spion-async-compare-blob-blog-examples-src-streamline-_js-"><a href="//github.com/spion/async-compare/blob/blog/examples/src-streamline._js">streamline.js</a></h4>
 <p>Uses <a href="http://github.com/Sage/streamlinejs">streamlinejs</a> CPS transformer and
 works very much like co and qasync, except without needing to write yield
 all the time.</p>
@@ -2786,7 +2781,7 @@ for their input on the draft version of this analysis.</p>
   <h1><a href="/posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h1>
   <div class="date">Wed Dec 12 2012</div>
   <div class="content"><iframe allowfullscreen="allowfullscreen" frameborder="0" height="360"
-    src="http://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
+    src="https://www.youtube.com/embed/3fmfbAJcfKY" width="640"></iframe>
 
 <p>This is Appser for Google Docs. It allows you to run the full, web version of Google Docs on the iPad. And by that we mean all of it, even editing presentations (a feature which was recently completely disabled on the iPad by Google)</p>
 <p>And its available on the app store, right now, for free.
