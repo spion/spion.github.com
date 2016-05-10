@@ -114,7 +114,7 @@ li {
 blockquote {
   border-left: solid 1ex #f3ecdf;
   padding-left: 1rem;
-  margin: 1rem 0.05rem;
+  margin: 0 0.05rem 1.45rem 0.05rem;
   font-style: italic;
   color: #666666;
 }
@@ -148,7 +148,7 @@ a:active {
   background-color: #f3ecdf;
   box-shadow: 0 0 0.25rem #c9aa70;
   padding: 0.8rem;
-  margin: 1rem 0.05rem;
+  margin: 0 0.05rem 1.45rem 0.05rem;
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
   font-size: 13px;
   line-height: 1.5;
@@ -173,7 +173,7 @@ hr {
   margin: 2rem 0 4rem 0;
 }
 .content > table {
-  margin: 1rem 0;
+  margin: 0 0 1.45rem 0;
   border: solid 2px #f3ecdf;
   border-collapse: collapse;
   border-spacing: 0;
