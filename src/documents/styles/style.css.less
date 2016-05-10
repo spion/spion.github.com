@@ -102,7 +102,7 @@ h2, h3, h4 {
 
 p {
     line-height:1.5rem;
-    margin-bottom: 1.45rem;
+    margin-bottom: @paraMargin;
 }
 p.subtitle {
     line-height: 1.2rem;
@@ -123,7 +123,7 @@ li {
 blockquote {
     border-left: solid 1ex @mainColor;
     padding-left: 1rem;
-    margin: 1rem 0.05rem;
+    margin: 0 0.05rem @paraMargin 0.05rem;
     font-style: italic;
     color: @grayColor;
 }
@@ -161,7 +161,7 @@ a:active { color: @linkColor; }
 .post pre {
     .codecolors(0.5rem);
     padding: 0.8rem;
-    margin: 1rem 0.05rem;
+    margin: 0 0.05rem @paraMargin 0.05rem;
     font-family: Monaco, "Liberation Mono", Courier, monospace !important;
     font-size: 13px;
     line-height: 1.5;
@@ -192,7 +192,7 @@ hr {
 
 .content > table {
 
-    margin: 1rem 0;
+    margin: 0 0 @paraMargin 0;
     border: solid 2px @mainColor;
     border-collapse: collapse;
     border-spacing: 0;

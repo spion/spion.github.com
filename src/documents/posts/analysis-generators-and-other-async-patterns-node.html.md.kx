@@ -506,8 +506,7 @@ functions.
 
 Library: [Q](//github.com/kriskowal/q)
 
-**[co.js](//github.com/spion/async-compare/blob/blog/examples/co.js)
-and [gens.js](//github.com/spion/async-compare/blob/blog/examples/gens.js)**
+#### [co.js](//github.com/spion/async-compare/blob/blog/examples/co.js) and [gens.js](//github.com/spion/async-compare/blob/blog/examples/gens.js)
 
 [Gens](//github.com/Raynos/gens) and [co](//github.com/visionmedia/co) are
 generator-based libraries. Both can work by yielding thunk-style functions:
