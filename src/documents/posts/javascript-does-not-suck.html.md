@@ -2,7 +2,6 @@
 layout: post
 title: JavaScript doesn't suck
 date: 2016-10-06
-hidden: true
 ---
 
 
