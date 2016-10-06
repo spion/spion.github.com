@@ -26,7 +26,7 @@ However, those few concepts combine together in a language with a really good po
 
 But more importantly, this sort of extension is somehow normal in JavaScript. If you took Ruby and used its metaprogramming facilities to add a comparable feature, it has significantly lower likelyhood of being accepted by developers. Why? Because ruby has standard ways to do things. You should be using objects and classes, not hashes, to model most of your data.
 
-That was not the case with the simple pre-ES6 JavaScript. There was no module system to organize code. No classes system to hierarhically organize blueprints that hold state. Lack of basic standard library items, such as maps, sets, iterables, streams, promises. Lack of functions to manipulate existing data structures (dictionaries and arrays).
+That was not the case with the simple pre-ES6 JavaScript. There was no module system to organize code. No classes system to hierarhically organize blueprints of things that hold state. Lack of basic standard library items, such as maps, sets, iterables, streams, promises. Lack of functions to manipulate existing data structures (dictionaries and arrays).
 
 Combine sufficient power, simplicity/malleability, and the lack of the basic facilities. Add to this the fact that its the basic option in the browser, the most popular platform. What do you get? You get a TON of people working in it to extend it in various different ways. And they invent a TON of stuff!
 
