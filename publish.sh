@@ -1,7 +1,7 @@
 git commit -am "$1"
 git push
 rm -rf ./out/*
-docpad generate
+npm run build
 cd out
 git add *
 git commit -am "$1"
