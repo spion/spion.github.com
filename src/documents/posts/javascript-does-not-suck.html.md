@@ -42,7 +42,7 @@ Finally, I believe the people who think that JavaScript will always be transpile
 
 At this point, I'm hoping several things will happen. We'll finally get those big integers and number types that Brendan Eich has been promising. We'll have some more stuff on top of [SharedArrayBuffer][shared] to enable easier shared memory parallelism, perhaps even [immutable datastructures][immutable] that are [transferable objects][transferable]. The wat talk will be obsolete: obviously, you'd be using a static analysis tool such as [Flow](https://flowtype.org/) or TypeScript to deal with that; the fact that the browser ignores those type annotations and does its best to interpret what you meant will be irrelevant. async/await will be implemented in all browsers as the de-facto way to do async control flow; perhaps even [async iterators][aiterator] too. We'll also have widly accepted standard libraries for [data](https://github.com/whatwg/streams) and [event] streams.
 
-I wonder, will JavaScript finally gain the status it deserves then? Probably. But at what cost? JavaScript is probably big enough now that there is less space for new inventions. And its fun to invent new things and read about other people's inventions!
+I wonder, will JavaScript finally gain the status it deserves then? Probably. But at what cost? JavaScript is big enough now that there is less space for new inventions. And its fun to invent new things and read about other people's inventions!
 
 On the other hand, maybe now we'll be able to focus on the stuff we're actually building instead.
 
