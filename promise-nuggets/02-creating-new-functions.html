@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
+    <meta content="True" name="HandheldFriendly">
+    <title>Creating new functions</title>
+    <link rel="shortcut icon" href="/ico/favicon.ico">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml">
+  </head>
+  <body>
+    <div class="main">
+<link rel="stylesheet" href="/styles/nuggets.css"/>
+<h1><a href="/promise-nuggets" class="back">↩</a><span>Creating new functions</span>
+</h1>
+<div class="content"><p>Creating simple functions is easy</p>
+<h4 id="callbacks">Callbacks</h4>
+<p>To create a callback-taking function, add a callback argument to your function.
+Then you can pass the callback to another callback-taking function</p>
+<pre><code class="lang-js">function readMyFile(callback) {
+    fs.readFile(&#39;myfile.txt&#39;, callback); 
+}
+</code></pre>
+<h4 id="promises">Promises</h4>
+<p>To create a promise-based function, simply return the promise as a result.</p>
+<pre><code class="lang-js">function readMyFile() {
+    return fs.readFileAsync(&#39;myfile.txt&#39;);
+}
+</code></pre>
+<p>But what if you want to do additional processing? Then you&#39;ll also need to 
+<a href="03-power-of-then-sync-processing.html">create your own callback, or use the power of <code>.then()</code></a></p>
+</div></div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <script>
+      $('code').addClass('prettyprint');
+      prettyPrint();
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42872676-1', 'spion.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>
