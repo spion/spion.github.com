@@ -5,11 +5,11 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 07 Oct 2016 23:07:39 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 09 Oct 2016 00:26:51 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 07 Oct 2016 23:07:35 GMT</pubDate>
+        <pubDate>Sun, 09 Oct 2016 00:26:47 GMT</pubDate>
         <item>
-            <title><![CDATA[JavaScript doesn't suck]]></title>
+            <title><![CDATA[JavaScript isn't cancer]]></title>
             <description><![CDATA[<p>The last few days, I&#39;ve been thinking about what leads so many people to hate JavaScript.</p>
 <p>JS is so quirky and unclean! Thats supposed to be the primary reason, but after working with a few other dynamic languages, I don&#39;t buy it. JS actually has a fairly small amount of quirks compared to other dynamic languages.</p>
 <p>Just think about PHP&#39;s named functions, which are always in the global scope. Except when they are in namespaces (oh hi another concept), and then its kinda weird because <a href="https://stackoverflow.com/questions/13435051/relative-nested-namespaces-in-php">namespaces can be relative</a>. There are no first class named functions, but function expressions can be assigned to variables. Which must be prefixed with <code>$</code>. There are no real modules, or proper nestable scope - at least not for functions, which are always global. But nested functions only exist once the outer function is called!</p>
@@ -33,8 +33,8 @@
 <p><small>(*) Or metaprogramming, but then everyone has to agree on the same metaprogramming. In JS,
 everyone uses records, and they probably use a tag field to discriminate them already: its a small step to add types for that.</small></p>
 ]]></description>
-            <link>https://spion.github.io/posts/javascript-does-not-suck.html</link>
-            <guid isPermaLink="true">https://spion.github.io/posts/javascript-does-not-suck.html</guid>
+            <link>https://spion.github.io/posts/javascript-is-not-cancer.html</link>
+            <guid isPermaLink="true">https://spion.github.io/posts/javascript-is-not-cancer.html</guid>
             <pubDate>Thu, 06 Oct 2016 00:00:00 GMT</pubDate>
         </item>
         <item>
