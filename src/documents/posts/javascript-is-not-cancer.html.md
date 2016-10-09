@@ -1,6 +1,6 @@
 ---
 layout: post
-title: JavaScript doesn't suck
+title: JavaScript isn't cancer
 date: 2016-10-06
 ---
 
