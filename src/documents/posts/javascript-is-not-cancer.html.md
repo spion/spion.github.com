@@ -10,6 +10,7 @@ The last few days, I've been thinking about what leads so many people to hate Ja
 JS is so quirky and unclean! Thats supposed to be the primary reason, but after working with a few other dynamic languages, I don't buy it. JS actually has a fairly small amount of quirks compared to other dynamic languages.
 
 Just think about PHP's named functions, which are always in the global scope. Except when they are in namespaces (oh hi another concept), and then its kinda weird because [namespaces can be relative][phpnamespaces]. There are no first class named functions, but function expressions can be assigned to variables. Which must be prefixed with `$`. There are no real modules, or proper nestable scope - at least not for functions, which are always global. But nested functions only exist once the outer function is called!
+
 In Ruby, blocks are like lambdas except when they are not, and you can pass a block explicitly or yield to the first block implicitly. But there are also lambdas, which are different. Modules are uselessly global, cannot be parameterised over other modules (without resorting to meta programming), and there are several ways to nest them: if you don't nest them lexically, [the lookup rules become different][ruby-module-wtf]. And there are classes, with private variables, which are prefixed with `@`. I really don't get that sigil fetish.
 
 
