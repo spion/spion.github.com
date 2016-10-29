@@ -356,7 +356,7 @@ fs.readFile(file).then(function(res) {
 Whats going on here? `fs.readFile(file)` starts a file reading operation. That
 operation is not yet complete at the point when readFile returns. This means
 we can't return the file content. But we can still return something: we can
-return the reading operation itself. And that operation is represanted with a
+return the reading operation itself. And that operation is represented with a
 promise.
 
 This is sort of like a single-value stream:
