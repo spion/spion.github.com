@@ -424,7 +424,7 @@ easy to do - bluebird already lets you do something like that with
 <p>Whats going on here? <code>fs.readFile(file)</code> starts a file reading operation. That
 operation is not yet complete at the point when readFile returns. This means
 we can&#39;t return the file content. But we can still return something: we can
-return the reading operation itself. And that operation is represanted with a
+return the reading operation itself. And that operation is represented with a
 promise.</p>
 <p>This is sort of like a single-value stream:</p>
 <pre><code class="lang-js">net.connect(port).on(&#39;data&#39;, function(res) {
