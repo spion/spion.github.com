@@ -38,7 +38,7 @@ in that sidebar.
 The personal history of a user could be, for example, which videos they've watched in the past
 few months, their gender, age and so on (many companies have a lot more).
 
-Based on thise results, the system learns how to tailor its actions (the videos it shows) so that
+Based on these results, the system learns how to tailor its actions (the videos it shows) so that
 it causes that particular person in that particular situation to stay longer on the website.
 
 At the beginning it will try random things. After several iterations, it will find things that
