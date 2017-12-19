@@ -12,7 +12,8 @@
     "docpad-plugin-ghpages": "*",
     "docpad-plugin-jade": "*",
     "docpad-plugin-less": "*",
-    "docpad-plugin-marked": "*"
+    "docpad-plugin-marked": "*",
+    "rss": "^1.2.2"
   },
   "scripts": {
     "start": "docpad-server",
