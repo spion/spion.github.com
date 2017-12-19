@@ -4,9 +4,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 19 Dec 2017 12:39:51 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 19 Dec 2017 12:52:56 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 19 Dec 2017 12:39:47 GMT</pubDate>
+        <pubDate>Tue, 19 Dec 2017 12:52:52 GMT</pubDate>
         <item>
             <title><![CDATA[Machine learning ethics]]></title>
             <description><![CDATA[<p>Today I found and watched one of the most important videos on machine learning published this year</p>
@@ -33,7 +33,7 @@ a history of results and the personal information of the user.</p>
 in that sidebar.</p>
 <p>The personal history of a user could be, for example, which videos they&#39;ve watched in the past
 few months, their gender, age and so on (many companies have a lot more).</p>
-<p>Based on thise results, the system learns how to tailor its actions (the videos it shows) so that
+<p>Based on these results, the system learns how to tailor its actions (the videos it shows) so that
 it causes that particular person in that particular situation to stay longer on the website.</p>
 <p>At the beginning it will try random things. After several iterations, it will find things that
 &quot;stick&quot; i.e. maximise the value. There are sophisticated techniques to get unstuck from local
