@@ -597,11 +597,11 @@ All external methods are mocked using `setTimeout` to simulate waiting for I/O.
 
 There are two variables that control the test:
 
-* \\(n\\) - the number of parallel "upload requests"
-* \\(t\\) - average wait time per async I/O operation
+* $[n]$ - the number of parallel "upload requests"
+* $[t]$ - average wait time per async I/O operation
 
 For the first test, I set the time for every async operation to 1ms then
-ran every solution for \\(n \in \lbrace 100, 500, 1000, 1500, 2000 \rbrace \\).
+ran every solution for $[n \in \lbrace 100, 500, 1000, 1500, 2000 \rbrace ]$.
 
 note: hover over the legend to highlight the item on the chart.
 
@@ -784,7 +784,7 @@ window.addEventListener('load', function() {
 </script>
 
 Wow. Promises seem really, really slow. Fibers are also slow, with time
-complexity \\( O(n^2) \\). Everything else seems to be much faster.
+complexity $[ O(n^2) ]$. Everything else seems to be much faster.
 
 __Update (Dec 20 2013)__: Promises not slow anymore. PetkaAntonov wrote
 Bluebird, which is faster than almost everything else and very low on

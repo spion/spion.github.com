@@ -70,17 +70,17 @@ Here is a short description of the system:
   votes that he has received for his submissions.
 * Exemplary users always have a static maximum influence.
 
-Suppose we have a content item \\(C\\) submitted by the user \\(U_c\\). Now a voter
-\\(V\\) comes to vote for it and clicks on the +1 button.
+Suppose we have a content item $[C]$ submitted by the user $[U_c]$. Now a voter
+$[V]$ comes to vote for it and clicks on the +1 button.
 
 The voter has his own submissions for which he has received a total amount of
-positive vote \\(p_V\\) and a total amount of negative vote \\(n_V\\). As a result,
-his voting influence \\(i_V\\) is modified: its not +1 but calculated according to
+positive vote $[p_V]$ and a total amount of negative vote $[n_V]$. As a result,
+his voting influence $[i_V]$ is modified: its not +1 but calculated according to
 the formula:
 
 $$ i_V = f_W(p_V, n_V) $$
 
-where \\(f_W\\) is the
+where $[f_W]$ is the
 [lower bound of Wilson score confidence interval](http://evanmiller.org/how-not-to-sort-by-average-rating.html).
 While a simple average such as:
 
@@ -91,8 +91,8 @@ not good enough when the number of votes is low. The Wilson score confidence
 interval gives us a better, flexible balance between desired certainty in the
 result and the result itself.
 
-This vote in turn is received by the content item \\(C\\). Because its a positive
-vote, the amount of positive vote \\(p_C\\) is changed for this content item
+This vote in turn is received by the content item $[C]$. Because its a positive
+vote, the amount of positive vote $[p_C]$ is changed for this content item
 
 $$ p_C \leftarrow p_C + i_V $$
 
@@ -100,12 +100,12 @@ and as a result, it has a new rating
 
 $$ r_c = f_W(p_c, n_c) $$
 
-but the positive points \\(p_U\\) of the creator of the content item are also
+but the positive points $[p_U]$ of the creator of the content item are also
 changed:
 
 $$ p_U \leftarrow p_U + i_V $$
 
-and as a result the voting influence \\(i_U\\) of submitter is also changed:
+and as a result the voting influence $[i_U]$ of submitter is also changed:
 
 $$ i_U = f_W(p_U, n_U) $$
 
@@ -116,7 +116,7 @@ This means that new members have no voting influence. As they submit content and
 receive votes their influence may rise if the existing users with high influence
 in the system consider their content to be good.
 
-This is where the reference users \\(R\\) come in. Their influence is fixed to
+This is where the reference users $[R]$ come in. Their influence is fixed to
 always be 1
 
 $$ i_R = 1 $$
@@ -126,16 +126,16 @@ users who submit content which is deemed high-quality by the reference users.
 Those users in turn also change influence by voting for others and so forth.
 
 Its also possible to scale down votes as they age. The two possible strategies
-are to scale all \\(p_X\\) and \\(n_X\\) values daily, for all content items and all
-users by multiplying them with a certain aging factor \\(k_a\\)
+are to scale all $[p_X]$ and $[n_X]$ values daily, for all content items and all
+users by multiplying them with a certain aging factor $[k_a]$
 
 $$ p_X \leftarrow k_a p_X $$
 
 $$ n_X \leftarrow k_a n_X $$
 
-or to simply keep all positive and negative votes \\(V_p\\) and \\(V_n\\) in the
-database and recalculate \\(p_X\\) and \\(n_X\\) according to the age of the votes
-\\(a_V\\), for example:
+or to simply keep all positive and negative votes $[V_p]$ and $[V_n]$ in the
+database and recalculate $[p_X]$ and $[n_X]$ according to the age of the votes
+$[a_V]$, for example:
 
 $$ p_X = \sum_{\forall V_p} { i_V k_a^{a_V} } $$
 
@@ -150,21 +150,21 @@ I tested this system on a forum dataset (details available on request) and found
 that the system achieves around 50% reduction of difference from a moderator
 only system compared to scores of a democratic system, even when the direct
 voting of reference users is turned off for content items and only the indirect
-(to other users) influence is counted. \\((p < 0.05)\\)
+(to other users) influence is counted. $[(p < 0.05)]$
 
 What does a 50% reduction in the difference mean? Let the score of a content
-item \\(C\\) be measured in 3 systems: democratic \\(D\\), reference-users-only
-\\(R\\) and hybrid \\(H\\) with direct influence of reference users to content items
+item $[C]$ be measured in 3 systems: democratic $[D]$, reference-users-only
+$[R]$ and hybrid $[H]$ with direct influence of reference users to content items
 being turned off. By sorting the items according to those scores we can
-calculate their ranks in the 3 systems: \\(r_D\\), \\(r_R\\) and \\(r_H\\) respectively.
- The value of the rank is in the range \\(1\\) to \\(n\\), where \\(n\\)
+calculate their ranks in the 3 systems: $[r_D]$, $[r_R]$ and $[r_H]$ respectively.
+ The value of the rank is in the range $[1]$ to $[n]$, where $[n]$
 is total number of content items. The absolute difference between the democratic
-ranking and the reference ranking \\(d_{DR}\\) is:
+ranking and the reference ranking $[d_{DR}]$ is:
 
 $$ d_{DR} = abs(r_D - r_R) $$
 
 while the absolute difference between the hybrid ranking and the reference
-ranking \\(d_{HR}\\) is:
+ranking $[d_{HR}]$ is:
 
 $$ d_{HR} = abs(r_H - r_R) $$
 
