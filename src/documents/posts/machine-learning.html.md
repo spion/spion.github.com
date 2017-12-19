@@ -28,12 +28,16 @@ The problem is fundamental to machine learning systems.
 A machine learning system is a program that is given a target goal, a list of actions,
 a history of results and the personal information of the user.
 
-The goal could be e.g. to maximise the time the user stays on a video sharing website.
+The goal could be e.g. to maximise the time the user stays on a video sharing website. More
+generally, a value function is given by the users that measures the desireability of a certain
+outcome or behaviour (it could include multiple things like number of product bought, mnumber of
+ads clicked or viewed, etc)
 
-The list of possible actions, a list of videos it can show in the sidebar on the right.
+The list of possible actions, could be a list of videos it can show in the sidebar on the right.
 
-The result: How long have certain people stayed on the website after they were shown certain videos
-in that sidebar.
+The result is the input to the value function. How long did a certain user stay on the website
+after they were shown certain content on the website? How many ads did they click? How many
+products did they buy?
 
 The personal history of a user could be, for example, which videos they've watched in the past
 few months, their gender, age and so on (many companies have a lot more).
@@ -49,7 +53,7 @@ Once trained and ran to determine actions in a certain situation, it will do som
 conclude: "well, when I encountered a situation like this other times, I tried these 5 options, and
 one of those maximised that value I'm told to maximise in most of the cases, so I'll do that".
 
-Sure, there are ways to ask many ML systems why they made a decision after the fact, and they can
+Sure, there are ways to ask some ML systems why they made a decision after the fact, and they can
 elaborate the variables that had the most effect. But before the algorithm gets the training data,
 you *don't* know what it will decide - nobody does!
 
@@ -59,14 +63,17 @@ example, it seems that people who generally watch cat videos will stay a lot lon
 given cat videos in their suggestion box.  Moreover, that will happen even if situations when they
 are watching something else, like academic lecture material.
 
-And there we come to the main problem - is that ethical behaviour? Is it ethical to show cat
-videos to a person trying to study and nudge them towards wasting their time? Even that is a fairly
-benign example. There are far worse examples mentioned in the TED talk above.
+This raises a very important question - is the system behaving in an ethical manner? Is it ethical
+to show cat videos to a person trying to study and nudge them towards wasting their time? Even that
+is a fairly benign example. There are far worse examples mentioned in the TED talk above.
 
-The root of the problem is our value function. Our systems are often blisfully unaware of any side
+The root of the problem is the value function. Our systems are often blisfully unaware of any side
 effects their decision may cause and blatantly disregard basic rules of behaviour that we take for
 granted. They have no other values than the value they're maximizing. For them, the end justifies
-the means.
+the means. If the value function is maximized by manipulating people, preying on their insecurities,
+making them scared, angry or sad - all of that is unimportant. If they find that the most effective
+way to keep a person on the same page is to show them something that will render them unconscious,
+they would happily do that.
 
 So how do we make these systems ethical?
 
