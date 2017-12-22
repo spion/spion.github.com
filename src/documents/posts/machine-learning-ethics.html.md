@@ -25,25 +25,27 @@ fully. Thats not the problem.
 
 The problem is fundamental to machine learning systems.
 
-A machine learning system is a program that is given a target goal, a list of actions,
-a history of results and the personal information of the user.
+A machine learning system is a program that is given a target goal, a list of possible actions,
+a history of prevoius actions and the context they were run in and how well they achieved that goal.
+The system should learn on the historical data and be able to predict what action it can select to
+best achieve the goal.
 
-The goal could be e.g. to maximise the time the user stays on a video sharing website. More
-generally, a value function is given by the users that measures the desireability of a certain
-outcome or behaviour (it could include multiple things like number of product bought, mnumber of
-ads clicked or viewed, etc)
+The goal could be e.g. to maximise the time the user stays on a video sharing website like YouTube.
+More generally, a value function is given by the ML system creator that measures the desireability
+of a certain outcome or behaviour (it could include multiple things like number of product bought,
+number of ads clicked or viewed, etc).
 
-The list of possible actions, could be a list of videos it can show in the sidebar on the right.
+In the case of YouTube, the action the system can take is show a certain list of videos in the
+sidebar on the right. Every different set of videos would be a different alternative, and could
+cause the user to either stay on YouTube longer or perhaps leave the site.
 
-The result is the input to the value function. How long did a certain user stay on the website
-after they were shown certain content on the website? How many ads did they click? How many
-products did they buy?
+Finally, the history of actions is a list of all users, with all their personal information, the
+history of videos they watched, how long ago they watch them and any other information that may be
+related.
 
-The personal history of a user could be, for example, which videos they've watched in the past
-few months, their gender, age and so on (many companies have a lot more).
-
-Based on these results, the system learns how to tailor its actions (the videos it shows) so that
-it causes that particular person in that particular situation to stay longer on the website.
+Based on this data, the system learns how to tailor its actions (the videos it shows) so that it
+achieves the goal (causes that particular user in that particular situation to stay longer on the
+website).
 
 At the beginning it will try random things. After several iterations, it will find things that
 "stick" i.e. maximise the value. There are sophisticated techniques to get unstuck from local
@@ -55,9 +57,10 @@ one of those maximised that value I'm told to maximise in most of the cases, so 
 
 Sure, there are ways to ask some ML systems why they made a decision after the fact, and they can
 elaborate the variables that had the most effect. But before the algorithm gets the training data,
-you *don't* know what it will decide - nobody does!
+you *don't* know what it will decide - nobody does! The learns from the history of its own actions
+and how the users reacted to them, so in essence, the users are the ones training it.
 
-Remember there are thousands of people visiting this site every day, so the algorithm can try a
+Remember there are millions of people visiting YouTube every day, so the algorithm can try a
 lot of stuff in a very short time. After a while it will start noticing certain patterns. For
 example, it seems that people who generally watch cat videos will stay a lot longer if they are
 given cat videos in their suggestion box.  Moreover, that will happen even if situations when they
@@ -70,10 +73,10 @@ is a fairly benign example. There are far worse examples mentioned in the TED ta
 The root of the problem is the value function. Our systems are often blisfully unaware of any side
 effects their decision may cause and blatantly disregard basic rules of behaviour that we take for
 granted. They have no other values than the value they're maximizing. For them, the end justifies
-the means. If the value function is maximized by manipulating people, preying on their insecurities,
-making them scared, angry or sad - all of that is unimportant. If they find that the most effective
-way to keep a person on the same page is to show them something that will render them unconscious,
-they would happily do that.
+the means. Whether the value function is maximized by manipulating people, preying on their
+insecurities, making them scared, angry or sad - all of that is unimportant. If they find that the
+most effective way to keep a person on the same page is to show them something that will render
+them unconscious, they would happily do that.
 
 So how do we make these systems ethical?
 

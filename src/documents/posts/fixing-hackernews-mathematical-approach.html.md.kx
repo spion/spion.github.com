@@ -67,15 +67,15 @@ Here is a short description of the system:
 * When a user votes for a content item, they also vote for the creator (or
   submitter) of the content.
 * The voting influence of a user is calculated using the positive and negative
-  votes that he has received for his submissions.
+  votes that they've received for their submissions.
 * Exemplary users always have a static maximum influence.
 
 Suppose we have a content item $[C]$ submitted by the user $[U_c]$. Now a voter
 $[V]$ comes to vote for it and clicks on the +1 button.
 
-The voter has his own submissions for which he has received a total amount of
+The voter has their own submissions for which they has received a total amount of
 positive vote $[p_V]$ and a total amount of negative vote $[n_V]$. As a result,
-his voting influence $[i_V]$ is modified: its not +1 but calculated according to
+their voting influence $[i_V]$ is modified: its not +1 but calculated according to
 the formula:
 
 $$ i_V = f_W(p_V, n_V) $$
@@ -109,7 +109,7 @@ and as a result the voting influence $[i_U]$ of submitter is also changed:
 
 $$ i_U = f_W(p_U, n_U) $$
 
-or in other words, he has "earned" a bigger influence in the voting system by
+or in other words, the submitter "earned" a bigger influence in the voting system by
 submitting a well-rated content item.
 
 This means that new members have no voting influence. As they submit content and
