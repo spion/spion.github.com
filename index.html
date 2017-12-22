@@ -46,20 +46,23 @@ understands how it [the machine learning system] works.</p>
 would think, its because the system is very complex, its hard for any one person to understand it
 fully. Thats not the problem.</p>
 <p>The problem is fundamental to machine learning systems.</p>
-<p>A machine learning system is a program that is given a target goal, a list of actions,
-a history of results and the personal information of the user.</p>
-<p>The goal could be e.g. to maximise the time the user stays on a video sharing website. More
-generally, a value function is given by the users that measures the desireability of a certain
-outcome or behaviour (it could include multiple things like number of product bought, mnumber of
-ads clicked or viewed, etc)</p>
-<p>The list of possible actions, could be a list of videos it can show in the sidebar on the right.</p>
-<p>The result is the input to the value function. How long did a certain user stay on the website
-after they were shown certain content on the website? How many ads did they click? How many
-products did they buy?</p>
-<p>The personal history of a user could be, for example, which videos they&#39;ve watched in the past
-few months, their gender, age and so on (many companies have a lot more).</p>
-<p>Based on these results, the system learns how to tailor its actions (the videos it shows) so that
-it causes that particular person in that particular situation to stay longer on the website.</p>
+<p>A machine learning system is a program that is given a target goal, a list of possible actions,
+a history of prevoius actions and the context they were run in and how well they achieved that goal.
+The system should learn on the historical data and be able to predict what action it can select to
+best achieve the goal.</p>
+<p>The goal could be e.g. to maximise the time the user stays on a video sharing website like YouTube.
+More generally, a value function is given by the ML system creator that measures the desireability
+of a certain outcome or behaviour (it could include multiple things like number of product bought,
+number of ads clicked or viewed, etc).</p>
+<p>In the case of YouTube, the action the system can take is show a certain list of videos in the
+sidebar on the right. Every different set of videos would be a different alternative, and could
+cause the user to either stay on YouTube longer or perhaps leave the site.</p>
+<p>Finally, the history of actions is a list of all users, with all their personal information, the
+history of videos they watched, how long ago they watch them and any other information that may be
+related.</p>
+<p>Based on this data, the system learns how to tailor its actions (the videos it shows) so that it
+achieves the goal (causes that particular user in that particular situation to stay longer on the
+website).</p>
 <p>At the beginning it will try random things. After several iterations, it will find things that
 &quot;stick&quot; i.e. maximise the value. There are sophisticated techniques to get unstuck from local
 maximums too, in order to find even bigger maximums.</p>
@@ -68,8 +71,9 @@ conclude: &quot;well, when I encountered a situation like this other times, I tr
 one of those maximised that value I&#39;m told to maximise in most of the cases, so I&#39;ll do that&quot;.</p>
 <p>Sure, there are ways to ask some ML systems why they made a decision after the fact, and they can
 elaborate the variables that had the most effect. But before the algorithm gets the training data,
-you <em>don&#39;t</em> know what it will decide - nobody does!</p>
-<p>Remember there are thousands of people visiting this site every day, so the algorithm can try a
+you <em>don&#39;t</em> know what it will decide - nobody does! The learns from the history of its own actions
+and how the users reacted to them, so in essence, the users are the ones training it.</p>
+<p>Remember there are millions of people visiting YouTube every day, so the algorithm can try a
 lot of stuff in a very short time. After a while it will start noticing certain patterns. For
 example, it seems that people who generally watch cat videos will stay a lot longer if they are
 given cat videos in their suggestion box.  Moreover, that will happen even if situations when they
@@ -80,10 +84,10 @@ is a fairly benign example. There are far worse examples mentioned in the TED ta
 <p>The root of the problem is the value function. Our systems are often blisfully unaware of any side
 effects their decision may cause and blatantly disregard basic rules of behaviour that we take for
 granted. They have no other values than the value they&#39;re maximizing. For them, the end justifies
-the means. If the value function is maximized by manipulating people, preying on their insecurities,
-making them scared, angry or sad - all of that is unimportant. If they find that the most effective
-way to keep a person on the same page is to show them something that will render them unconscious,
-they would happily do that.</p>
+the means. Whether the value function is maximized by manipulating people, preying on their
+insecurities, making them scared, angry or sad - all of that is unimportant. If they find that the
+most effective way to keep a person on the same page is to show them something that will render
+them unconscious, they would happily do that.</p>
 <p>So how do we make these systems ethical?</p>
 <p>The first challenge is technical, and its the easiest one. How do we come up with a value function
 that encodes additional basic values of of human ethics? Its easy as pie! You take a bunch of
@@ -1381,8 +1385,8 @@ which in turn resulted with <a href="//github.com/spion/async-compare/blob/blog/
 <h4 class="post"><a href="/posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h4>
 <h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4>
 <h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News with a reputation system</a></h4>
-<h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
 <h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
+<h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
 <h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
 <h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>
