@@ -26,31 +26,33 @@ fully. Thats not the problem.
 The problem is fundamental to machine learning systems.
 
 A machine learning system is a program that is given a target goal, a list of possible actions,
-a history of prevoius actions and the context they were run in and how well they achieved that goal.
+a history of previous actions and how well they achieved the goal in a past context.
 The system should learn on the historical data and be able to predict what action it can select to
 best achieve the goal.
 
-The goal could be e.g. to maximise the time the user stays on a video sharing website like YouTube.
-More generally, a value function is given by the ML system creator that measures the desireability
+Lets see what these parts would represent on say, YouTube, for a ML system that has to pick which
+videos to show on the sidebar right next to the video you're watching.
+
+The target goal could be e.g. to maximise the time the user stays on YouTube, watching videos.
+More generally, a *value function* is given by the ML system creator that measures the desireability
 of a certain outcome or behaviour (it could include multiple things like number of product bought,
 number of ads clicked or viewed, etc).
 
-In the case of YouTube, the action the system can take is show a certain list of videos in the
-sidebar on the right. Every different set of videos would be a different alternative, and could
-cause the user to either stay on YouTube longer or perhaps leave the site.
+The action the system can take is the choice of videos in the sidebar. Every different set of videos
+would be a different alternative action, and could cause the user to either stay on YouTube longer
+or perhaps leave the site.
 
-Finally, the history of actions is a list of all previous video lists shown in the sidebar to users,
-the time the users spent on the website after seeing that list (or the result of the value function)
-as well as contextual information about that situation: which user was it, what was their personal
-information, their past watching history, the channels they're subscribed to etc.
+Finally, the history of actions includes all previous video lists shown in the sidebar to users,
+together with the value function outcome from them: the time the user spent on the website after
+being  presented that list. Additional context from that time is also included: which user was it,
+what was their personal information, their past watching history, the channels they're subscribed
+to, videos they liked, videos they disliked and so on.
 
 Based on this data, the system learns how to tailor its actions (the videos it shows) so that it
-achieves the goal (causes a particular user in a particular situation to stay longer on the
-website).
+achieves the goal by picking the right action for a given context.
 
-At the beginning it will try random things. After several iterations, it will find things that
-"stick" i.e. maximise the value. There are sophisticated techniques to get unstuck from local
-maximums too, in order to find even bigger maximums.
+At the beginning it will try random things. After several iterations, it will find which things
+seem to maximize value in which context.
 
 Once trained with sufficient data, it will be able to do some calculations and conclude: "well,
 when I encountered a situation like this other times, I tried these five options, and option two
@@ -59,13 +61,16 @@ on average caused users like this one to stay the longest, so I'll do that".
 Sure, there are ways to ask some ML systems why they made a decision after the fact, and they can
 elaborate the variables that had the most effect. But before the algorithm gets the training data,
 you *don't* know what it will decide - nobody does! It learns from the history of its own actions
-and how the users reacted to them, so in essence, the users are the ones training it.
+and how the users reacted to them, so in essence, the users are programming its behaviour (through
+the lens of its value function).
 
-Remember there are millions of people visiting YouTube every day, so the algorithm can try a
-lot of stuff in a very short time. After a while it will start noticing certain patterns. For
-example, it seems that people who generally watch cat videos will stay a lot longer if they are
-given cat videos in their suggestion box.  Moreover, that will happen even if situations when they
-are watching something else, like academic lecture material.
+Lets say the system learnt that people who have cat videos in their watch history will stay a lot
+longer if they are given cat videos in their suggestion box. Nothing groundbreaking there.
+
+Now lets say it figures out the same action is appropriate when they are watching something
+unrelated, like academic lecture material, because past data suggests that people of that profile
+leave slightly earlier when given more lecture videos, while they stay for hours when given cat
+videos, giving up the lecture videos.
 
 This raises a very important question - is the system behaving in an ethical manner? Is it ethical
 to show cat videos to a person trying to study and nudge them towards wasting their time? Even that
@@ -75,9 +80,11 @@ The root of the problem is the value function. Our systems are often blisfully u
 effects their decision may cause and blatantly disregard basic rules of behaviour that we take for
 granted. They have no other values than the value function they're maximizing. For them, the end
 justifies the means. Whether the value function is maximized by manipulating people, preying on
-their insecurities, making them scared, angry or sad - all of that is unimportant. If they find that
-the most effective way to keep a person on the same page is to show them something that will render
-them unconscious, they would happily do that.
+their insecurities, making them scared, angry or sad - all of that is unimportant. Here is a scary
+proposition: if you are epileptic, it might learn that the best way to keep you "on the website" is
+to show them something that will render you unconscious. It wouldn't even know that it didn't
+really achieve the goal: as far as it knows, autoplay is on and you haven't stopped it in the past
+two hours, so it all must be "good".
 
 So how do we make these systems ethical?
 
@@ -108,7 +115,8 @@ Another way to deal with this is to mandate that all ML systems have a feedback 
 The user (or a responsible guardian of the user) should be able to log on to the system, see its
 past actions within a given context and rate them as ethical or unethical. The system must be
 designed to use this data and give it precedence when making decisions, such that actions that are
-computed to be more ethical are always picked over actions that are less ethical.
+computed to be more ethical are always picked over actions that are less ethical. In this scenario
+the users are the ethicists.
 
 The third challenge is philosophical. Until now, philosophers were content with "there is no right
 answer, but there have been many thoughts on what exactly is ethical". They better get their act
