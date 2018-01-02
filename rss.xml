@@ -4,9 +4,9 @@
         <description><![CDATA[Untitled RSS Feed]]></description>
         <link>https://spion.github.io</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Mon, 01 Jan 2018 05:42:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 02 Jan 2018 10:41:34 GMT</lastBuildDate>
         <atom:link href="https://spion.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Mon, 01 Jan 2018 05:41:56 GMT</pubDate>
+        <pubDate>Tue, 02 Jan 2018 10:41:30 GMT</pubDate>
         <item>
             <title><![CDATA[Machine learning ethics]]></title>
             <description><![CDATA[<p>Today I found and watched one of the most important videos on machine learning published this year</p>
@@ -69,9 +69,9 @@ effects their decision may cause and blatantly disregard basic rules of behaviou
 granted. They have no other values than the value function they&#39;re maximizing. For them, the end
 justifies the means. Whether the value function is maximized by manipulating people, preying on
 their insecurities, making them scared, angry or sad - all of that is unimportant. Here is a scary
-proposition: if you are epileptic, it might learn that the best way to keep you &quot;on the website&quot; is
-to show them something that will render you unconscious. It wouldn&#39;t even know that it didn&#39;t
-really achieve the goal: as far as it knows, autoplay is on and you haven&#39;t stopped it in the past
+proposition: if a person is epileptic, it might learn that the best way to keep thenm &quot;on the website&quot;
+is to show them something that will render them unconscious. It wouldn&#39;t even know that it didn&#39;t
+really achieve the goal: as far as it knows, autoplay is on and they haven&#39;t stopped it in the past
 two hours, so it all must be &quot;good&quot;.</p>
 <p>So how do we make these systems ethical?</p>
 <p>The first challenge is technical, and its the easiest one. How do we come up with a value function
