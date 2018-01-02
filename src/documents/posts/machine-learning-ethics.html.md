@@ -81,9 +81,9 @@ effects their decision may cause and blatantly disregard basic rules of behaviou
 granted. They have no other values than the value function they're maximizing. For them, the end
 justifies the means. Whether the value function is maximized by manipulating people, preying on
 their insecurities, making them scared, angry or sad - all of that is unimportant. Here is a scary
-proposition: if you are epileptic, it might learn that the best way to keep you "on the website" is
-to show them something that will render you unconscious. It wouldn't even know that it didn't
-really achieve the goal: as far as it knows, autoplay is on and you haven't stopped it in the past
+proposition: if a person is epileptic, it might learn that the best way to keep thenm "on the website"
+is to show them something that will render them unconscious. It wouldn't even know that it didn't
+really achieve the goal: as far as it knows, autoplay is on and they haven't stopped it in the past
 two hours, so it all must be "good".
 
 So how do we make these systems ethical?
