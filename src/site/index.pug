@@ -1,0 +1,33 @@
+---
+layout: default.pug
+title: A hint of chaos
+---
+
+- var posts = collections.posts;
+- posts = posts.map(function(p) {
+-   p.myDate = new Date(p.date);
+-   p.url = p.path.replace(/md$/, 'html')
+-   return p;
+- }).sort(function(p1, p2) {
+-   return p2.myDate.getTime() - p1.myDate.getTime()
+- }).filter(function(p) {
+-   return !p.hidden;
+- });
+
+each post in posts.slice(0,5)
+  .post
+    h1
+      a(href=post.url)=post.title
+    .date= post.myDate.toDateString()
+    .content!=post.contentsWithoutLayout
+    .comments
+      hr
+      a(href=post.url + '#_comments') comment or share
+
+- var older = posts.slice(5);
+if (older.length)
+  hr
+  h1 Older posts
+  each post in posts.slice(5)
+    h4.post
+      a(href=post.url)=post.title

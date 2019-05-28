@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    script.
+      var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";
+    meta(charset='utf-8')
+    meta(name="viewport",
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi")
+    meta(content='True', name='HandheldFriendly')
+    title= title
+    link(rel='shortcut icon', href='/ico/favicon.ico')
+    link(rel='stylesheet', href='/styles/style.css')
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css')
+    link(rel='alternate', type='application/rss+xml', title='spion.github.io', href='/rss.xml')
+  body
+
+    .main
+      .info-tiny
+        a.img(href='/')
+          img(src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144")
+        h1.first
+          a(href='/') Gorgi Kosev
+        p.subtitle code, music, math
+      .info
+        a.img(href='/')
+          img(src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144")
+        h1.first
+          a(href='/') Gorgi Kosev
+        p.subtitle code, music, math
+        p.subtitle.margin
+          a(href='http://twitter.com/spion') @spion
+      .rest
+        block content
+
+
+    link(rel='stylesheet', href='//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css')
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+    script(src="/scripts/jquery.flot.js")
+    script(src="/scripts/jquery.flot.highlightSeries.js")
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    script.
+      ga('create', 'UA-42872676-1', 'spion.github.io');ga('send', 'pageview');
+
