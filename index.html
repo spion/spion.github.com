@@ -1,45 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <script>
-      var host = ".github.io";
-      if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:")
-        window.location.protocol = "https";
-    </script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
-    <title>A hint of chaos</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml">
-  </head>
-  <body>
-    <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-      </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-        <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
-      </div>
-      <div class="rest">
-<div class="post">
-  <h1><a href="/posts/machine-learning-ethics.html">Machine learning ethics</a></h1>
-  <div class="date">Tue Dec 19 2017</div>
-  <div class="content"><p>Today I found and watched one of the most important videos on machine learning published this year</p>
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>A hint of chaos</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><div class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></div><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><div class="rest"><div><div class="post"><h1><a href="posts/machine-learning-ethics.html">Machine learning ethics</a></h1><div class="date">Tue Dec 19 2017</div><div class="content"><p>Today I found and watched one of the most important videos on machine learning published this year</p>
 <blockquote>
-<p>We&#39;re building a dystopia just to make people click on ads
-<a href="https://www.youtube.com/watch?v=iFTWM7HV2UI&amp;app=desktop">https://www.youtube.com/watch?v=iFTWM7HV2UI&amp;app=desktop</a></p>
+<p>We're building a dystopia just to make people click on ads
+https://www.youtube.com/watch?v=iFTWM7HV2UI&amp;app=desktop</p>
 </blockquote>
 <p>Go watch it first before reading ahead! I could not possibly summarise it without doing it a
 disservice.</p>
 <p>What struck me most was the following quote:</p>
 <blockquote>
-<p>Having interviewed people who worked at Facebook, I&#39;m convinced that nobody there really
+<p>Having interviewed people who worked at Facebook, I'm convinced that nobody there really
 understands how it [the machine learning system] works.</p>
 </blockquote>
 <p>The important question is, howcome nobody understands how a machine learning system works? You
@@ -51,7 +19,7 @@ a history of previous actions and how well they achieved the goal in a past cont
 The system should learn on the historical data and be able to predict what action it can select to
 best achieve the goal.</p>
 <p>Lets see what these parts would represent on say, YouTube, for a ML system that has to pick which
-videos to show on the sidebar right next to the video you&#39;re watching.</p>
+videos to show on the sidebar right next to the video you're watching.</p>
 <p>The target goal could be e.g. to maximise the time the user stays on YouTube, watching videos.
 More generally, a <em>value function</em> is given by the ML system creator that measures the desireability
 of a certain outcome or behaviour (it could include multiple things like number of product bought,
@@ -62,7 +30,7 @@ or perhaps leave the site.</p>
 <p>Finally, the history of actions includes all previous video lists shown in the sidebar to users,
 together with the value function outcome from them: the time the user spent on the website after
 being  presented that list. Additional context from that time is also included: which user was it,
-what was their personal information, their past watching history, the channels they&#39;re subscribed
+what was their personal information, their past watching history, the channels they're subscribed
 to, videos they liked, videos they disliked and so on.</p>
 <p>Based on this data, the system learns how to tailor its actions (the videos it shows) so that it
 achieves the goal by picking the right action for a given context.</p>
@@ -70,10 +38,10 @@ achieves the goal by picking the right action for a given context.</p>
 seem to maximize value in which context.</p>
 <p>Once trained with sufficient data, it will be able to do some calculations and conclude: &quot;well,
 when I encountered a situation like this other times, I tried these five options, and option two
-on average caused users like this one to stay the longest, so I&#39;ll do that&quot;.</p>
+on average caused users like this one to stay the longest, so I'll do that&quot;.</p>
 <p>Sure, there are ways to ask some ML systems why they made a decision after the fact, and they can
 elaborate the variables that had the most effect. But before the algorithm gets the training data,
-you <em>don&#39;t</em> know what it will decide - nobody does! It learns from the history of its own actions
+you <em>don't</em> know what it will decide - nobody does! It learns from the history of its own actions
 and how the users reacted to them, so in essence, the users are programming its behaviour (through
 the lens of its value function).</p>
 <p>Lets say the system learnt that people who have cat videos in their watch history will stay a lot
@@ -87,12 +55,12 @@ to show cat videos to a person trying to study and nudge them towards wasting th
 is a fairly benign example. There are far worse examples mentioned in the TED talk above.</p>
 <p>The root of the problem is the value function. Our systems are often blisfully unaware of any side
 effects their decision may cause and blatantly disregard basic rules of behaviour that we take for
-granted. They have no other values than the value function they&#39;re maximizing. For them, the end
+granted. They have no other values than the value function they're maximizing. For them, the end
 justifies the means. Whether the value function is maximized by manipulating people, preying on
 their insecurities, making them scared, angry or sad - all of that is unimportant. Here is a scary
 proposition: if a person is epileptic, it might learn that the best way to keep thenm &quot;on the website&quot;
-is to show them something that will render them unconscious. It wouldn&#39;t even know that it didn&#39;t
-really achieve the goal: as far as it knows, autoplay is on and they haven&#39;t stopped it in the past
+is to show them something that will render them unconscious. It wouldn't even know that it didn't
+really achieve the goal: as far as it knows, autoplay is on and they haven't stopped it in the past
 two hours, so it all must be &quot;good&quot;.</p>
 <p>So how do we make these systems ethical?</p>
 <p>The first challenge is technical, and its the easiest one. How do we come up with a value function
@@ -103,13 +71,13 @@ You end up with a an ethics function, and you create a new value function that c
 value function with the ethics function into the new value function. As a result the system starts
 picking more ethical actions. All done. (If only things were that easy!)</p>
 <p>The second challenge is a business one. How far are you willing to reduce your value maximisation
-to be ethical? What to do if your competitor doesn&#39;t do that? What are the ethics of putting a
-number on how much ethics you&#39;re willing to sacrifice for profits? (Spoiler alert: they&#39;re not
+to be ethical? What to do if your competitor doesn't do that? What are the ethics of putting a
+number on how much ethics you're willing to sacrifice for profits? (Spoiler alert: they're not
 great)</p>
 <p>One way to solve that is to have regulations for ethical behaviour of machine learning systems.
 Such systems could be held responsible for unethical actions. If those actions are reported by
 people, investigated by experts and found true in court, the company owning the ML system is held
-liable. Unethical behaviour of machine learning systems shouldn&#39;t be <em>too</em> difficult to spot,
+liable. Unethical behaviour of machine learning systems shouldn't be <em>too</em> difficult to spot,
 although getting evidence might prove difficult. Public pressure and exposure of companies seems
 to help too. Perhaps we could make a machine learning systems that detects unethical behaviour and
 call it the ML police. Citizens could agree to install the ML police add-on to help monitor
@@ -123,126 +91,110 @@ computed to be more ethical are always picked over actions that are less ethical
 the users are the ethicists.</p>
 <p>The third challenge is philosophical. Until now, philosophers were content with &quot;there is no right
 answer, but there have been many thoughts on what exactly is ethical&quot;. They better get their act
-together, because we&#39;ll need them to come up with a definite, quantifiable answer real soon.</p>
+together, because we'll need them to come up with a definite, quantifiable answer real soon.</p>
 <p>On the more optimistic side, I hope that any generally agreed upon &quot;standard&quot; ethical system will
 be a better starting point than having none at all.</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/machine-learning-ethics.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/javascript-is-not-cancer.html">JavaScript isn't cancer</a></h1>
-  <div class="date">Thu Oct 06 2016</div>
-  <div class="content"><p>The last few days, I&#39;ve been thinking about what leads so many people to hate JavaScript.</p>
-<p>JS is so quirky and unclean! Thats supposed to be the primary reason, but after working with a few other dynamic languages, I don&#39;t buy it. JS actually has a fairly small amount of quirks compared to other dynamic languages.</p>
-<p>Just think about PHP&#39;s named functions, which are always in the global scope. Except when they are in namespaces (oh hi another concept), and then its kinda weird because <a href="https://stackoverflow.com/questions/13435051/relative-nested-namespaces-in-php">namespaces can be relative</a>. There are no first class named functions, but function expressions can be assigned to variables. Which must be prefixed with <code>$</code>. There are no real modules, or proper nestable scope - at least not for functions, which are always global. But nested functions only exist once the outer function is called!</p>
-<p>In Ruby, blocks are like lambdas except when they are not, and you can pass a block explicitly or yield to the first block implicitly. But there are also lambdas, which are different. Modules are uselessly global, cannot be parameterised over other modules (without resorting to meta programming), and there are several ways to nest them: if you don&#39;t nest them lexically, <a href="https://cirw.in/blog/constant-lookup.html">the lookup rules become different</a>. And there are classes, with private variables, which are prefixed with <code>@</code>. I really don&#39;t get that sigil fetish.</p>
+</div><div class="comments"><hr/><a href="posts/machine-learning-ethics.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="posts/javascript-is-not-cancer.html">JavaScript isn't cancer</a></h1><div class="date">Thu Oct 06 2016</div><div class="content"><p>The last few days, I've been thinking about what leads so many people to hate JavaScript.</p>
+<p>JS is so quirky and unclean! Thats supposed to be the primary reason, but after working with a few other dynamic languages, I don't buy it. JS actually has a fairly small amount of quirks compared to other dynamic languages.</p>
+<p>Just think about PHP's named functions, which are always in the global scope. Except when they are in namespaces (oh hi another concept), and then its kinda weird because <a href="https://stackoverflow.com/questions/13435051/relative-nested-namespaces-in-php">namespaces can be relative</a>. There are no first class named functions, but function expressions can be assigned to variables. Which must be prefixed with <code>$</code>. There are no real modules, or proper nestable scope - at least not for functions, which are always global. But nested functions only exist once the outer function is called!</p>
+<p>In Ruby, blocks are like lambdas except when they are not, and you can pass a block explicitly or yield to the first block implicitly. But there are also lambdas, which are different. Modules are uselessly global, cannot be parameterised over other modules (without resorting to meta programming), and there are several ways to nest them: if you don't nest them lexically, <a href="https://cirw.in/blog/constant-lookup.html">the lookup rules become different</a>. And there are classes, with private variables, which are prefixed with <code>@</code>. I really don't get that sigil fetish.</p>
 <p>The above examples are only scratching the surface.</p>
-<p>And which are the most often cited problems of JavaScript? Implicit conversions (the wat talk), no large ints and hard to understand prototypical inheritance and <code>this</code> keyword. That doesn&#39;t look any worse than the above lists! Plus, the language (pre ES6) is very minimalistic. It has freeform records with prototypes, and closures with lexical scope. Thats it!</p>
-<p>So this supposed &quot;quirkiness&quot; of JavaScript doesn&#39;t seem like a satisfactory explanation. There must be something else going on here, and I think I finally realized what that is.</p>
+<p>And which are the most often cited problems of JavaScript? Implicit conversions (the wat talk), no large ints and hard to understand prototypical inheritance and <code>this</code> keyword. That doesn't look any worse than the above lists! Plus, the language (pre ES6) is very minimalistic. It has freeform records with prototypes, and closures with lexical scope. Thats it!</p>
+<p>So this supposed &quot;quirkiness&quot; of JavaScript doesn't seem like a satisfactory explanation. There must be something else going on here, and I think I finally realized what that is.</p>
 <p>JavaScript is seen as a &quot;low status&quot; language. A 10 day accident, a silly toy language for the browser that ought to be simple and easy to learn. To an extent this is true, largely thanks to the fact that there are very few distinct concepts to be learned.</p>
 <p>However, those few concepts combine together into a package with a really good power-to-weight ratio. Additionally, the simplicity ensures that the language is malleable towards even more power (e.g. you can extend it with a type system and then you can <em>idiomatically</em> approximate some capabilities of algebraic sum types, like <a href="https://goo.gl/IkiZqx">making illegal states unrepresentable</a>).</p>
 <p>The emphasis above is on <em>idiomatically</em> for a reason. This sort of extension is somehow perfectly normal in JavaScript. If you took Ruby and used its dictionary type to add a comparable feature, it has significantly lower likelyhood of being accepted by developers. Why? Because Ruby has standard ways of doing things. You should be using objects and classes, not hashes, to model most of your data. (*)</p>
 <p>That was not the case with the simple pre-ES6 JavaScript. There was no module system to organize code. No classes system to hierarhically organize blueprints of things that hold state. Lack of basic standard library items, such as maps, sets, iterables, streams, promises. Lack of functions to manipulate existing data structures (dictionaries and arrays).</p>
 <p>Combine sufficient power, simplicity/malleability, and the lack of the basic facilities. Add to this the fact that its the basic option in the browser, the most popular platform. What do you get? You get a TON of people working in it to extend it in various different ways. And they invent a TON of stuff!</p>
-<p>We ended up with several popular module systems (object based namespaces, CommonJS, AMD, ES6, the angular module system, etc) as well as many package managers to manage these modules (npm, bower, jspm, ...). We also got many object/inheritance systems: plain objects, pure prototype extension, simulating classes, <a href="https://github.com/stampit-org/stampit">&quot;composable object factories&quot;</a>, and so on and so forth. Heck, a while ago every other library used to implement its own class system! <small>(That is, until CoffeeScript came and gave the definite answer on how to implement classes on top of prototypes. This is interesting, and I&#39;ll come back to it later.)</small></p>
-<p>This creates dissonance with the language&#39;s simplicity. JavaScript is this simple browser language that was supposed to be easy, so why is it so hard? Why are there so many things built on top of it and how the heck do I choose which one to use? I hate it. Why do I hate it? Probably its all these silly quirks that it has! Just look at its implicit conversions and lack of number types other than doubles!</p>
-<p>It doesn&#39;t matter that many languages are much worse. A great example of the reverse phenomenon is C++. Its a <a href="http://yosefk.com/c++fqa/">complete abomination</a>, far worse than JavaScript - a Frankenstein in the languages domain. But its seen as &quot;high status&quot;, so it has many apologists that will come to defend its broken design: &quot;Yeah, C++ is a serious language, you need grown-up pants to use it&quot;. Unfortunately JS has no such luck: its status as a hack-together glue for the web pages seems to have been forever cemented in people&#39;s heads.</p>
+<p>We ended up with several popular module systems (object based namespaces, CommonJS, AMD, ES6, the angular module system, etc) as well as many package managers to manage these modules (npm, bower, jspm, ...). We also got many object/inheritance systems: plain objects, pure prototype extension, simulating classes, <a href="https://github.com/stampit-org/stampit">&quot;composable object factories&quot;</a>, and so on and so forth. Heck, a while ago every other library used to implement its own class system! <small>(That is, until CoffeeScript came and gave the definite answer on how to implement classes on top of prototypes. This is interesting, and I'll come back to it later.)</small></p>
+<p>This creates dissonance with the language's simplicity. JavaScript is this simple browser language that was supposed to be easy, so why is it so hard? Why are there so many things built on top of it and how the heck do I choose which one to use? I hate it. Why do I hate it? Probably its all these silly quirks that it has! Just look at its implicit conversions and lack of number types other than doubles!</p>
+<p>It doesn't matter that many languages are much worse. A great example of the reverse phenomenon is C++. Its a <a href="http://yosefk.com/c++fqa/">complete abomination</a>, far worse than JavaScript - a Frankenstein in the languages domain. But its seen as &quot;high status&quot;, so it has many apologists that will come to defend its broken design: &quot;Yeah, C++ is a serious language, you need grown-up pants to use it&quot;. Unfortunately JS has no such luck: its status as a hack-together glue for the web pages seems to have been forever cemented in people's heads.</p>
 <p>So how do we fix this? You might not realize it, but this is already being fixed as we speak! Remember how CoffeeScript slowed down the prolification of custom object systems? Browsers and environments are quickly implementing ES6, which standardizes a huge percentage of what used to be the JS wild west. We now have the standard way to do modules, the standard way to do classes, the standard way to do basic procedural async (Promises; async/await). The standard way to do bundling will probably be no-bundling: <a href="https://esdiscuss.org/topic/fwd-are-es6-modules-in-browsers-going-to-get-loaded-level-by-level#content-4">HTTP2 push + ES6 modules will &quot;just work&quot;</a>!</p>
-<p>Finally, I believe the people who think that JavaScript will always be transpiled are wrong. As ES6+ features get implemented in major browsers, more and more people will find the overhead of ES.Next to ES transpilers isn&#39;t worth it. This process will stop entirely at some point as the basics get fully covered.</p>
-<p>At this point, I&#39;m hoping several things will happen. We&#39;ll finally get those big integers and number types that Brendan Eich has been promising. We&#39;ll have some more stuff on top of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer">SharedArrayBuffer</a> to enable easier shared memory parallelism, perhaps even <a href="https://facebook.github.io/immutable-js/">immutable datastructures</a> that are <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#Passing_data_by_transferring_ownership_(transferable_objects)">transferable objects</a>. The wat talk will be obsolete: obviously, you&#39;d be using a static analysis tool such as <a href="https://flowtype.org/">Flow</a> or TypeScript to deal with that; the fact that the browser ignores those type annotations and does its best to interpret what you meant will be irrelevant. async/await will be implemented in all browsers as the de-facto way to do async control flow; perhaps even <a href="https://github.com/tc39/proposal-async-iteration">async iterators</a> too. We&#39;ll also have widly accepted standard libraries for <a href="https://github.com/whatwg/streams">data</a> and event streams.</p>
-<p>Will JavaScript finally gain the status it deserves then? Probably. But at what cost? JavaScript is big enough now that there is less space for new inventions. And its fun to invent new things and read about other people&#39;s inventions!</p>
-<p>On the other hand, maybe then we&#39;ll be able to focus on the stuff we&#39;re actually building instead.</p>
+<p>Finally, I believe the people who think that JavaScript will always be transpiled are wrong. As ES6+ features get implemented in major browsers, more and more people will find the overhead of ES.Next to ES transpilers isn't worth it. This process will stop entirely at some point as the basics get fully covered.</p>
+<p>At this point, I'm hoping several things will happen. We'll finally get those big integers and number types that Brendan Eich has been promising. We'll have some more stuff on top of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer">SharedArrayBuffer</a> to enable easier shared memory parallelism, perhaps even <a href="https://facebook.github.io/immutable-js/">immutable datastructures</a> that are <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#Passing_data_by_transferring_ownership_(transferable_objects)">transferable objects</a>. The wat talk will be obsolete: obviously, you'd be using a static analysis tool such as <a href="https://flowtype.org/">Flow</a> or TypeScript to deal with that; the fact that the browser ignores those type annotations and does its best to interpret what you meant will be irrelevant. async/await will be implemented in all browsers as the de-facto way to do async control flow; perhaps even <a href="https://github.com/tc39/proposal-async-iteration">async iterators</a> too. We'll also have widly accepted standard libraries for <a href="https://github.com/whatwg/streams">data</a> and event streams.</p>
+<p>Will JavaScript finally gain the status it deserves then? Probably. But at what cost? JavaScript is big enough now that there is less space for new inventions. And its fun to invent new things and read about other people's inventions!</p>
+<p>On the other hand, maybe then we'll be able to focus on the stuff we're actually building instead.</p>
 <p><small>(*) Or metaprogramming, but then everyone has to agree on the same metaprogramming. In JS,
 everyone uses records, and they probably use a tag field to discriminate them already: its a small step to add types for that.</small></p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/javascript-is-not-cancer.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/es7-async-await-step-in-the-wrong-direction.html">ES7 async functions - a step in the wrong direction</a></h1>
-  <div class="date">Sun Aug 23 2015</div>
-  <div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
+</div><div class="comments"><hr/><a href="posts/javascript-is-not-cancer.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="posts/es7-async-await-step-in-the-wrong-direction.html">ES7 async functions - a step in the wrong direction</a></h1><div class="date">Sun Aug 23 2015</div><div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
 on top of previous capabilities made available by ES6 (promises), letting you
-write async code as though it were synchronous. At the moment, they&#39;re a
+write async code as though it were synchronous. At the moment, they're a
 <a href="https://github.com/lukehoban/ecmascript-asyncawait">stage 1 proposal for ES7</a> and supported by babel /
 regenerator.</p>
 <p>When generator functions were first made available in node, I was
 <a href="https://spion.github.io/posts/analysis-generators-and-other-async-patterns-node.html">very excited</a>. Finally, a way to write asynchronous JavaScript that
-doesn&#39;t descend into callback hell! At the time, I was unfamiliar with promises
+doesn't descend into callback hell! At the time, I was unfamiliar with promises
 and the language power you get back by simply having async computations be
 first class values, so it seemed to me that generators are the best solution
 available.</p>
-<p>Turns out, they aren&#39;t. And the same limitations apply for async functions.</p>
-<h3 id="predicates-in-catch-statements">Predicates in catch statements</h3>
+<p>Turns out, they aren't. And the same limitations apply for async functions.</p>
+<h3>Predicates in catch statements</h3>
 <p>With generators, thrown errors bubble up the function chain until a catch
 statement is encountered, much like in other languages that support exceptions.
-On one hand, this is convenient, but on the other, you never know what you&#39;re
+On one hand, this is convenient, but on the other, you never know what you're
 catching once you write a catch statement.</p>
-<p>JavaScript catch doesn&#39;t support any mechanism to filter errors. This
-limitation isn&#39;t too hard to get around: we can write a function <code>guard</code></p>
-<pre><code class="lang-js">function guard(e, predicate) {
-  if (!predicate(e)) throw e;
+<p>JavaScript catch doesn't support any mechanism to filter errors. This
+limitation isn't too hard to get around: we can write a function <code>guard</code></p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">guard</span>(<span class="hljs-params">e, predicate</span>) </span>{
+  <span class="hljs-keyword">if</span> (!predicate(e)) <span class="hljs-keyword">throw</span> e;
 }
 </code></pre>
 <p>and then use it to e.g. only filter &quot;not found&quot; errors when downloading an
 image</p>
-<pre><code class="lang-js">try {
-    await downloadImage(url);
-} catch (e) { guard(e, e =&gt; e.code == 404);
+<pre><code class="language-js"><span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">await</span> downloadImage(url);
+} <span class="hljs-keyword">catch</span> (e) { guard(e, e =&gt; e.code == <span class="hljs-number">404</span>);
     handle404(...);
 }
 </code></pre>
 <p>But that only gets us so far. What if we want to have a second error handler?
-We must resort to using <code>if-then-else</code>, making sure that we don&#39;t forget to
+We must resort to using <code>if-then-else</code>, making sure that we don't forget to
 rethrow the error at the end</p>
-<pre><code class="lang-js">try {
-    await downloadImage(url);
-} catch (e) {
-    if (e.code == 404)  {
+<pre><code class="language-js"><span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">await</span> downloadImage(url);
+} <span class="hljs-keyword">catch</span> (e) {
+    <span class="hljs-keyword">if</span> (e.code == <span class="hljs-number">404</span>)  {
         handle404(...)
-    } else if (e.code == 401) {
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e.code == <span class="hljs-number">401</span>) {
         handle401(...);
-    } else {
-        throw e;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">throw</span> e;
     }
 }
 </code></pre>
 <p>Since promises are a userland library, restrictions like the above do not
 apply. We can write our own promise implementation that demands the use of a
 predicate filter:</p>
-<pre><code class="lang-js">downloadImage(url)
-.catch(e =&gt; e.code == 404, e =&gt; {
+<pre><code class="language-js">downloadImage(url)
+.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.code == <span class="hljs-number">404</span>, e =&gt; {
     handle404(...);
 })
-.catch(e =&gt; e.code == 401, e =&gt; {
+.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.code == <span class="hljs-number">401</span>, e =&gt; {
     handle401(...)
 })
 </code></pre>
 <p>Now if we want all errors to be caught, we have to say it explicitly:</p>
-<pre><code class="lang-js">asyncOperation()
-.catch(e =&gt; true, e =&gt; {
+<pre><code class="language-js">asyncOperation()
+.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-literal">true</span>, e =&gt; {
     handleAllErrors(...)
 });
 </code></pre>
 <p>Since these constructs are not built-in language features but a DSL built on
 top of higher order functions, we can impose any restrictions we like instead
 of waiting on TC39 to fix the language.</p>
-<h3 id="cannot-use-higher-order-functions">Cannot use higher order functions</h3>
+<h3>Cannot use higher order functions</h3>
 <p>Because generators and async-await are shallow, you cannot use <code>yield</code> or
 <code>await</code> within lambdas passed to higher order functions.</p>
 <p>This is <a href="https://github.com/tc39/ecmascript-asyncawait/issues/7">better explained here</a> - The example given
 there is</p>
-<pre><code class="lang-js">async function renderChapters(urls) {
-  urls.map(getJSON).forEach(j =&gt; addToPage((await j).html));
+<pre><code class="language-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderChapters</span>(<span class="hljs-params">urls</span>) </span>{
+  urls.map(getJSON).forEach(<span class="hljs-function"><span class="hljs-params">j</span> =&gt;</span> addToPage((<span class="hljs-keyword">await</span> j).html));
 }
 </code></pre>
-<p>and will not work, because you&#39;re not allowed to use await from within a nested
+<p>and will not work, because you're not allowed to use await from within a nested
 function. The following will work, but will execute in parallel:</p>
-<pre><code class="lang-js">async function renderChapters(urls) {
-  urls.map(getJSON).forEach(async j =&gt; addToPage((await j).html));
+<pre><code class="language-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderChapters</span>(<span class="hljs-params">urls</span>) </span>{
+  urls.map(getJSON).forEach(<span class="hljs-keyword">async</span> j =&gt; addToPage((<span class="hljs-keyword">await</span> j).html));
 }
 </code></pre>
 <p>To understand why, you need to read <a href="http://calculist.org/blog/2011/12/14/why-coroutines-wont-work-on-the-web/">this article</a>. In short:
@@ -252,33 +204,33 @@ do it.</p>
 are succint and powerful, yet we cannot <em>really</em> use them inside async
 functions. To get sequential execution we have to resort to the clumsy built
 in for loops which often force us into writing ceremonial, stateful code.</p>
-<h3 id="arrow-functions-give-us-more-power-than-ever-before">Arrow functions give us more power than ever before</h3>
+<h3>Arrow functions give us more power than ever before</h3>
 <p>Functional DSLs were very powerful even before JS had short lambda syntax. But
 with arrow functions, things get even cleaner. The amount of code one needs to
 write can be reduced greatly thanks to short lambda syntax and higher order
 functions. Lets take the motivating example from the async-await proposal</p>
-<pre><code class="lang-js">function chainAnimationsPromise(elem, animations) {
-    var ret = null;
-    var p = currentPromise;
-    for(var anim of animations) {
-        p = p.then(function(val) {
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">chainAnimationsPromise</span>(<span class="hljs-params">elem, animations</span>) </span>{
+    <span class="hljs-keyword">var</span> ret = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">var</span> p = currentPromise;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> anim <span class="hljs-keyword">of</span> animations) {
+        p = p.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">val</span>) </span>{
             ret = val;
-            return anim(elem);
+            <span class="hljs-keyword">return</span> anim(elem);
         })
     }
-    return p.catch(function(e) {
-        /* ignore and keep going */
-    }).then(function() {
-        return ret;
+    <span class="hljs-keyword">return</span> p.catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
+        <span class="hljs-comment">/* ignore and keep going */</span>
+    }).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> ret;
     });
 }
 </code></pre>
-<p>With bluebird&#39;s <code>Promise.reduce</code>, this becomes</p>
-<pre><code class="lang-js">function chainAnimationsPromise(elem, animations) {
-  return Promise.reduce(animations,
-      (lastVal, anim) =&gt; anim(elem).catch(_ =&gt; Promise.reject(lastVal)),
-      Promise.resolve(null))
-  .catch(lastVal =&gt; lastVal);
+<p>With bluebird's <code>Promise.reduce</code>, this becomes</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">chainAnimationsPromise</span>(<span class="hljs-params">elem, animations</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reduce(animations,
+      (lastVal, anim) =&gt; anim(elem).catch(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">Promise</span>.reject(lastVal)),
+      <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">null</span>))
+  .catch(<span class="hljs-function"><span class="hljs-params">lastVal</span> =&gt;</span> lastVal);
 }
 </code></pre>
 <p>In short: functional DSLs are now more powerful than built in constructs,
@@ -286,59 +238,59 @@ even though (admittedly) they may take some getting used to.</p>
 <hr>
 <p>But this is not why async functions are a step in the wrong direction. The
 problems above are not unique to async functions. The same problems apply to
-generators: async functions merely inherit them as they&#39;re very similar.</p>
+generators: async functions merely inherit them as they're very similar.</p>
 <p>Async functions also go another step backwards.</p>
-<h2 id="loss-of-generality-and-power">Loss of generality and power</h2>
+<h2>Loss of generality and power</h2>
 <p>Despite their shortcomings, generator based coroutines have one redeeming
 quality: they allow you to redefine the coroutine execution engine. This is
 extremely powerful, and I will demonstrate by giving the following example:</p>
 <p>Lets say we were given the task to write the save function for an issue
-tracker. The issue author can specify the issue&#39;s title and text, as well
+tracker. The issue author can specify the issue's title and text, as well
 as any other issues that are blocking the solution of the newly entered issue.</p>
 <p>Our initial implementation is simple:</p>
-<pre><code class="lang-js">async function saveIssue(data, blockers) {
-    let issue = await Issues.insert(data);
-    for (let blockerId of blockers) {
-      await BlockerIssues.insert({blocker: blockerId, blocks: issue.id});
+<pre><code class="language-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">saveIssue</span>(<span class="hljs-params">data, blockers</span>) </span>{
+    <span class="hljs-keyword">let</span> issue = <span class="hljs-keyword">await</span> Issues.insert(data);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> blockerId <span class="hljs-keyword">of</span> blockers) {
+      <span class="hljs-keyword">await</span> BlockerIssues.insert({<span class="hljs-attr">blocker</span>: blockerId, <span class="hljs-attr">blocks</span>: issue.id});
     }
 }
 
-Issues.insert = async function(data) {
-    return db.query(&quot;INSERT ... VALUES&quot;, data).execWithin(db.pool);
+Issues.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT ... VALUES"</span>, data).execWithin(db.pool);
 }
 
-BlockerIssue.insert = async function(data) {
-    return db.query(&quot;INSERT .... VALUES&quot;, data).execWithin(db.pool);
+BlockerIssue.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT .... VALUES"</span>, data).execWithin(db.pool);
 }
 </code></pre>
 <p><code>Issue</code> and <code>BlockerIssues</code> are references to the corresponding tables in an
 SQL database. Their <code>insert</code> methods return a promise that indicate whether
 the query has been completed. The query is executed by a connection pool.</p>
-<p>But then, we run into a problem. We don&#39;t want to partially save the issue if
+<p>But then, we run into a problem. We don't want to partially save the issue if
 some of the data was not inserted successfuly. We want the entire save
 operation to be atomic. Fortunately, SQL databases support this via
 transactions, and our database library has a transaction abstraction. So we
 change our code:</p>
-<pre><code class="lang-js">async function saveIssue(data, blockers) {
-    let tx = db.beginTransaction();
-    let issue = await Issue.insert(tx, data);
-    for (let blockerId of blockers) {
-      await BlockerIssues.insert(tx, {blocker: blockerId, blocks: issue.id});
+<pre><code class="language-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">saveIssue</span>(<span class="hljs-params">data, blockers</span>) </span>{
+    <span class="hljs-keyword">let</span> tx = db.beginTransaction();
+    <span class="hljs-keyword">let</span> issue = <span class="hljs-keyword">await</span> Issue.insert(tx, data);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> blockerId <span class="hljs-keyword">of</span> blockers) {
+      <span class="hljs-keyword">await</span> BlockerIssues.insert(tx, {<span class="hljs-attr">blocker</span>: blockerId, <span class="hljs-attr">blocks</span>: issue.id});
     }
 }
 
-Issues.insert = async function(tx, data) {
-    return db.query(&quot;INSERT ... VALUES&quot;, data).execWithin(tx);
+Issues.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx, data</span>) </span>{
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT ... VALUES"</span>, data).execWithin(tx);
 }
 
-BlockerIssue.insert = async function(tx, data) {
-    return db.query(&quot;INSERT .... VALUES&quot;, data).execWithin(tx);
+BlockerIssue.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx, data</span>) </span>{
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT .... VALUES"</span>, data).execWithin(tx);
 }
 </code></pre>
 <p>Here, we changed the code in two ways. Firstly, we created a transaction within
 the saveIssue function. Secondly, we changed both insert methods to take this
 transaction as an argument.</p>
-<p>Immediately we can see that this solution doesn&#39;t scale very well. What if
+<p>Immediately we can see that this solution doesn't scale very well. What if
 we need to use <code>saveIssue</code> as a part of a larger transaction? Then it has to
 take a transaction as an argument. Who will create the transactions? The top
 level service. What if the top level service becomes a part of a larger
@@ -347,25 +299,25 @@ service? Then we need to change the code again.</p>
 automatically initializes a transaction if one is not passed via the
 constructor, and then have <code>Issues</code>, <code>BlockerIssue</code> etc inherit from this
 class.</p>
-<pre><code>
-class Transactionable {
-    constructor(tx) {
-        this.transaction = tx || db.beginTransaction();
+<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Transactionable</span> </span>{
+    <span class="hljs-keyword">constructor</span>(tx) {
+        <span class="hljs-keyword">this</span>.transaction = tx || db.beginTransaction();
     }
 }
-class IssueService extends Transactionable {
-    async saveIssue(data, blockers) {
-        issues = new Issues(this.transaction);
-        blockerIssues = new BlockerIssues(this.transaction);
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IssueService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Transactionable</span> </span>{
+    <span class="hljs-keyword">async</span> saveIssue(data, blockers) {
+        issues = <span class="hljs-keyword">new</span> Issues(<span class="hljs-keyword">this</span>.transaction);
+        blockerIssues = <span class="hljs-keyword">new</span> BlockerIssues(<span class="hljs-keyword">this</span>.transaction);
         ...
     }
 }
-class Issues extends Transactionable { ... }
-class BlockerIssues extends Transactionable { ... }
-// etc
-</code></pre><p>Like many OO solutions, this only spreads the problem across the plate to make
-it look smaller but doesn&#39;t solve it.</p>
-<h2 id="generators-are-better">Generators are better</h2>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Issues</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Transactionable</span> </span>{ ... }
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlockerIssues</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Transactionable</span> </span>{ ... }
+<span class="hljs-comment">// etc</span>
+</code></pre>
+<p>Like many OO solutions, this only spreads the problem across the plate to make
+it look smaller but doesn't solve it.</p>
+<h2>Generators are better</h2>
 <p>Generators let us define the execution engine. The iteration is driven by the
 function that consumes the generator, which decides what to do with the yielded
 values. What if instead of only allowing promises, our engine let us also:</p>
@@ -378,56 +330,56 @@ options</li>
 <li>Yield promises: These will be handled normally</li>
 </ol>
 <p>Lets take the original code and simplify it:</p>
-<pre><code class="lang-js">
-function* saveIssue(data, blockers) {
-    let issue = yield Issues.insert(data);
-    for (var blockerId of blockers) {
-      yield BlockerIssues.insert({blocker: blockerId, blocks: issue.id});
+<pre><code class="language-js">
+<span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">saveIssue</span>(<span class="hljs-params">data, blockers</span>) </span>{
+    <span class="hljs-keyword">let</span> issue = <span class="hljs-keyword">yield</span> Issues.insert(data);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> blockerId <span class="hljs-keyword">of</span> blockers) {
+      <span class="hljs-keyword">yield</span> BlockerIssues.insert({<span class="hljs-attr">blocker</span>: blockerId, <span class="hljs-attr">blocks</span>: issue.id});
     }
 }
 
-Issues.insert = function* (data) {
-    return db.query(&quot;INSERT ... VALUES&quot;, data)
+Issues.insert = <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params">data</span>) </span>{
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT ... VALUES"</span>, data)
 }
 
-BlockerIssue.insert = function* (data) {
-    return db.query(&quot;INSERT .... VALUES&quot;, data)
+BlockerIssue.insert = <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params">data</span>) </span>{
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT .... VALUES"</span>, data)
 }
 </code></pre>
 <p>From our http handler, we can now write</p>
-<pre><code class="lang-js">var myengine = require(&#39;./my-engine&#39;);
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myengine = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./my-engine'</span>);
 
-app.post(&#39;/issues/save&#39;, function(req, res) {
-  myengine.run(saveIssue(data, blockers), {tx: db.beginTransaction()})
+app.post(<span class="hljs-string">'/issues/save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  myengine.run(saveIssue(data, blockers), {<span class="hljs-attr">tx</span>: db.beginTransaction()})
 });
 </code></pre>
 <p>Lets implement this engine:</p>
-<pre><code class="lang-js">function run(iterator, options) {
-    function id(x) { return x; }
-    function iterate(value) {
-        var next = iterator.next(value)
-        var request = next.value;
-        var nextAction = next.done ? id : iterate;
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">run</span>(<span class="hljs-params">iterator, options</span>) </span>{
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">id</span>(<span class="hljs-params">x</span>) </span>{ <span class="hljs-keyword">return</span> x; }
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">iterate</span>(<span class="hljs-params">value</span>) </span>{
+        <span class="hljs-keyword">var</span> next = iterator.next(value)
+        <span class="hljs-keyword">var</span> request = next.value;
+        <span class="hljs-keyword">var</span> nextAction = next.done ? id : iterate;
 
-        if (isIterator(request)) {
-            return run(request, options).then(nextAction)
+        <span class="hljs-keyword">if</span> (isIterator(request)) {
+            <span class="hljs-keyword">return</span> run(request, options).then(nextAction)
         }
-        else if (isQuery(request)) {
-            return request.execWithin(options.tx).then(nextAction)
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isQuery(request)) {
+            <span class="hljs-keyword">return</span> request.execWithin(options.tx).then(nextAction)
         }
-        else if (isPromise(request)) {
-            return request.then(nextAction);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isPromise(request)) {
+            <span class="hljs-keyword">return</span> request.then(nextAction);
         }
     }
-    return iterate()
+    <span class="hljs-keyword">return</span> iterate()
 }
 </code></pre>
 <p>The best part of this change is that we did not have to change the original
-code at all. We didn&#39;t have to add the transaction parameter to every function,
+code at all. We didn't have to add the transaction parameter to every function,
 to take care to properly propagate it everywhere and to properly create the
 transaction. All we needed to do is just change our execution engine.</p>
 <p>And we can add much more! We can <code>yield</code> a request to get the current user
-if any, so we don&#39;t have to thread that through our code. Infact we can
+if any, so we don't have to thread that through our code. Infact we can
 implement <a href="https://github.com/othiym23/node-continuation-local-storage">continuation local storage</a> with only a few lines of code.</p>
 <p>Async generators are often given as a reason why we need async functions. If
 yield is already being used as await, how can we get both working at the same
@@ -441,28 +393,28 @@ execution of queries. If we replace <code>Promise.all</code> with our own implem
 caled <code>parallel</code>, then we can add support for non-promise arguments.</p>
 <p>Lets say we have the following code to notify owners of blocked issues in
 parallel when an issue is resolved:</p>
-<pre><code class="lang-js">let blocked = yield BlockerIssues.where({blocker: blockerId})
-let owners  = yield engine.parallel(blocked.map(issue =&gt; issue.getOwner()))
+<pre><code class="language-js"><span class="hljs-keyword">let</span> blocked = <span class="hljs-keyword">yield</span> BlockerIssues.where({<span class="hljs-attr">blocker</span>: blockerId})
+<span class="hljs-keyword">let</span> owners  = <span class="hljs-keyword">yield</span> engine.parallel(blocked.map(<span class="hljs-function"><span class="hljs-params">issue</span> =&gt;</span> issue.getOwner()))
 
-for (let owner of owners) yield owner.notifyResolved(issue)
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> owner <span class="hljs-keyword">of</span> owners) <span class="hljs-keyword">yield</span> owner.notifyResolved(issue)
 </code></pre>
 <p>Instead of returning an SQL based query, we can have <code>getOwner()</code> return data
 about the query:</p>
-<pre><code class="lang-js">{table: &#39;users&#39;, id: issue.user_id}
+<pre><code class="language-js">{<span class="hljs-attr">table</span>: <span class="hljs-string">'users'</span>, <span class="hljs-attr">id</span>: issue.user_id}
 </code></pre>
 <p>and have <code>engine</code> optimize the execution of parallel queries, by sending
 a single query per table rather then per item.</p>
-<pre><code class="lang-js">if (isParallelQuery(query)) {
-    var results = _(query.items).groupBy(&#39;table&#39;)
-      .map((items, t) =&gt; db.query(`select * from ${t} where id in ?`,
-                                  items.map(it =&gt; it.id))
+<pre><code class="language-js"><span class="hljs-keyword">if</span> (isParallelQuery(query)) {
+    <span class="hljs-keyword">var</span> results = _(query.items).groupBy(<span class="hljs-string">'table'</span>)
+      .map(<span class="hljs-function">(<span class="hljs-params">items, t</span>) =&gt;</span> db.query(<span class="hljs-string">`select * from <span class="hljs-subst">${t}</span> where id in ?`</span>,
+                                  items.map(<span class="hljs-function"><span class="hljs-params">it</span> =&gt;</span> it.id))
                 .execWithin(options.tx)).toArray();
-    Promise.all(results)
-        .then(results =&gt; results.sort(byOrderOf(query.items)))
+    <span class="hljs-built_in">Promise</span>.all(results)
+        .then(<span class="hljs-function"><span class="hljs-params">results</span> =&gt;</span> results.sort(byOrderOf(query.items)))
         .then(runNext)
 }
 </code></pre>
-<p>And voila, we&#39;ve just implemented a query optimizer. It will fetch all issue
+<p>And voila, we've just implemented a query optimizer. It will fetch all issue
 owners with a single query. If we add an SQL parser into the mix, it should
 be possible to rewrite real SQL queries.</p>
 <p>We can do something similar on the client too with GraphQL queries by aggregating
@@ -477,30 +429,22 @@ those functions knowing anything about it (thus, without breaking modularity).</
 <p>Async functions cant let us do any of this. All we get is a single execution
 engine that only knows how to await promises. To make matters worse, thanks
 to the unfortunately short-sighted <a href="https://esdiscuss.org/topic/a-challenge-problem-for-promise-designers-was-re-futures">recursive thenable assimilation</a>
-design decision, we can&#39;t simply create our own thenable that will support
+design decision, we can't simply create our own thenable that will support
 the above extra features. If we try to do that, we will be
 <a href="https://github.com/Reactive-Extensions/RxJS/issues/470">unable to safely use it with Promises</a>.
-We&#39;re stuck with what we get by default in async functions, and
+We're stuck with what we get by default in async functions, and
 thats it.</p>
-<p>Generators are JavaScript&#39;s programmable semicolons. Lets not take away that
+<p>Generators are JavaScript's programmable semicolons. Lets not take away that
 power by taking away the programmability. Lets drop async/await and write our
 own interpreters.</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/es7-async-await-step-in-the-wrong-direction.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/why-i-am-switching-to-promises.html">Why I am switching to promises</a></h1>
-  <div class="date">Mon Oct 07 2013</div>
-  <div class="content"><p>I&#39;m switching my node code from callbacks to promises. The reasons aren&#39;t
-merely aesthetical, they&#39;re rather practical:</p>
+</div><div class="comments"><hr/><a href="posts/es7-async-await-step-in-the-wrong-direction.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="posts/why-i-am-switching-to-promises.html">Why I am switching to promises</a></h1><div class="date">Mon Oct 07 2013</div><div class="content"><p>I'm switching my node code from callbacks to promises. The reasons aren't
+merely aesthetical, they're rather practical:</p>
 <p><a name="throw-crash"></a></p>
-<h3 id="throw-catch-vs-throw-crash">Throw-catch vs throw-crash</h3>
-<p>We&#39;re all human. We make mistakes, and then JavaScript <code>throw</code>s an error. How
+<h3>Throw-catch vs throw-crash</h3>
+<p>We're all human. We make mistakes, and then JavaScript <code>throw</code>s an error. How
 do callbacks punish that mistake? They crash your process!</p>
 <blockquote>
-<p>But spion, why don&#39;t you use domains?</p>
+<p>But spion, why don't you use domains?</p>
 </blockquote>
 <p>Yes, I could do that. I could <a href="http://nodejs.org/api/domain.html#domain_warning_don_t_ignore_errors">crash my process gracefully</a>
 instead of letting it just crash. But its still a crash no matter what
@@ -515,37 +459,37 @@ callbacks, only that single promise chain will die. I can also attach error or
 process will happily continue to serve the rest of my users.</p>
 <p>For more info see <a href="https://github.com/joyent/node/issues/5114">#5114</a> and <a href="https://github.com/joyent/node/issues/5149">#5149</a>. To find out how promises
 can solve this, see <a href="https://github.com/petkaantonov/bluebird/issues/51">bluebird #51</a></p>
-<h3 id="-if-err-return-callback-err-"><code>if (err) return callback(err)</code></h3>
+<h3><code>if (err) return callback(err)</code></h3>
 <p>That line is haunting me in my dreams now. What happened to the
 <a href="dry">DRY principle</a>?</p>
-<p>I understand that its important to explicitly handle all errors. But I don&#39;t
- believe its important to explicitly <em>bubble them up</em> the callback chain. If
-I don&#39;t deal with the error here, thats because I can&#39;t deal with the error
-there - I simply don&#39;t have enough context.</p>
+<p>I understand that its important to explicitly handle all errors. But I don't
+believe its important to explicitly <em>bubble them up</em> the callback chain. If
+I don't deal with the error here, thats because I can't deal with the error
+there - I simply don't have enough context.</p>
 <blockquote>
-<p>But spion, why don&#39;t you wrap your calbacks?</p>
+<p>But spion, why don't you wrap your calbacks?</p>
 </blockquote>
 <p>I guess I could do that and lose the callback stack when generating a
-<code>new Error()</code>. Or since I&#39;m already wrapping things, why not wrap the
+<code>new Error()</code>. Or since I'm already wrapping things, why not wrap the
 entire thing with promises, rely on longStackSupport, and handle errors at
 my discretion?</p>
 <p>Also, what happened to the <a href="dry">DRY principle</a>?</p>
-<h3 id="promises-are-now-part-of-es6">Promises are now part of ES6</h3>
+<h3>Promises are now part of ES6</h3>
 <p>Yes, they will become a part of the language. New DOM APIs will be using them
 too. jQuery already switched to promise...ish things. Angular utilizes promises
 everywhere (even in the templates). Ember uses promises. The list goes on.</p>
-<p>Browser libraries already switched. I&#39;m switching too.</p>
-<h3 id="containing-zalgo">Containing Zalgo</h3>
+<p>Browser libraries already switched. I'm switching too.</p>
+<h3>Containing Zalgo</h3>
 <p>Your promise library prevents you from <a href="http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony">releasing Zalgo</a>. You
-can&#39;t release Zalgo with promises. Its impossible for a promise to result with
+can't release Zalgo with promises. Its impossible for a promise to result with
 the release of the Zalgo-beast. <a href="http://promisesaplus.com/#point-87">Promises are Zalgo-safe (see section
 3.1)</a>.</p>
-<h3 id="callbacks-getting-called-multiple-times">Callbacks getting called multiple times</h3>
+<h3>Callbacks getting called multiple times</h3>
 <p>Promises solve that too. Once the operation is complete and the promise is
 resolved (either with a result or with an error), it cannot be resolved again.</p>
-<h3 id="promises-can-do-your-laundry">Promises can do your laundry</h3>
+<h3>Promises can do your laundry</h3>
 <p>Oops, unfortunately, promises wont do that. You still need to do it manually.</p>
-<h2 id="but-you-said-promises-are-slow-">But you said promises are slow!</h2>
+<h2>But you said promises are slow!</h2>
 <p>Yes, I know I wrote that. But I was wrong. A month after I wrote
 <a href="/posts/analysis-generators-and-other-async-patterns-node.html">the giant comparison of async patterns</a>, Petka Antonov wrote
 <a href="https://github.com/petkaantonov/bluebird">Bluebird</a>. Its a wicked fast promise library, and here are the
@@ -553,9 +497,7 @@ charts to prove it:</p>
 <p>Time to complete (ms)</p>
 <div id="perf-time-promises" class="plot">
 </div>
-
 <p style="text-align:right">Parallel requests</p>
-
 <script type="text/javascript">
 
 window.perfTimePromises =
@@ -617,18 +559,14 @@ window.perfTimePromises =
 
 window.addEventListener('load', function() {
     $.plot("#perf-time-promises", window.perfTimePromises,
-        {legend: { position: 'nw' }});
+    	{legend: { position: 'nw' }});
 });
 
 </script>
-
-
 <p>Memory usage (MB)</p>
 <div id="perf-mem-promises" class="plot">
 </div>
-
 <p style="text-align:right">Parallel requests</p>
-
 <script type="text/javascript">
 
 window.perfMemPromises =
@@ -691,11 +629,10 @@ window.perfMemPromises =
 
 window.addEventListener('load', function() {
     $.plot('#perf-mem-promises', perfMemPromises, {legend: { position: 'nw' },
-        yaxis: {min: 0}});
+		yaxis: {min: 0}});
 });
 
 </script>
-
 <p>And now, a table containing many patterns, 10 000 parallel requests, 1 ms per
 I/O op. Measure ALL the things!</p>
 <table>
@@ -815,36 +752,36 @@ I/O op. Measure ALL the things!</p>
 </tbody>
 </table>
 <p>Promises are not slow. At least, not anymore. Infact, bluebird generators
-are almost as fast as regular callback code (they&#39;re also the fastest
+are almost as fast as regular callback code (they're also the fastest
 generators as of now). And bluebird promises are definitely at least two times
 faster than <code>async.waterfall</code>.</p>
 <p>Considering that bluebird wraps the underlying callback-based libraries <strong>and</strong>
 makes your own callbacks exception-safe, this is really amazing.
-<code>async.waterfall</code> doesn&#39;t do this. exceptions still crash your process.</p>
-<h2 id="what-about-stack-traces-">What about stack traces?</h2>
-<p>Bluebird has them behind a flag that slows it down about 5 times. They&#39;re
-even longer than Q&#39;s <code>longStackSupport</code>: bluebird can give you the entire event
-chain. Simply enable the flag in development mode, and you&#39;re suddenly in
+<code>async.waterfall</code> doesn't do this. exceptions still crash your process.</p>
+<h2>What about stack traces?</h2>
+<p>Bluebird has them behind a flag that slows it down about 5 times. They're
+even longer than Q's <code>longStackSupport</code>: bluebird can give you the entire event
+chain. Simply enable the flag in development mode, and you're suddenly in
 debugging nirvana. It may even be viable to turn them on in production!</p>
-<h2 id="what-about-the-community-">What about the community?</h2>
+<h2>What about the community?</h2>
 <p>This is a valid point. Mikeal said it: If you write a library based on
 promises, <a href="http://www.youtube.com/watch?v=GaqxIMLLOu8">nobody is going to use it</a>.</p>
 <p>However, both bluebird and Q give you <code>promise.nodeify</code>. With it, you can
 write a library with a dual API that can both take callbacks and return
 promises:</p>
-<pre><code class="lang-js">module.exports = function fetch(itemId, callback) {
-    return locate(itemId).then(function(location) {
-        return getFrom(location, itemId);
-    }).nodeify(callback);
+<pre><code class="language-js"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fetch</span>(<span class="hljs-params">itemId, callback</span>) </span>{
+	<span class="hljs-keyword">return</span> locate(itemId).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">location</span>) </span>{
+		<span class="hljs-keyword">return</span> getFrom(location, itemId);
+	}).nodeify(callback);
 }
 </code></pre>
 <p>And now my library is not imposing promises on you. Infact, my library is even
 friendlier to the community: if I make a dumb mistake that causes an exception
 to be thrown in the library, the exception will be passed as an error to
-your callback instead of crashing your process. Now I don&#39;t have to fear the
+your callback instead of crashing your process. Now I don't have to fear the
 wrath of angry library users expecting zero downtime on their production
 servers. Thats always a plus, right?</p>
-<h2 id="what-about-generators-">What about generators?</h2>
+<h2>What about generators?</h2>
 <p>To use generators with callbacks you have two options</p>
 <ol>
 <li>use a resumer style library like <a href="https://github.com/jmar777/suspend">suspend</a> or <a href="https://github.com/jmar777/genny">genny</a></li>
@@ -853,9 +790,9 @@ servers. Thats always a plus, right?</p>
 <p>Since #1 is proving to be unpopular, and #2 already involves wrapping, why not
 just <code>s/thunk/promise/g</code> in #2 and use generators with promises?</p>
 <p><a name="promises-tutorial"></a></p>
-<h2 id="but-promises-are-unnecessarily-complicated-">But promises are unnecessarily complicated!</h2>
+<h2>But promises are unnecessarily complicated!</h2>
 <p>Yes, the terminology used to explain promises can often be confusing. But
-promises themselves are pretty simple - they&#39;re basically like lightweight
+promises themselves are pretty simple - they're basically like lightweight
 streams for single values.</p>
 <p>Here is a straight-forward guide that uses known principles and analogies from
 node (remember, the focus is on simplicity, not correctness):</p>
@@ -869,147 +806,148 @@ callbacks: a success callback and an error callback. When one of these two
 callbacks returns a value or throws an exception, <code>then</code> must behave in a way
 that enables stream-like chaining and simplified error handling. Lets explain
 that behavior of <code>then</code> through examples:</p>
-<p>Imagine that node&#39;s <code>fs</code> was wrapped to work in this manner. This is pretty
+<p>Imagine that node's <code>fs</code> was wrapped to work in this manner. This is pretty
 easy to do - bluebird already lets you do something like that with
 <a href="https://github.com/petkaantonov/bluebird/blob/master/API.md#promisepromisifyobject-target---object"><code>promisify()</code></a>. Then this code:</p>
-<pre><code class="lang-js">fs.readFile(file, function(err, res) {
-    if (err) handleError();
+<pre><code class="language-js">fs.readFile(file, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>) </span>{
+    <span class="hljs-keyword">if</span> (err) handleError();
     doStuffWith(res);
 });
 </code></pre>
 <p>will look like this:</p>
-<pre><code class="lang-js">fs.readFile(file).then(function(res) {
+<pre><code class="language-js">fs.readFile(file).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
     doStuffWith(res);
-}, function(err) {
+}, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
     handleError();
 });
 </code></pre>
 <p>Whats going on here? <code>fs.readFile(file)</code> starts a file reading operation. That
 operation is not yet complete at the point when readFile returns. This means
-we can&#39;t return the file content. But we can still return something: we can
+we can't return the file content. But we can still return something: we can
 return the reading operation itself. And that operation is represented with a
 promise.</p>
 <p>This is sort of like a single-value stream:</p>
-<pre><code class="lang-js">net.connect(port).on(&#39;data&#39;, function(res) {
-    doStuffWith(res);
-}).on(&#39;error&#39;, function(err) {
-    hadnleError();
+<pre><code class="language-js">net.connect(port).on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+	doStuffWith(res);
+}).on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+	hadnleError();
 });
 </code></pre>
-<p>So far, this doesn&#39;t look that different from regular node callbacks -
-except that you use a second callback for the error (which isn&#39;t necessarily
+<p>So far, this doesn't look that different from regular node callbacks -
+except that you use a second callback for the error (which isn't necessarily
 better). So when does it get better?</p>
 <p>Its better because you can attach the callback later if you want. Remember,
 <code>fs.readFile(file)</code> <em>returns</em> a promise now, so you can put that in a var,
 or return it from a function:</p>
-<pre><code class="lang-js">var filePromise = fs.readFile(file);
-// do more stuff... even nest inside another promise, then
-filePromise.then(function(res) { ... });
+<pre><code class="language-js"><span class="hljs-keyword">var</span> filePromise = fs.readFile(file);
+<span class="hljs-comment">// do more stuff... even nest inside another promise, then</span>
+filePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{ ... });
 </code></pre>
-<p>Yup, the second callback is optional. We&#39;re going to see why later.</p>
-<p>Okay, that&#39;s still not much of an improvement. How about this then? You can
+<p>Yup, the second callback is optional. We're going to see why later.</p>
+<p>Okay, that's still not much of an improvement. How about this then? You can
 attach more than one callback to a promise if you like:</p>
-<pre><code class="lang-js">filePromise.then(function(res) { uploadData(url, res); });
-filePromise.then(function(res) { saveLocal(url, res); });
+<pre><code class="language-js">filePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{ uploadData(url, res); });
+filePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{ saveLocal(url, res); });
 </code></pre>
 <p>Hey, this is beginning to look more and more like streams - they too can be
 piped to multiple destinations. But unlike streams, you can attach more
 callbacks and get the value even <em>after</em> the file reading operation completes.</p>
 <p>Still not good enough?</p>
 <p>What if I told you... that if you return something from inside a .then()
-callback, then you&#39;ll get a promise for that thing on the outside?</p>
+callback, then you'll get a promise for that thing on the outside?</p>
 <p>Say you want to get a line from a file. Well, you can get a promise for that
 line instead:</p>
-<pre><code class="lang-js">
-var filePromise = fs.readFile(file)
+<pre><code class="language-js">
+<span class="hljs-keyword">var</span> filePromise = fs.readFile(file)
 
-var linePromise = filePromise.then(function(data) {
-    return data.toString().split(&#39;\n&#39;)[line];
+<span class="hljs-keyword">var</span> linePromise = filePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+    <span class="hljs-keyword">return</span> data.toString().split(<span class="hljs-string">'\n'</span>)[line];
 });
 
-var beginsWithHelloPromise = linePromise.then(function(line) {
-    return /^hello/.test(line);
+<span class="hljs-keyword">var</span> beginsWithHelloPromise = linePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">line</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-regexp">/^hello/</span>.test(line);
 });
+
 </code></pre>
 <p>Thats pretty cool, although not terribly useful - we could just put both sync
 operations in the first <code>.then()</code> callback and be done with it.</p>
 <p>But guess what happens when you return a <em>promise</em> from within a <code>.then</code>
 callback. You get a promise for a promise outside of <code>.then()</code>?  Nope,
 you just get the same promise!</p>
-<pre><code class="lang-js">function readProcessAndSave(inPath, outPath) {
-    // read the file
-    var filePromise = fs.readFile(inPath);
-    // then send it to the transform service
-    var transformedPromise = filePromise.then(function(content) {
-        return service.transform(content);
-    });
-    // then save the transformed content
-    var writeFilePromise = transformedPromise.then(function(transformed) {
-        return fs.writeFile(otherPath, transformed)
-    });
-    // return a promise that &quot;succeeds&quot; when the file is saved.
-    return writeFilePromise;
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readProcessAndSave</span>(<span class="hljs-params">inPath, outPath</span>) </span>{
+	<span class="hljs-comment">// read the file</span>
+	<span class="hljs-keyword">var</span> filePromise = fs.readFile(inPath);
+	<span class="hljs-comment">// then send it to the transform service</span>
+	<span class="hljs-keyword">var</span> transformedPromise = filePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content</span>) </span>{
+		<span class="hljs-keyword">return</span> service.transform(content);
+	});
+	<span class="hljs-comment">// then save the transformed content</span>
+	<span class="hljs-keyword">var</span> writeFilePromise = transformedPromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transformed</span>) </span>{
+		<span class="hljs-keyword">return</span> fs.writeFile(otherPath, transformed)
+	});
+	<span class="hljs-comment">// return a promise that "succeeds" when the file is saved.</span>
+	<span class="hljs-keyword">return</span> writeFilePromise;
 }
-readProcessAndSave(file, url, otherPath).then(function() {
-    console.log(&quot;Success!&quot;);
-}, function(err) {
-    // This function will catch *ALL* errors from the above
-    // operations including any exceptions thrown inside .then
-    console.log(&quot;Oops, it failed.&quot;, err);
+readProcessAndSave(file, url, otherPath).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Success!"</span>);
+}, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+	<span class="hljs-comment">// This function will catch *ALL* errors from the above</span>
+	<span class="hljs-comment">// operations including any exceptions thrown inside .then</span>
+	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Oops, it failed."</span>, err);
 });
 </code></pre>
 <p>Now its easier to understand chaining: at the end of every function passed
 to a <code>.then()</code> call, simply return a promise.</p>
 <p>Lets make our code even shorter:</p>
-<pre><code class="lang-js">function readProcessAndSave(file, url, otherPath) {
-    return fs.readFile(file)
-        .then(service.transform)
-        .then(fs.writeFile.bind(fs, otherPath));
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readProcessAndSave</span>(<span class="hljs-params">file, url, otherPath</span>) </span>{
+	<span class="hljs-keyword">return</span> fs.readFile(file)
+		.then(service.transform)
+		.then(fs.writeFile.bind(fs, otherPath));
 }
 </code></pre>
-<p>Mind = blown! Notice how I don&#39;t have to manually propagate errors. They will
+<p>Mind = blown! Notice how I don't have to manually propagate errors. They will
 automatically get passed with the returned promise.</p>
 <p>What if we want to read, process, then upload, then also save locally?</p>
-<pre><code class="lang-js">function readUploadAndSave(file, url, otherPath) {
-    var content;
-    // read the file and transform it
-    return fs.readFile(file)
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readUploadAndSave</span>(<span class="hljs-params">file, url, otherPath</span>) </span>{
+    <span class="hljs-keyword">var</span> content;
+    <span class="hljs-comment">// read the file and transform it</span>
+    <span class="hljs-keyword">return</span> fs.readFile(file)
     .then(service.transform)
-    .then(function(vContent)
-        content = vContent;
-        // then upload it
-        return uploadData(url, content);
-    }).then(function() { // after its uploaded
-        // save it
-        return fs.writeFile(otherPath, content);
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">vContent</span>)
+        <span class="hljs-title">content</span> = <span class="hljs-title">vContent</span>;
+        // <span class="hljs-title">then</span> <span class="hljs-title">upload</span> <span class="hljs-title">it</span>
+        <span class="hljs-title">return</span> <span class="hljs-title">uploadData</span>(<span class="hljs-params">url, content</span>);
+    }).<span class="hljs-title">then</span>(<span class="hljs-params">function(</span>) </span>{ <span class="hljs-comment">// after its uploaded</span>
+        <span class="hljs-comment">// save it</span>
+        <span class="hljs-keyword">return</span> fs.writeFile(otherPath, content);
     });
 }
 </code></pre>
 <p>Or just nest it if you prefer the closure.</p>
-<pre><code class="lang-js">function readUploadAndSave(file, url, otherPath) {
-    // read the file and transform it
-    return fs.readFile(file)
-        .then(service.transform)
-        .then(function(content)
-            return uploadData(url, content).then(function() {
-                // after its uploaded, save it
-                return fs.writeFile(otherPath, content);
-            });
-        });
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readUploadAndSave</span>(<span class="hljs-params">file, url, otherPath</span>) </span>{
+    <span class="hljs-comment">// read the file and transform it</span>
+    <span class="hljs-keyword">return</span> fs.readFile(file)
+    	.then(service.transform)
+    	.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content</span>)
+        	<span class="hljs-title">return</span> <span class="hljs-title">uploadData</span>(<span class="hljs-params">url, content</span>).<span class="hljs-title">then</span>(<span class="hljs-params">function(</span>) </span>{
+        		<span class="hljs-comment">// after its uploaded, save it</span>
+        		<span class="hljs-keyword">return</span> fs.writeFile(otherPath, content);
+        	});
+    	});
 }
 </code></pre>
 <p>But hey, you can also upload and save in parallel!</p>
-<pre><code class="lang-js">function readUploadAndSave(file, url, otherPath) {
-    // read the file and transform it
-    return fs.readFile(file)
-        .then(service.transform)
-        .then(function(content) {
-            // create a promise that is done when both the upload
-            // and file write are done:
-            return Promise.join(
-                uploadData(url, content),
-                fs.writeFile(otherPath, content));
-        });
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readUploadAndSave</span>(<span class="hljs-params">file, url, otherPath</span>) </span>{
+    <span class="hljs-comment">// read the file and transform it</span>
+    <span class="hljs-keyword">return</span> fs.readFile(file)
+    	.then(service.transform)
+    	.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content</span>) </span>{
+    	    <span class="hljs-comment">// create a promise that is done when both the upload</span>
+    	    <span class="hljs-comment">// and file write are done:</span>
+        	<span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.join(
+        		uploadData(url, content),
+        		fs.writeFile(otherPath, content));
+    	});
 }
 </code></pre>
 <p>No, these are not &quot;conveniently chosen&quot; functions. Promise code really is that
@@ -1021,13 +959,13 @@ functions to promise-returning functions and using the stuff above to do your
 control flow.</p>
 <p>You can also return values in case of an error. So for example, to write a
 <code>readFileOrDefault</code> (which returns a default value if for example the file
-doesn&#39;t exist) you would simply return the default value from the error
+doesn't exist) you would simply return the default value from the error
 callback:</p>
-<pre><code class="lang-js">function readFileOrDefault(file, defaultContent) {
-    return fs.readFile(file).then(function(fileContent) {
-        return fileContent;
-    }, function(err) {
-        return defaultContent;
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readFileOrDefault</span>(<span class="hljs-params">file, defaultContent</span>) </span>{
+	<span class="hljs-keyword">return</span> fs.readFile(file).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">fileContent</span>) </span>{
+    	<span class="hljs-keyword">return</span> fileContent;
+    }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+    	<span class="hljs-keyword">return</span> defaultContent;
     });
 }
 </code></pre>
@@ -1035,208 +973,201 @@ callback:</p>
 user of the returned promise can catch those errors by adding the second
 .then handler</p>
 <p>Now how about <code>configFromFileOrDefault</code> that reads and parses a JSON config
-file, falls back to a default config if the file doesn&#39;t exist, but reports
+file, falls back to a default config if the file doesn't exist, but reports
 JSON parsing errors? Here it is:</p>
-<pre><code class="lang-js">function configFromFileOrDefault(file, defaultConfig) {
-    // if fs.readFile fails, a default config is returned.
-    // if JSON.parse throws, this promise propagates that.
-    return fs.readFile(file).then(JSON.parse,
-           function ifReadFails() {
-               return defaultConfig;
-           });
-    // if we want to catch JSON.parse errors, we need to chain another
-    // .then here - this one only captures errors from fs.readFile(file)
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">configFromFileOrDefault</span>(<span class="hljs-params">file, defaultConfig</span>) </span>{
+    <span class="hljs-comment">// if fs.readFile fails, a default config is returned.</span>
+    <span class="hljs-comment">// if JSON.parse throws, this promise propagates that.</span>
+	<span class="hljs-keyword">return</span> fs.readFile(file).then(<span class="hljs-built_in">JSON</span>.parse,
+		   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ifReadFails</span>(<span class="hljs-params"></span>) </span>{
+		       <span class="hljs-keyword">return</span> defaultConfig;
+		   });
+	<span class="hljs-comment">// if we want to catch JSON.parse errors, we need to chain another</span>
+	<span class="hljs-comment">// .then here - this one only captures errors from fs.readFile(file)</span>
 }
 </code></pre>
 <p>Finally, you can make sure your resources are released in all cases, even
 when an error or exception happens:</p>
-<pre><code class="lang-js">var result = doSomethingAsync();
+<pre><code class="language-js"><span class="hljs-keyword">var</span> result = doSomethingAsync();
 
-return result.then(function(value) {
-    // clean up first, then return the value.
-    return cleanUp().then(function() { return value; })
-}, function(err) {
-    // clean up, then re-throw that error
-    return cleanUp().then(function() { throw err; });
+<span class="hljs-keyword">return</span> result.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>{
+    <span class="hljs-comment">// clean up first, then return the value.</span>
+	<span class="hljs-keyword">return</span> cleanUp().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> value; })
+}, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+    <span class="hljs-comment">// clean up, then re-throw that error</span>
+	<span class="hljs-keyword">return</span> cleanUp().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">throw</span> err; });
 })
 </code></pre>
 <p>Or you can do the same using <code>.finally</code> (from both Bluebird and Q):</p>
-<pre><code class="lang-js">var result = doSomethingAsync();
-return result.finally(cleanUp);
+<pre><code class="language-js"><span class="hljs-keyword">var</span> result = doSomethingAsync();
+<span class="hljs-keyword">return</span> result.finally(cleanUp);
 </code></pre>
 <p>The same promise is still returned, but only after <code>cleanUp</code> completes.</p>
-<h2 id="but-what-about-async-async-">But what about <a href="https://github.com/caolan/async">async</a>?</h2>
+<h2>But what about <a href="https://github.com/caolan/async">async</a>?</h2>
 <p>Since promises are actual values, most of the tools in async.js become
-unnecessary and you can just use whatever you&#39;re using for regular values, like
+unnecessary and you can just use whatever you're using for regular values, like
 your regular <code>array.map</code> / <code>array.reduce</code> functions, or just plain for loops.
 That, and a couple of promise array tools like <code>.all</code>, <code>.spread</code> and <code>.some</code></p>
 <p>You already have async.waterfall and async.auto with .then and .spread
 chaining:</p>
-<pre><code class="lang-js">files.getLastTwoVersions(filename)
-    .then(function(items) {
-        // fetch versions in parallel
-        var v1 = versions.get(items.last),
-            v2 = versions.get(items.previous);
-        return [v1, v2];
-    })
-    .spread(function(v1, v2) {
-        // both of these are now complete.
-        return diffService.compare(v1.blob, v2.blob)
-    })
-    .then(function(diff) {
-        // voila, diff is ready. Do something with it.
-    });
+<pre><code class="language-js">files.getLastTwoVersions(filename)
+	.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">items</span>) </span>{
+		<span class="hljs-comment">// fetch versions in parallel</span>
+		<span class="hljs-keyword">var</span> v1 = versions.get(items.last),
+		    v2 = versions.get(items.previous);
+        <span class="hljs-keyword">return</span> [v1, v2];
+	})
+	.spread(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">v1, v2</span>) </span>{
+	    <span class="hljs-comment">// both of these are now complete.</span>
+	    <span class="hljs-keyword">return</span> diffService.compare(v1.blob, v2.blob)
+	})
+	.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">diff</span>) </span>{
+	    <span class="hljs-comment">// voila, diff is ready. Do something with it.</span>
+	});
 </code></pre>
 <p><code>async.parallel</code> / <code>async.map</code> are straightforward:</p>
-<pre><code class="lang-js">// download all items, then get their names
-var pNames = ids.map(function(id) {
-    return getItem(id).then(function(result) {
-        return result.name;
+<pre><code class="language-js"><span class="hljs-comment">// download all items, then get their names</span>
+<span class="hljs-keyword">var</span> pNames = ids.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+    <span class="hljs-keyword">return</span> getItem(id).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">result</span>) </span>{
+    	<span class="hljs-keyword">return</span> result.name;
     });
 });
-// wait for things to complete:
-Promise.all(pNames).then(function(names) {
-    // we now have all the names.
+<span class="hljs-comment">// wait for things to complete:</span>
+<span class="hljs-built_in">Promise</span>.all(pNames).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">names</span>) </span>{
+    <span class="hljs-comment">// we now have all the names.</span>
 });
 </code></pre>
 <p>What if you want to wait for the current item to download first (like
 <code>async.mapSeries</code> and <code>async.series</code>)? Thats also pretty straightforward: just
 wait for the current download to complete, then start the next download, then
 extract the item name, and thats exactly what you say in the code:</p>
-<pre><code class="lang-js">// start with current being an &quot;empty&quot; already-fulfilled promise
-var current = Promise.fulfilled();
-var namePromises = ids.map(function(id) {
-    // wait for the current download to complete, then get the next
-    // item, then extract its name.
+<pre><code class="language-js"><span class="hljs-comment">// start with current being an "empty" already-fulfilled promise</span>
+<span class="hljs-keyword">var</span> current = <span class="hljs-built_in">Promise</span>.fulfilled();
+<span class="hljs-keyword">var</span> namePromises = ids.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+    <span class="hljs-comment">// wait for the current download to complete, then get the next</span>
+    <span class="hljs-comment">// item, then extract its name.</span>
     current = current
-        .then(function() { return getItem(id); })
-        .then(function(item) { return item.name; });
-    return current;
+        .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> getItem(id); })
+        .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{ <span class="hljs-keyword">return</span> item.name; });
+    <span class="hljs-keyword">return</span> current;
 });
-Promise.all(namePromises).then(function(names) {
-    // use all names here.
+<span class="hljs-built_in">Promise</span>.all(namePromises).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">names</span>) </span>{
+    <span class="hljs-comment">// use all names here.</span>
 });
 </code></pre>
 <p>The only thing that remains is mapLimit - which is a bit harder to write - but
 still not that hard:</p>
-<pre><code class="lang-js">var queued = [], parallel = 3;
-var namePromises = ids.map(function(id) {
-    // How many items must download before fetching the next?
-    // The queued, minus those running in parallel, plus one of
-    // the parallel slots.
-    var mustComplete = Math.max(0, queued.length - parallel + 1);
-    // when enough items are complete, queue another request for an item
-    return Promise.some(queued, mustComplete)
-        .then(function() {
-            var download = getItem(id);
+<pre><code class="language-js"><span class="hljs-keyword">var</span> queued = [], parallel = <span class="hljs-number">3</span>;
+<span class="hljs-keyword">var</span> namePromises = ids.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+    <span class="hljs-comment">// How many items must download before fetching the next?</span>
+    <span class="hljs-comment">// The queued, minus those running in parallel, plus one of</span>
+    <span class="hljs-comment">// the parallel slots.</span>
+    <span class="hljs-keyword">var</span> mustComplete = <span class="hljs-built_in">Math</span>.max(<span class="hljs-number">0</span>, queued.length - parallel + <span class="hljs-number">1</span>);
+    <span class="hljs-comment">// when enough items are complete, queue another request for an item</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.some(queued, mustComplete)
+        .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">var</span> download = getItem(id);
             queued.push(download);
-            return download;
-        }).then(function(item) {
-            // after that new download completes, get the item&#39;s name.
-            return item.name;
+        	<span class="hljs-keyword">return</span> download;
+        }).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{
+            <span class="hljs-comment">// after that new download completes, get the item's name.</span>
+        	<span class="hljs-keyword">return</span> item.name;
         });
   });
-Promise.all(namePromises).then(function(names) {
-    // use all names here.
+<span class="hljs-built_in">Promise</span>.all(namePromises).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">names</span>) </span>{
+    <span class="hljs-comment">// use all names here.</span>
 });
 </code></pre>
 <p>That covers most of async.</p>
-<h2 id="what-about-early-returns-">What about early returns?</h2>
+<h2>What about early returns?</h2>
 <p>Early returns are a pattern used throughout both sync and async code. Take this
 hypothetical sync example:</p>
 <pre><code>function getItem(key) {
-    var item;
-    // early-return if the item is in the cache.
-    if (item = cache.get(key)) return item;
-    // continue to get the item from the database. cache.put returns the item.
-    item = cache.put(database.get(key));
+	var item;
+	// early-return if the item is in the cache.
+	if (item = cache.get(key)) return item;
+	// continue to get the item from the database. cache.put returns the item.
+	item = cache.put(database.get(key));
 
-    return item;
+	return item;
 }
-</code></pre><p>If we attempt to write this using promises, at first it looks impossible:</p>
-<pre><code class="lang-js">function getItem(key) {
-    return cache.get(key).then(function(item) {
-        // early-return if the item is in the cache.
-        if (item) return item;
-        return database.get(item)
-    }).then(function(putOrItem) {
-        // what do we do here to avoid the unnecessary cache.put ?
-    })
+</code></pre>
+<p>If we attempt to write this using promises, at first it looks impossible:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getItem</span>(<span class="hljs-params">key</span>) </span>{
+	<span class="hljs-keyword">return</span> cache.get(key).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{
+		<span class="hljs-comment">// early-return if the item is in the cache.</span>
+		<span class="hljs-keyword">if</span> (item) <span class="hljs-keyword">return</span> item;
+		<span class="hljs-keyword">return</span> database.get(item)
+	}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">putOrItem</span>) </span>{
+		<span class="hljs-comment">// what do we do here to avoid the unnecessary cache.put ?</span>
+	})
 }
 </code></pre>
 <p>How can we solve this?</p>
 <p>We solve it by remembering that the callback variant looks like this:</p>
-<pre><code class="lang-js">function getItem(key, callback) {
-    cache.get(key, function(err, res) {
-        // early-return if the item is in the cache.
-        if (res) return callback(null, res);
-        // continue to get the item from the database
-        database.get(key, function(err, res) {
-            if (err) return callback(err);
-            // cache.put calls back with the item
-            cache.put(key, res, callback);
-        })
-    })
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getItem</span>(<span class="hljs-params">key, callback</span>) </span>{
+	cache.get(key, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>) </span>{
+		<span class="hljs-comment">// early-return if the item is in the cache.</span>
+		<span class="hljs-keyword">if</span> (res) <span class="hljs-keyword">return</span> callback(<span class="hljs-literal">null</span>, res);
+		<span class="hljs-comment">// continue to get the item from the database</span>
+		database.get(key, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>) </span>{
+			<span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> callback(err);
+			<span class="hljs-comment">// cache.put calls back with the item</span>
+			cache.put(key, res, callback);
+		})
+	})
 }
 </code></pre>
 <p>The promise version can do pretty much the same - just nest the rest
 of the chain inside the first callback.</p>
-<pre><code class="lang-js">function getItem(key) {
-    return cache.get(key).then(function(res) {
-        // early return if the item is in the cache
-        if (res) return res;
-        // continue the chain within the callback.
-        return database.get(key)
-            .then(cache.put);
-    });
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getItem</span>(<span class="hljs-params">key</span>) </span>{
+	<span class="hljs-keyword">return</span> cache.get(key).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+		<span class="hljs-comment">// early return if the item is in the cache</span>
+		<span class="hljs-keyword">if</span> (res) <span class="hljs-keyword">return</span> res;
+		<span class="hljs-comment">// continue the chain within the callback.</span>
+		<span class="hljs-keyword">return</span> database.get(key)
+			.then(cache.put);
+	});
 }
 </code></pre>
 <p>Or alternatively, if a cache miss results with an error:</p>
-<pre><code class="lang-js">function getItem(key) {
-    return cache.get(key).catch(function(err) {
-        return database.get(key).then(cache.put);
-    });
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getItem</span>(<span class="hljs-params">key</span>) </span>{
+	<span class="hljs-keyword">return</span> cache.get(key).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+		<span class="hljs-keyword">return</span> database.get(key).then(cache.put);
+	});
 }
 </code></pre>
 <p>That means that early returns are just as easy as with callbacks, and sometimes
 even easier (in case of errors)</p>
-<h2 id="what-about-streams-">What about streams?</h2>
+<h2>What about streams?</h2>
 <p>Promises can work very well with streams. Imagine a <code>limit</code> stream that allows
 at most 3 promises resolving in parallel, backpressuring otherwise, processing
 items from leveldb:</p>
-<pre><code class="lang-js">originalSublevel.createReadStream().pipe(limit(3, function(data) {
-    return convertor(data.value).then(function(converted) {
-        return {key: data.key, value: converted};
-    });
+<pre><code class="language-js">originalSublevel.createReadStream().pipe(limit(<span class="hljs-number">3</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+	<span class="hljs-keyword">return</span> convertor(data.value).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">converted</span>) </span>{
+		<span class="hljs-keyword">return</span> {<span class="hljs-attr">key</span>: data.key, <span class="hljs-attr">value</span>: converted};
+	});
 })).pipe(convertedSublevel.createWriteStream());
 </code></pre>
 <p>Or how about stream pipelines that are safe from errors without attaching
 error handlers to all of them?</p>
-<pre><code class="lang-js">pipeline(original, limiter, converted).then(function(done) {
+<pre><code class="language-js">pipeline(original, limiter, converted).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">done</span>) </span>{
 
-}, function(streamError) {
+}, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">streamError</span>) </span>{
 
 })
 </code></pre>
 <p>Looks awesome. I definitely want to explore that.</p>
-<h2 id="the-future-">The future?</h2>
+<h2>The future?</h2>
 <p>In ES7, promises will become monadic (by getting flatMap and unit).
-Also, we&#39;re going to get generic syntax sugar for monads. Then, it trully wont
+Also, we're going to get generic syntax sugar for monads. Then, it trully wont
 matter what style you use - stream, promise or thunk - as long as it also
 implements the monad functions. That is, except for callback-passing style -
-it wont be able to join the party because it doesn&#39;t produce values.</p>
-<p>I&#39;m just kidding, of course. I don&#39;t know if thats going to happen. Either way,
+it wont be able to join the party because it doesn't produce values.</p>
+<p>I'm just kidding, of course. I don't know if thats going to happen. Either way,
 promises are useful and practical and will remain useful and practical in the
 future.</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/why-i-am-switching-to-promises.html#_comments">comment or share</a>
-  </div>
-</div>
-<div class="post">
-  <h1><a href="/posts/closures-are-unavoidable-in-node.html">Closures are unavoidable in node</a></h1>
-  <div class="date">Fri Aug 23 2013</div>
-  <div class="content"><p>A couple of weeks ago I wrote a <a href="/posts/analysis-generators-and-other-async-patterns-node.html">giant comparison of node.js async code
+</div><div class="comments"><hr/><a href="posts/why-i-am-switching-to-promises.html#_comments">comment or share</a></div></div><div class="post"><h1><a href="posts/closures-are-unavoidable-in-node.html">Closures are unavoidable in node</a></h1><div class="date">Fri Aug 23 2013</div><div class="content"><p>A couple of weeks ago I wrote a <a href="/posts/analysis-generators-and-other-async-patterns-node.html">giant comparison of node.js async code
 patterns</a> that
 mostly focuses on the new generators feature in EcmaScript 6 (Harmony)</p>
 <p>Among other implementations there were two callback versions: <a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a>,
@@ -1302,15 +1233,18 @@ JS that allows you to include context together with a function.</p>
         return fn.apply(ctx, arguments);
     }
 }
-</code></pre><p>Notice how <code>bound</code> is a closure over ctx and fn.</p>
+</code></pre>
+<p>Notice how <code>bound</code> is a closure over ctx and fn.</p>
 <p>Now, if node core functions were also able to take a context argument, things
 could have been different. For example, instead of writing:</p>
 <pre><code>fs.readFile(f, bind(this.afterFileRead, this));
-</code></pre><p>if we were able to write:</p>
+</code></pre>
+<p>if we were able to write:</p>
 <pre><code>fs.readFile(f, this.afterFileRead, this);
-</code></pre><p>then we would be able to write code that avoids closures and
+</code></pre>
+<p>then we would be able to write code that avoids closures and
 <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a> could have been much faster.</p>
-<p>But we can&#39;t do that.</p>
+<p>But we can't do that.</p>
 <p>What if we could though? Lets fork
 <a href="https://github.com/joyent/node/blob/blog/lib/timers.js">timers.js</a> from
 node core and find out:</p>
@@ -1388,40 +1322,4 @@ which in turn resulted with <a href="//github.com/spion/async-compare/blob/blog/
 </tbody>
 </table>
 <p>Maybe, maybe not. You decide.</p>
-</div>
-  <div class="comments"> 
-    <hr/><a href="/posts/closures-are-unavoidable-in-node.html#_comments">comment or share</a>
-  </div>
-</div>
-<hr/>
-<h1>Older posts</h1>
-<h4 class="post"><a href="/posts/analysis-generators-and-other-async-patterns-node.html">Analysis of generators and other async patterns in node</a></h4>
-<h4 class="post"><a href="/posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h4>
-<h4 class="post"><a href="/posts/introducing-npmsearch.html">Introducing npmsearch</a></h4>
-<h4 class="post"><a href="/posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News with a reputation system</a></h4>
-<h4 class="post"><a href="/posts/why-native-sucks-html5-rocks-porting-windows-8.html">Why native sucks and HTML5 rocks: porting</a></h4>
-<h4 class="post"><a href="/posts/let-it-snow.html">Let it snow</a></h4>
-<h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4>
-<h4 class="post"><a href="/posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4>
-<h4 class="post"><a href="/posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div>
-    </div>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
-    <script>
-      $('code').addClass('prettyprint');
-      prettyPrint();
-    </script>
-    <script src="/scripts/jquery.flot.js"></script>
-    <script src="/scripts/jquery.flot.highlightSeries.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      
-      ga('create', 'UA-42872676-1', 'spion.github.io');
-      ga('send', 'pageview');
-    </script>
-  </body>
-</html>
+</div><div class="comments"><hr/><a href="posts/closures-are-unavoidable-in-node.html#_comments">comment or share</a></div></div><hr/><h1>Older posts</h1><h4 class="post"><a href="posts/analysis-generators-and-other-async-patterns-node.html">Analysis of generators and other async patterns in node</a></h4><h4 class="post"><a href="posts/make-most-webapps-work-on-ipad.html">Google Docs on the iPad</a></h4><h4 class="post"><a href="posts/introducing-npmsearch.html">Introducing npmsearch</a></h4><h4 class="post"><a href="posts/fixing-hackernews-mathematical-approach.html">Fixing Hacker News with a reputation system</a></h4><h4 class="post"><a href="posts/let-it-snow.html">Let it snow</a></h4><h4 class="post"><a href="posts/why-native-sucks--rocks-porting-windows-8.html">Why native sucks and HTML5 rocks</a></h4><h4 class="post"><a href="posts/intuitive-javascript-array-filtering-function-pt2.html">Intuitive JavaScript array filtering function pt2</a></h4><h4 class="post"><a href="posts/intuitive-javascript-array-filtering-function.html">Intuitive JavaScript array filtering function pt1</a></h4><h4 class="post"><a href="posts/amateur-lasse-gjertsen.html">Amateur - Lasse Gjertsen</a></h4></div></div></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');</script><script>ga('create', 'UA-42872676-1', 'spion.github.io');ga('send', 'pageview');</script></body></html>

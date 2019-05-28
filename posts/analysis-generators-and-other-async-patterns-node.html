@@ -1,43 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <script>
-      var host = ".github.io";
-      if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:")
-        window.location.protocol = "https";
-    </script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi">
-    <meta content="True" name="HandheldFriendly">
-    <title>Analysis of generators and other async patterns in node</title>
-    <link rel="shortcut icon" href="/ico/favicon.ico">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-    <link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml">
-  </head>
-  <body>
-    <div class="main">
-      <div class="info-tiny"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-      </div>
-      <div class="info"><a href="/" class="img"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a>
-        <h1 class="first"><a href="/">Gorgi Kosev</a></h1>
-        <p class="subtitle">code, music, math</p>
-        <p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p>
-      </div>
-      <div class="rest">
-<div class="post">
-  <h1>Analysis of generators and other async patterns in node</h1>
-  <div class="date">Fri Aug 09 2013</div>
-  <div class="content"><p>Table of contents:</p>
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Analysis of generators and other async patterns in node</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><div class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></div><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><div class="rest"><div class="post"><h1>Analysis of generators and other async patterns in node</h1><div class="date">Fri Aug 09 2013</div><div class="content"><p>Table of contents:</p>
 <ul>
 <li><a href="#a-gentle-introduction-to-generators">A gentle introduction to generators</a></li>
 <li><a href="#the-analysis">The analysis</a></li>
 <li><a href="#the-examples">The examples</a></li>
 <li><a href="#complexity">Complexity</a></li>
 <li><a href="#performance-time-and-memory">Performance (time and memory)</a></li>
-<li><a href="#debuggability">Debuggability</a><ul>
+<li><a href="#debuggability">Debuggability</a>
+<ul>
 <li><a href="#source-maps-support">Source maps support</a></li>
 <li><a href="#stack-trace-accuracy">Stack trace accuracy</a></li>
 </ul>
@@ -53,33 +22,33 @@ may be induced.</p>
 mechanism to allow code to pause and resume across the event loop boundary.</p>
 <p>Until now.</p>
 <p><a name="a-gentle-introduction-to-generators"></a></p>
-<h3 id="a-gentle-introduction-to-generators">A gentle introduction to generators</h3>
+<h3>A gentle introduction to generators</h3>
 <p><small>If you know how generators work, you can <a href="#skip">skip this</a>
-    and continue to the analysis</small></p>
+and continue to the analysis</small></p>
 <p>Generators are a new feature of ES6. Normally they would be used for iteration.
 Here is a generator that generates Fibonacci numbers. The example is taken from
 the <a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">ECMAScript harmony wiki</a>:</p>
-<pre><code class="lang-js">function* fibonacci() {
-    let [prev, curr] = [0, 1];
-    for (;;) {
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">fibonacci</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">let</span> [prev, curr] = [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">for</span> (;;) {
         [prev, curr] = [curr, prev + curr];
-        yield curr;
+        <span class="hljs-keyword">yield</span> curr;
     }
 }
 </code></pre>
 <p>And here is how we iterate through this generator:</p>
-<pre><code class="lang-js">for (n of fibonacci()) {
-    // truncate the sequence at 1000
-    if (n &gt; 1000) break;
-    console.log(n);
+<pre><code class="language-js"><span class="hljs-keyword">for</span> (n <span class="hljs-keyword">of</span> fibonacci()) {
+    <span class="hljs-comment">// truncate the sequence at 1000</span>
+    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">1000</span>) <span class="hljs-keyword">break</span>;
+    <span class="hljs-built_in">console</span>.log(n);
 }
 </code></pre>
 <p>What happens behind the scene?</p>
 <p>Generator functions are actually constructors of iterators. The returned
 iterator object has a <code>next()</code> method. We can invoke that method manually:</p>
-<pre><code class="lang-js">var seq = fibonacci();
-console.log(seq.next()); // 1
-console.log(seq.next()); // 2 etc.
+<pre><code class="language-js"><span class="hljs-keyword">var</span> seq = fibonacci();
+<span class="hljs-built_in">console</span>.log(seq.next()); <span class="hljs-comment">// 1</span>
+<span class="hljs-built_in">console</span>.log(seq.next()); <span class="hljs-comment">// 2 etc.</span>
 </code></pre>
 <p>When <code>next</code> is invoked, it starts the execution of the generator. The generator
 runs until it encounters a <code>yield</code> expression. Then it pauses and the execution
@@ -91,50 +60,50 @@ point where it left off - from the last <code>yield</code> line.</p>
 and calculate the next Fibonacci pair.</p>
 <p>So how would we use this to write async code?</p>
 <p>A great thing about the <code>next()</code> method is that it can also send values to the
-generator. Let&#39;s write a simple number generator that also collects the stuff
+generator. Let's write a simple number generator that also collects the stuff
 it receives. When it gets two things it prints them using <code>console.log</code>:</p>
-<pre><code class="lang-js">function* numbers() {
-    var stuffIgot = [];
-    for (var k = 0; k &lt; 2; ++k) {
-        var itemReceived = yield k;
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">numbers</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> stuffIgot = [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">2</span>; ++k) {
+        <span class="hljs-keyword">var</span> itemReceived = <span class="hljs-keyword">yield</span> k;
         stuffIgot.push(itemReceived);
     }
-    console.log(stuffIgot);
+    <span class="hljs-built_in">console</span>.log(stuffIgot);
 }
 </code></pre>
 <p>This generator gives us 3 numbers using yield. Can we give something back?</p>
-<p>Let&#39;s give two things to this generator:</p>
-<pre><code class="lang-js">var iterator = numbers();
-// Cant give anything the first time: need to get to a yield first.
-console.log(iterator.next()); // logs 0
-console.log(iterator.next(&#39;present&#39;)); // logs 1
-fs.readFile(&#39;file.txt&#39;, function(err, resultFromAnAsyncTask) {
-    console.log(iterator.next(resultFromAnAsyncTask)); // logs 2
+<p>Let's give two things to this generator:</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> iterator = numbers();
+<span class="hljs-comment">// Cant give anything the first time: need to get to a yield first.</span>
+<span class="hljs-built_in">console</span>.log(iterator.next()); <span class="hljs-comment">// logs 0</span>
+<span class="hljs-built_in">console</span>.log(iterator.next(<span class="hljs-string">'present'</span>)); <span class="hljs-comment">// logs 1</span>
+fs.readFile(<span class="hljs-string">'file.txt'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, resultFromAnAsyncTask</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(iterator.next(resultFromAnAsyncTask)); <span class="hljs-comment">// logs 2</span>
 });
 </code></pre>
-<p>The generator will log the string <code>&#39;present&#39;</code> and the contents of <code>file.txt</code></p>
+<p>The generator will log the string <code>'present'</code> and the contents of <code>file.txt</code></p>
 <p>Uh-oh.</p>
 <p>Seems that we can keep the generator paused across the event loop boundary.</p>
 <p>What if instead of numbers, we yielded some files to be read?</p>
-<pre><code class="lang-js">function* files() {
-    var results = [];
-    for (var k = 0; k &lt; files.length; ++k)
-        results.push(yield files[k]);
-    return results;
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">files</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> results = [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> k = <span class="hljs-number">0</span>; k &lt; files.length; ++k)
+        results.push(<span class="hljs-keyword">yield</span> files[k]);
+    <span class="hljs-keyword">return</span> results;
 }
 </code></pre>
 <p>We could process those file reading tasks asynchronously.</p>
-<pre><code class="lang-js">var iterator = files();
-function process(iterator, sendValue) {
-    var fileTask = iterator.next(sendValue);
-    fs.readFile(fileTask, function(err, res) {
-        if (err) iterator.throw(err);
-        else process(iterator, res);
+<pre><code class="language-js"><span class="hljs-keyword">var</span> iterator = files();
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">process</span>(<span class="hljs-params">iterator, sendValue</span>) </span>{
+    <span class="hljs-keyword">var</span> fileTask = iterator.next(sendValue);
+    fs.readFile(fileTask, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) iterator.throw(err);
+        <span class="hljs-keyword">else</span> process(iterator, res);
     });
 }
 process(iterator);
 </code></pre>
-<p>But from the generator&#39;s point of view, everything seems to be happening
+<p>But from the generator's point of view, everything seems to be happening
 synchronously: it gives us the file using <code>yield</code>, then it waits to be resumed,
 then it receives the contents of the file and makes a push to the results
 array.</p>
@@ -143,17 +112,17 @@ from inside the generator. How cool is that?</p>
 <p>With <code>next</code> and <code>throw</code> combined together, we can easily run async code. Here
 is an example from one of the earliest ES6 async generators library
 <a href="http://taskjs.org/">task.js</a>.</p>
-<pre><code class="lang-js">spawn(function* () {
-    var data = yield $.ajax(url);
-    $(&#39;#result&#39;).html(data);
-    var status = $(&#39;#status&#39;).html(&#39;Download complete.&#39;);
-    yield status.fadeIn().promise();
-    yield sleep(2000);
+<pre><code class="language-js">spawn(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">yield</span> $.ajax(url);
+    $(<span class="hljs-string">'#result'</span>).html(data);
+    <span class="hljs-keyword">var</span> status = $(<span class="hljs-string">'#status'</span>).html(<span class="hljs-string">'Download complete.'</span>);
+    <span class="hljs-keyword">yield</span> status.fadeIn().promise();
+    <span class="hljs-keyword">yield</span> sleep(<span class="hljs-number">2000</span>);
     status.fadeOut();
 });
 </code></pre>
 <p>This generator yields promises, which causes it to suspend execution. The <code>spawn</code>
-function that runs the generator takes those promises and waits until they&#39;re
+function that runs the generator takes those promises and waits until they're
 fulfilled. Then it resumes the generator by sending it the resulting value.</p>
 <p>When used in this form, generators look a lot like classical threads. You spawn
 a thread, it issues blocking I/O calls using <code>yield</code>, then the code resumes
@@ -162,18 +131,18 @@ execution from the point it left off.</p>
 involuntarily at any point by the operating systems, generators have to
 willingly suspend themselves using <code>yield</code>. This means that there is no danger
 of variables changing under our feet, except after a <code>yield</code>.</p>
-<p>Generators go a step further with this: it&#39;s impossible to suspend execution
+<p>Generators go a step further with this: it's impossible to suspend execution
 without using the <code>yield</code> keyword. In fact, if you want to call another
 generator you will have to write <code>yield* anotherGenerator(args)</code>. This means
 that suspend points are always visible in the code, just like they are when
 using callbacks.</p>
 <p>Amazing stuff! So what does this mean? What is the reduction of code complexity?
 What are the performance characteristics of code using generators? Is debugging
-easy? What about environments that don&#39;t have ES6 support?</p>
+easy? What about environments that don't have ES6 support?</p>
 <p>I decided to do a big comparison of all existing node async code patterns and
 find the answers to these questions.</p>
 <p><a name="skip"></a><a name="the-analysis"></a></p>
-<h3 id="the-analysis">The analysis</h3>
+<h3>The analysis</h3>
 <p>For the analysis, I took <code>file.upload</code>, a typical CRUD method extracted from
 <a href="http://doxbee.com">DoxBee</a> called when uploading files. It executes multiple
 queries to the database: a couple of selects, some inserts and one update.
@@ -202,7 +171,7 @@ Lots of mixed sync / async action.</p>
             Version.insert(version).execWithin(tx, function (err) {
                 if (err) return backoff(err);
                 if (!file) {
-                    var splitPath = idOrPath.split(&#39;/&#39;);
+                    var splitPath = idOrPath.split('/');
                     var fileName = splitPath[splitPath.length - 1];
                     var newId = uuid.v1();
                     self.createQuery(idOrPath, {
@@ -236,9 +205,10 @@ Lots of mixed sync / async action.</p>
         });
     });
 }
-</code></pre><p>Slightly pyramidal code full of callbacks.</p>
+</code></pre>
+<p>Slightly pyramidal code full of callbacks.</p>
 <p>This is how it looks like when written with generators:</p>
-<pre><code>var genny = require(&#39;genny&#39;);
+<pre><code>var genny = require('genny');
 module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
     var blob = blobManager.create(account);
     var tx = db.begin();
@@ -255,7 +225,7 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
         version.id = Version.createHash(version);
         yield Version.insert(version).execWithin(tx, resume());
         if (!file) {
-            var splitPath = idOrPath.split(&#39;/&#39;);
+            var splitPath = idOrPath.split('/');
             var fileName = splitPath[splitPath.length - 1];
             var newId = uuid.v1();
             var file = {
@@ -277,10 +247,11 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
         throw e;
     }
 });
-</code></pre><p>Shorter, very straight-forward code and absolutely no nesting of callback
+</code></pre>
+<p>Shorter, very straight-forward code and absolutely no nesting of callback
 functions. Awesome.</p>
 <p>Yet subjective adjectives are not very convincing. I want to have a measure of
-complexity, a number that tells me what I&#39;m actually saving.</p>
+complexity, a number that tells me what I'm actually saving.</p>
 <p>I also want to know what the performance characteristics are - how much time
 and memory would it take to execute a thousand of parallel invocations of this
 method? What about 2000 or 3000?</p>
@@ -291,39 +262,39 @@ streamlinejs and promises (without generators).</p>
 <p>So I wrote a lot of different versions of this method, and I will share my
 personal impressions before giving you the results of the analysis</p>
 <p><a name="the-examples"></a></p>
-<h3 id="the-examples">The examples</h3>
-<h4 id="-original-js-github-com-spion-async-compare-blob-blog-examples-original-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a></h4>
+<h3>The examples</h3>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a></h4>
 <p>The original solution, presented above. Vanilla callbacks. Slightly pyramidal.
 I consider it acceptable, if a bit mediocre.</p>
-<h4 id="-flattened-js-github-com-spion-async-compare-blob-blog-examples-flattened-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/flattened.js">flattened.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/flattened.js">flattened.js</a></h4>
 <p>Flattened variant of the original via named functions. Taking the advice from
 <a href="http://callbackhell.com/">callback hell</a>, I flattened the pyramid a little
 bit. As I did that, I found that while the pyramid shrunk, the code actually
 grew.</p>
-<h4 id="-catcher-js-github-com-spion-async-compare-blob-blog-examples-catcher-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/catcher.js">catcher.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/catcher.js">catcher.js</a></h4>
 <p>I noticed that the first two vanilla solutions had a lot of common error
 handling code everywhere. So I wrote a tiny library called catcher.js which
-works very much like node&#39;s <code>domain.intercept</code>. This reduced the complexity
+works very much like node's <code>domain.intercept</code>. This reduced the complexity
 and the number of lines further, but the pyramidal looks remained.</p>
-<h4 id="-async-js-github-com-spion-async-compare-blob-blog-examples-async-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/async.js">async.js</a></h4>
-<p>Uses the waterfall function from <a href="//github.com/caolan/async">caolan&#39;s async</a>.
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/async.js">async.js</a></h4>
+<p>Uses the waterfall function from <a href="//github.com/caolan/async">caolan's async</a>.
 Very similar to flattened.js but without the need to handle errors at every
 step.</p>
-<h4 id="-flattened-class-js-github-com-spion-async-compare-blob-blog-examples-flattened-class-js-flattened-noclosure-js-github-com-spion-async-compare-blob-blog-examples-flattened-noclosure-js-flattened-class-ctx-js-github-com-spion-async-compare-blob-blog-examples-flattened-class-ctx-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js">flattened-noclosure.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js">flattened-class-ctx.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js">flattened-noclosure.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js">flattened-class-ctx.js</a></h4>
 <p>See <a href="/posts/closures-are-unavoidable-in-node.html">this post</a> for details</p>
 <p><a name="promises-failure"></a></p>
-<h4 id="-promises-js-github-com-spion-async-compare-blob-blog-examples-extra-promises-js-"><a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">promises.js</a></h4>
-<p>I&#39;ll be honest. I&#39;ve never written promise code in node before. Driven by
-<a href="//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post">Gozalla&#39;s excellent post</a>
-I concluded that everything should be a promise, and things that can&#39;t handle
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">promises.js</a></h4>
+<p>I'll be honest. I've never written promise code in node before. Driven by
+<a href="//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post">Gozalla's excellent post</a>
+I concluded that everything should be a promise, and things that can't handle
 promises should also be rewritten.</p>
 <p>Take for example this particular line in the original:</p>
-<pre><code class="lang-js">var previousId = file ? file.version : null;
+<pre><code class="language-js"><span class="hljs-keyword">var</span> previousId = file ? file.version : <span class="hljs-literal">null</span>;
 </code></pre>
-<p>If file is a promise, we can&#39;t use the ternary operator or the property
+<p>If file is a promise, we can't use the ternary operator or the property
 getter. Instead we need to write two helpers: a ternary operator helper and a
 property getter helper:</p>
-<pre><code class="lang-js">var previousIdP = p.ternary(fileP, p.get(fileP, &#39;version&#39;), null);
+<pre><code class="language-js"><span class="hljs-keyword">var</span> previousIdP = p.ternary(fileP, p.get(fileP, <span class="hljs-string">'version'</span>), <span class="hljs-literal">null</span>);
 </code></pre>
 <p>Unfortunately this gets out of hand quickly:</p>
 <pre><code>var versionP = p.allObject({
@@ -340,59 +311,64 @@ versionP = p.set(versionP, p.allObject({
 // a promise and therefore we cannot call execWithinP. We have to wait for the
 // promise  to resolve to invoke the function.
 var versionInsert = p.eventuallyCall(
-    Version.insert(versionP), &#39;execWithinP&#39;, tx);
-var versionIdP = p.get(versionP, &#39;id&#39;);
-</code></pre><p>So I decided to write a less aggressive version, <code>promiseish.js</code></p>
+    Version.insert(versionP), 'execWithinP', tx);
+var versionIdP = p.get(versionP, 'id');
+</code></pre>
+<p>So I decided to write a less aggressive version, <code>promiseish.js</code></p>
 <p>note: I used <a href="//github.com/cujojs/when">when</a> because i liked its function
-lifting API better than Q&#39;s</p>
-<h4 id="-promiseish-js-github-com-spion-async-compare-blob-blog-examples-promiseish-js-and-promiseishq-js-github-com-spion-async-compare-blob-blog-examples-promiseishq-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/promiseish.js">promiseish.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js">promiseishQ.js</a></h4>
+lifting API better than Q's</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/promiseish.js">promiseish.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js">promiseishQ.js</a></h4>
 <p>Nothing fancy here, just some <code>.then()</code> chaining. In fact it feels less complex
 than the <code>promise.js</code> version, where I felt like I was trying to fight the
 language all the time.</p>
 <p>The second file <code>promiseishQ.js</code> uses <a href="//github.com/kriskowal/q">Q</a> instead of
 <a href="//github.com/cujojs/when">when</a>. No big difference there.</p>
-<h4 id="-fibrous-js-github-com-spion-async-compare-blob-blog-examples-fibrous-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/fibrous.js">fibrous.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/fibrous.js">fibrous.js</a></h4>
 <p><a href="//github.com/goodeggs/fibrous">Fibrous</a> is a fibers library that creates
 &quot;sync&quot; methods out of your async ones, which you can then run in a fiber.</p>
 <p>So if for example you had:</p>
 <pre><code>fs.readFile(file, function(err, data){ ... });
-</code></pre><p>Fibrous would generate a version that returns a future, suspends the running
+</code></pre>
+<p>Fibrous would generate a version that returns a future, suspends the running
 fiber and resumes execution when the value becomes available.</p>
 <pre><code>var data = fs.sync.readFile(file);
-</code></pre><p>I also needed to wrap the entire upload function:</p>
+</code></pre>
+<p>I also needed to wrap the entire upload function:</p>
 <pre><code>fibrous(function upload() { ... })
-</code></pre><p>This felt very similar to the generators version above but with <code>sync</code> instead
+</code></pre>
+<p>This felt very similar to the generators version above but with <code>sync</code> instead
 of <code>yield</code> to indicate the methods that will yield. The one benefit I can think
 of is that it feels more natural for chaining - less parenthesis are needed.</p>
-<pre><code>somefn.sync(arg).split(&#39;/&#39;)
+<pre><code>somefn.sync(arg).split('/')
 // vs
-(yield somefn(arg, resume)).split(&#39;/&#39;)
-</code></pre><p>Major drawback: this will never be available outside of node.js or without
+(yield somefn(arg, resume)).split('/')
+</code></pre>
+<p>Major drawback: this will never be available outside of node.js or without
 native modules.</p>
 <p>Library: <a href="//github.com/goodeggs/fibrous">fibrous</a></p>
-<h4 id="-suspend-js-github-com-spion-async-compare-blob-blog-examples-suspend-js-and-genny-js-github-com-spion-async-compare-blob-blog-examples-extra-promises-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/suspend.js">suspend.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">genny.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/suspend.js">suspend.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">genny.js</a></h4>
 <p><a href="https://github.com/jmar777/suspend">suspend</a> and
 <a href="http://github.com/spion/genny">genny</a> are generator-based solutions that can
 work directly with node-style functions.</p>
-<p>I&#39;m biased here since I wrote genny. I still think that this is objectively the
+<p>I'm biased here since I wrote genny. I still think that this is objectively the
 best way to use generators in node. Just replace the callback with a placeholder
 generator-resuming function, then yield that. Comes back to you with the value.</p>
-<p>Kudos to <a href="//github.com/jmar777">jmar777</a> for realizing that you don&#39;t need
+<p>Kudos to <a href="//github.com/jmar777">jmar777</a> for realizing that you don't need
 to actually yield anything and can resume the generator using the placeholder
 callback instead.</p>
 <p>Both suspend and genny use generators roughly the same way. The resulting code
 is very clean, very straightforward and completely devoid of callbacks.</p>
-<h4 id="-qasync-js-github-com-spion-async-compare-blob-blog-examples-qasync-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/qasync.js">qasync.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/qasync.js">qasync.js</a></h4>
 <p>Q provides two methods that allow you to use generators: <code>Q.spawn</code> and
 <code>Q.async</code>. In both cases the generator yields promises and in turn receives
 resolved values.</p>
-<p>The code didn&#39;t feel very different from genny and suspend. Its slightly less
+<p>The code didn't feel very different from genny and suspend. Its slightly less
 complicated: you can yield the promise instead of placing the provided resume
 function at every point where a callback is needed.</p>
 <p>Caveat: as always with promises you will need to wrap all callback-based
 functions.</p>
 <p>Library: <a href="//github.com/kriskowal/q">Q</a></p>
-<h4 id="-co-js-github-com-spion-async-compare-blob-blog-examples-co-js-and-gens-js-github-com-spion-async-compare-blob-blog-examples-gens-js-"><a href="//github.com/spion/async-compare/blob/blog/examples/co.js">co.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/gens.js">gens.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/co.js">co.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/gens.js">gens.js</a></h4>
 <p><a href="//github.com/Raynos/gens">Gens</a> and <a href="//github.com/visionmedia/co">co</a> are
 generator-based libraries. Both can work by yielding thunk-style functions:
 that is, functions that take a single argument which is a node style callback
@@ -401,22 +377,22 @@ in the format <code>function (err, result)</code></p>
 <p>The problem is, thunks still require wrapping. The recommended way to wrap node
 style functions is to use <code>co.wrap</code> for co and <code>fn.bind</code> for gens - so thats
 what I did.</p>
-<h4 id="-streamline-js-github-com-spion-async-compare-blob-blog-examples-src-streamline-_js-"><a href="//github.com/spion/async-compare/blob/blog/examples/src-streamline._js">streamline.js</a></h4>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/src-streamline._js">streamline.js</a></h4>
 <p>Uses <a href="http://github.com/Sage/streamlinejs">streamlinejs</a> CPS transformer and
 works very much like co and qasync, except without needing to write yield
 all the time.</p>
 <p>Caveat: you will need to compile the file in order to use it. Also, even
-though it looks like valid JavaScript, it isn&#39;t JavaScript. Superficially, it
+though it looks like valid JavaScript, it isn't JavaScript. Superficially, it
 has the same syntax, but it has very different semantics, particularly when
 it comes to the <code>_</code> keyword, which acts like <code>yield</code> and <code>resume</code> combined in
 one.</p>
 <p>The code however is really simple and straightforward: infact it has the lowest
 complexity.</p>
 <p><a name="complexity"></a></p>
-<h3 id="complexity">Complexity</h3>
+<h3>Complexity</h3>
 <p>To measure complexity I took the number of tokens in the source code found by
-Esprima&#39;s lexer (comments excluded). The idea is taken from
-<a href="http://www.paulgraham.com/power.html">Paul Graham&#39;s essay <em>Succinctness is Power</em></a></p>
+Esprima's lexer (comments excluded). The idea is taken from
+<a href="http://www.paulgraham.com/power.html">Paul Graham's essay <em>Succinctness is Power</em></a></p>
 <p>I decided to allow all callback wrapping to happen in a separate file: In a
 large system, the wrapped layer will probably be a small part of the code.</p>
 <p>Results:</p>
@@ -528,227 +504,219 @@ comparable to the original version with callbacks, but there is some
 improvement as the error handling is consolidated to one place.</p>
 <p>It seems that flattening the callback pyramid increases the complexity a little
 bit. However, arguably the readability of the flattened version is improved.</p>
-<p>Using caolan&#39;s async in this particular case doesn&#39;t seem to yield much
+<p>Using caolan's async in this particular case doesn't seem to yield much
 improvement. Its complexity however is lower than the flattened version because
 it consolidates error handling.</p>
 <p>Going promises-all-the-way as Gozala suggests also increases the complexity
-because we&#39;re fighting the language all the time.</p>
+because we're fighting the language all the time.</p>
 <p>The rx.js sample is still a work in progress - it can be made much better.</p>
 <p><a name="performance-time-and-memory"></a></p>
-<h3 id="performance-time-and-memory-">Performance (time and memory)</h3>
+<h3>Performance (time and memory)</h3>
 <p>All external methods are mocked using <code>setTimeout</code> to simulate waiting for I/O.</p>
 <p>There are two variables that control the test:</p>
 <ul>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base"><span class="mord mathit">n</span></span></span></span> - the number of parallel &quot;upload requests&quot;</li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.61508em;"></span><span class="strut bottom" style="height:0.61508em;vertical-align:0em;"></span><span class="base"><span class="mord mathit">t</span></span></span></span> - average wait time per async I/O operation</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> - the number of parallel &quot;upload requests&quot;</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span></span></span></span> - average wait time per async I/O operation</li>
 </ul>
 <p>For the first test, I set the time for every async operation to 1ms then
-ran every solution for <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>∈</mo><mo>{</mo><mn>1</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>5</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mn>0</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mn>5</mn><mn>0</mn><mn>0</mn><mo separator="true">,</mo><mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn><mo>}</mo></mrow><annotation encoding="application/x-tex">n \in \lbrace 100, 500, 1000, 1500, 2000 \rbrace </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base"><span class="mord mathit">n</span><span class="mrel">∈</span><span class="mopen">{</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">5</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">1</span><span class="mord mathrm">5</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">2</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mclose">}</span></span></span></span>.</p>
+ran every solution for $[n \in \lbrace 100, 500, 1000, 1500, 2000 \rbrace ]$.</p>
 <p>note: hover over the legend to highlight the item on the chart.</p>
-<p><div id="perf-time-1" class="plot">
-</div></p>
+<div id="perf-time-1" class="plot">
+</div>
 <script type="text/javascript">
-
-window.perfCPUBound =
+<p>window.perfCPUBound =
 [
 { label: 'async.js',
-    data:
-     [ [ 100, 17 ],
-       [ 500, 39 ],
-       [ 1000, 65 ],
-       [ 1500, 95 ],
-       [ 2000, 119 ] ] },
+data:
+[ [ 100, 17 ],
+[ 500, 39 ],
+[ 1000, 65 ],
+[ 1500, 95 ],
+[ 2000, 119 ] ] },
 { label: 'catcher.js',
-    data:
-     [ [ 100, 17 ],
-       [ 500, 29 ],
-       [ 1000, 44 ],
-       [ 1500, 58 ],
-       [ 2000, 72 ] ] },
-  { label: 'co.js',
-    data:
-     [ [ 100, 24 ],
-       [ 500, 62 ],
-       [ 1000, 96 ],
-       [ 1500, 157 ],
-       [ 2000, 233 ] ] },
-  { label: 'dst-co-traceur.js',
-    data:
-     [ [ 100, 28 ],
-       [ 500, 86 ],
-       [ 1000, 200 ],
-       [ 1500, 271 ],
-       [ 2000, 324 ] ] },
-  { label: 'dst-genny-traceur.js',
-    data:
-     [ [ 100, 25 ],
-       [ 500, 76 ],
-       [ 1000, 157 ],
-       [ 1500, 244 ],
-       [ 2000, 286 ] ] },
-  { label: 'dst-qasync-traceur.js',
-    data:
-     [ [ 100, 112 ],
-       [ 500, 510 ],
-       [ 1000, 1108 ],
-       [ 1500, 1713 ],
-       [ 2000, 2316 ] ] },
-  { label: 'dst-stratifiedjs-014.js',
-    data:
-     [ [ 100, 40 ],
-       [ 500, 131 ],
-       [ 1000, 224 ],
-       [ 1500, 280 ],
-       [ 2000, 433 ] ] },
-  { label: 'dst-streamline.js',
-    data:
-     [ [ 100, 19 ],
-       [ 500, 37 ],
-       [ 1000, 54 ],
-       [ 1500, 74 ],
-       [ 2000, 97 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data:
-     [ [ 100, 21 ],
-       [ 500, 56 ],
-       [ 1000, 117 ],
-       [ 1500, 217 ],
-       [ 2000, 263 ] ] },
-  { label: 'flattened-class.js',
-    data:
-     [ [ 100, 16 ],
-       [ 500, 29 ],
-       [ 1000, 40 ],
-       [ 1500, 47 ],
-       [ 2000, 58 ] ] },
-  { label: 'flattened.js',
-    data:
-     [ [ 100, 15 ],
-       [ 500, 31 ],
-       [ 1000, 44 ],
-       [ 1500, 55 ],
-       [ 2000, 64 ] ] },
-  { label: 'flattened-noclosure.js',
-    data:
-     [ [ 100, 16 ],
-       [ 500, 28 ],
-       [ 1000, 42 ],
-       [ 1500, 53 ],
-       [ 2000, 64 ] ] },
-  { label: 'genny.js',
-    data:
-     [ [ 100, 19 ],
-       [ 500, 48 ],
-       [ 1000, 79 ],
-       [ 1500, 147 ],
-       [ 2000, 150 ] ] },
-  { label: 'gens.js',
-    data:
-     [ [ 100, 19 ],
-       [ 500, 39 ],
-       [ 1000, 63 ],
-       [ 1500, 94 ],
-       [ 2000, 119 ] ] },
-  { label: 'original.js',
-    data:
-     [ [ 100, 15 ],
-       [ 500, 28 ],
-       [ 1000, 43 ],
-       [ 1500, 56 ],
-       [ 2000, 65 ] ] },
-  { label: 'promiseish.js',
-    data:
-     [ [ 100, 97 ],
-       [ 500, 463 ],
-       [ 1000, 809 ],
-       [ 1500, 1155 ],
-       [ 2000, 1652 ] ] },
-  { label: 'promiseishQ.js',
-    data:
-     [ [ 100, 93 ],
-       [ 500, 540 ],
-       [ 1000, 1145 ],
-       [ 1500, 1789 ],
-       [ 2000, 2287 ] ] },
-  { label: 'promises.js',
-    data:
-     [ [ 100, 222 ],
-       [ 500, 1241 ],
-       [ 1000, 2284 ],
-       [ 1500, 3836 ],
-       [ 2000, 5861 ] ] },
-  { label: 'qasync.js',
-    data:
-     [ [ 100, 79 ],
-       [ 500, 489 ],
-       [ 1000, 962 ],
-       [ 1500, 1587 ],
-       [ 2000, 2104 ] ] },
-  { label: 'rx.js',
-    data:
-     [ [ 100, 37 ],
-       [ 500, 147 ],
-       [ 1000, 232 ],
-       [ 1500, 329 ],
-       [ 2000, 490 ] ] },
-  { label: 'suspend.js',
-    data:
-     [ [ 100, 16 ],
-       [ 500, 28 ],
-       [ 1000, 50 ],
-       [ 1500, 66 ],
-       [ 2000, 83 ] ] } ]
-
-  .concat(
-
-[ { label: 'dst-streamline-fibers.js',
-    data:
-     [ [ 100, 25 ],
-       [ 500, 147 ],
-       [ 1000, 519 ],
-       [ 1500, 1256 ],
-       [ 2000, 2393 ] ] },
-  { label: 'fibrous.js',
-    data:
-     [ [ 100, 89 ],
-       [ 500, 442 ],
-       [ 1000, 1159 ],
-       [ 1500, 2228 ],
-       [ 2000, 3755 ] ] } ]
-
-    );
-
-window.addEventListener('load', function() {
-    $.plot('#perf-time-1', perfCPUBound, {legend: { position: 'nw' }});
+data:
+[ [ 100, 17 ],
+[ 500, 29 ],
+[ 1000, 44 ],
+[ 1500, 58 ],
+[ 2000, 72 ] ] },
+{ label: 'co.js',
+data:
+[ [ 100, 24 ],
+[ 500, 62 ],
+[ 1000, 96 ],
+[ 1500, 157 ],
+[ 2000, 233 ] ] },
+{ label: 'dst-co-traceur.js',
+data:
+[ [ 100, 28 ],
+[ 500, 86 ],
+[ 1000, 200 ],
+[ 1500, 271 ],
+[ 2000, 324 ] ] },
+{ label: 'dst-genny-traceur.js',
+data:
+[ [ 100, 25 ],
+[ 500, 76 ],
+[ 1000, 157 ],
+[ 1500, 244 ],
+[ 2000, 286 ] ] },
+{ label: 'dst-qasync-traceur.js',
+data:
+[ [ 100, 112 ],
+[ 500, 510 ],
+[ 1000, 1108 ],
+[ 1500, 1713 ],
+[ 2000, 2316 ] ] },
+{ label: 'dst-stratifiedjs-014.js',
+data:
+[ [ 100, 40 ],
+[ 500, 131 ],
+[ 1000, 224 ],
+[ 1500, 280 ],
+[ 2000, 433 ] ] },
+{ label: 'dst-streamline.js',
+data:
+[ [ 100, 19 ],
+[ 500, 37 ],
+[ 1000, 54 ],
+[ 1500, 74 ],
+[ 2000, 97 ] ] },
+{ label: 'dst-suspend-traceur.js',
+data:
+[ [ 100, 21 ],
+[ 500, 56 ],
+[ 1000, 117 ],
+[ 1500, 217 ],
+[ 2000, 263 ] ] },
+{ label: 'flattened-class.js',
+data:
+[ [ 100, 16 ],
+[ 500, 29 ],
+[ 1000, 40 ],
+[ 1500, 47 ],
+[ 2000, 58 ] ] },
+{ label: 'flattened.js',
+data:
+[ [ 100, 15 ],
+[ 500, 31 ],
+[ 1000, 44 ],
+[ 1500, 55 ],
+[ 2000, 64 ] ] },
+{ label: 'flattened-noclosure.js',
+data:
+[ [ 100, 16 ],
+[ 500, 28 ],
+[ 1000, 42 ],
+[ 1500, 53 ],
+[ 2000, 64 ] ] },
+{ label: 'genny.js',
+data:
+[ [ 100, 19 ],
+[ 500, 48 ],
+[ 1000, 79 ],
+[ 1500, 147 ],
+[ 2000, 150 ] ] },
+{ label: 'gens.js',
+data:
+[ [ 100, 19 ],
+[ 500, 39 ],
+[ 1000, 63 ],
+[ 1500, 94 ],
+[ 2000, 119 ] ] },
+{ label: 'original.js',
+data:
+[ [ 100, 15 ],
+[ 500, 28 ],
+[ 1000, 43 ],
+[ 1500, 56 ],
+[ 2000, 65 ] ] },
+{ label: 'promiseish.js',
+data:
+[ [ 100, 97 ],
+[ 500, 463 ],
+[ 1000, 809 ],
+[ 1500, 1155 ],
+[ 2000, 1652 ] ] },
+{ label: 'promiseishQ.js',
+data:
+[ [ 100, 93 ],
+[ 500, 540 ],
+[ 1000, 1145 ],
+[ 1500, 1789 ],
+[ 2000, 2287 ] ] },
+{ label: 'promises.js',
+data:
+[ [ 100, 222 ],
+[ 500, 1241 ],
+[ 1000, 2284 ],
+[ 1500, 3836 ],
+[ 2000, 5861 ] ] },
+{ label: 'qasync.js',
+data:
+[ [ 100, 79 ],
+[ 500, 489 ],
+[ 1000, 962 ],
+[ 1500, 1587 ],
+[ 2000, 2104 ] ] },
+{ label: 'rx.js',
+data:
+[ [ 100, 37 ],
+[ 500, 147 ],
+[ 1000, 232 ],
+[ 1500, 329 ],
+[ 2000, 490 ] ] },
+{ label: 'suspend.js',
+data:
+[ [ 100, 16 ],
+[ 500, 28 ],
+[ 1000, 50 ],
+[ 1500, 66 ],
+[ 2000, 83 ] ] } ]</p>
+<p>.concat(</p>
+<p>[ { label: 'dst-streamline-fibers.js',
+data:
+[ [ 100, 25 ],
+[ 500, 147 ],
+[ 1000, 519 ],
+[ 1500, 1256 ],
+[ 2000, 2393 ] ] },
+{ label: 'fibrous.js',
+data:
+[ [ 100, 89 ],
+[ 500, 442 ],
+[ 1000, 1159 ],
+[ 1500, 2228 ],
+[ 2000, 3755 ] ] } ]</p>
+<pre><code>);
+</code></pre>
+<p>window.addEventListener('load', function() {
+$.plot('#perf-time-1', perfCPUBound, {legend: { position: 'nw' }});
 });
-</script>
-
+</script></p>
 <p>Wow. Promises seem really, really slow. Fibers are also slow, with time
-complexity <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>n</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex"> O(n^2) </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathrm mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>. Everything else seems to be much faster.</p>
+complexity $[ O(n^2) ]$. Everything else seems to be much faster.</p>
 <p><strong>Update (Dec 20 2013)</strong>: Promises not slow anymore. PetkaAntonov wrote
 Bluebird, which is faster than almost everything else and very low on
 memory usage. For more info read <em><a href="/posts/why-i-am-switching-to-promises.html">Why I am switching to
 Promises</a></em></p>
 <p>Lets try removing all those promises and fibers to see whats down there.</p>
-<p><div id="perf-time-2" class="plot">
-</div></p>
+<div id="perf-time-2" class="plot">
+</div>
 <script type="text/javascript">
-
-
-window.addEventListener('load', function() {
-    $.plot('#perf-time-2', perfCPUBound.filter(function(item) {
-        return !/(promise|qasync|fibrous|fiber)/.test(item.label)
-    }), {legend: { position: 'nw' }})
+<p>window.addEventListener('load', function() {
+$.plot('#perf-time-2', perfCPUBound.filter(function(item) {
+return !/(promise|qasync|fibrous|fiber)/.test(item.label)
+}), {legend: { position: 'nw' }})
 });
-</script>
-
+</script></p>
 <p>Ah, much better.</p>
 <p>The original and flattened solutions are the fastest, as they use vanilla
 callbacks, with the fastest flattened solution being flattened-class.js.</p>
 <p>suspend is the fastest generator based solution. It incurred minimal
 overhead of about 60% running time. Its also roughly comparable with
 streamlinejs (when in raw callbacks mode).</p>
-<p>caolan&#39;s async adds some measurable overhead (its about 2 times slower than
+<p>caolan's async adds some measurable overhead (its about 2 times slower than
 the original versions). Its also somewhat slower than the fastest generator
 based solution.</p>
 <p>genny is about 3 times slower. This is because it adds some protection
@@ -770,193 +738,190 @@ As a result, performance is I/O bound - why measure things as if it were
 CPU-bound?</p>
 <p>So lets make the average time needed for an async operation depend on the
 number of parallel calls to <code>upload()</code>.</p>
-<p>On my machine redis can be queried about 40 000 times per second; node&#39;s
+<p>On my machine redis can be queried about 40 000 times per second; node's
 &quot;hello world&quot; http server can serve up to 10 000 requests per second;
-postgresql&#39;s pgbench can do 300 mixed or 15 000 select transactions per second.</p>
+postgresql's pgbench can do 300 mixed or 15 000 select transactions per second.</p>
 <p>Given all that, I decided to go with 10 000 requests per second - it looks like
 a reasonable (rounded) mean.</p>
 <p>Each I/O operation will take 10 ms on average when there are 100 running in
 parallel and 1000 ms when there are 10 000 running in parallel. Makes much more
 sense.</p>
-<p><div id="perf-time-3" class="plot">
-</div></p>
+<div id="perf-time-3" class="plot">
+</div>
 <script type="text/javascript">
 window.perfIOBound =
-
-[ { label: 'async.js',
-    data:
-     [ [ 100, 92 ],
-       [ 500, 388 ],
-       [ 1000, 791 ],
-       [ 1500, 1155 ],
-       [ 2000, 1518 ] ] },
+<p>[ { label: 'async.js',
+data:
+[ [ 100, 92 ],
+[ 500, 388 ],
+[ 1000, 791 ],
+[ 1500, 1155 ],
+[ 2000, 1518 ] ] },
 { label: 'catcher.js',
-    data:
-     [ [ 100, 78 ],
-       [ 500, 351 ],
-       [ 1000, 699 ],
-       [ 1500, 1081 ],
-       [ 2000, 1427 ] ] },
-  { label: 'co.js',
-    data:
-     [ [ 100, 98 ],
-       [ 500, 424 ],
-       [ 1000, 821 ],
-       [ 1500, 1222 ],
-       [ 2000, 1661 ] ] },
-  { label: 'dst-co-traceur.js',
-    data:
-     [ [ 100, 91 ],
-       [ 500, 467 ],
-       [ 1000, 922 ],
-       [ 1500, 1347 ],
-       [ 2000, 1744 ] ] },
-  { label: 'dst-genny-traceur.js',
-    data:
-     [ [ 100, 89 ],
-       [ 500, 398 ],
-       [ 1000, 778 ],
-       [ 1500, 1205 ],
-       [ 2000, 1533 ] ] },
-  { label: 'dst-qasync-traceur.js',
-    data:
-     [ [ 100, 113 ],
-       [ 500, 495 ],
-       [ 1000, 1125 ],
-       [ 1500, 1757 ],
-       [ 2000, 2301 ] ] },
-  { label: 'dst-stratifiedjs-014.js',
-    data:
-     [ [ 100, 117 ],
-       [ 500, 437 ],
-       [ 1000, 820 ],
-       [ 1500, 1216 ],
-       [ 2000, 1592 ] ] },
-  { label: 'dst-streamline.js',
-    data:
-     [ [ 100, 79 ],
-       [ 500, 350 ],
-       [ 1000, 699 ],
-       [ 1500, 1070 ],
-       [ 2000, 1444 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data:
-     [ [ 100, 82 ],
-       [ 500, 352 ],
-       [ 1000, 687 ],
-       [ 1500, 1038 ],
-       [ 2000, 1374 ] ] },
-  { label: 'flattened-class.js',
-    data:
-     [ [ 100, 79 ],
-       [ 500, 337 ],
-       [ 1000, 687 ],
-       [ 1500, 1049 ],
-       [ 2000, 1424 ] ] },
-  { label: 'flattened.js',
-    data:
-     [ [ 100, 76 ],
-       [ 500, 346 ],
-       [ 1000, 699 ],
-       [ 1500, 1059 ],
-       [ 2000, 1440 ] ] },
-  { label: 'flattened-noclosure.js',
-    data:
-     [ [ 100, 80 ],
-       [ 500, 340 ],
-       [ 1000, 697 ],
-       [ 1500, 1060 ],
-       [ 2000, 1425 ] ] },
-  { label: 'genny.js',
-    data:
-     [ [ 100, 77 ],
-       [ 500, 357 ],
-       [ 1000, 723 ],
-       [ 1500, 1130 ],
-       [ 2000, 1521 ] ] },
-  { label: 'gens.js',
-    data:
-     [ [ 100, 84 ],
-       [ 500, 353 ],
-       [ 1000, 719 ],
-       [ 1500, 1100 ],
-       [ 2000, 1471 ] ] },
-  { label: 'original.js',
-    data:
-     [ [ 100, 74 ],
-       [ 500, 341 ],
-       [ 1000, 695 ],
-       [ 1500, 1060 ],
-       [ 2000, 1431 ] ] },
-  { label: 'promiseish.js',
-    data:
-     [ [ 100, 90 ],
-       [ 500, 504 ],
-       [ 1000, 908 ],
-       [ 1500, 1234 ],
-       [ 2000, 1730 ] ] },
-  { label: 'promiseishQ.js',
-    data:
-     [ [ 100, 94 ],
-       [ 500, 565 ],
-       [ 1000, 1166 ],
-       [ 1500, 1778 ],
-       [ 2000, 2519 ] ] },
-  { label: 'promises.js',
-    data:
-     [ [ 100, 229 ],
-       [ 500, 1233 ],
-       [ 1000, 2284 ],
-       [ 1500, 3860 ],
-       [ 2000, 5919 ] ] },
-  { label: 'qasync.js',
-    data:
-     [ [ 100, 88 ],
-       [ 500, 487 ],
-       [ 1000, 950 ],
-       [ 1500, 1604 ],
-       [ 2000, 2155 ] ] },
-  { label: 'rx.js',
-    data:
-     [ [ 100, 102 ],
-       [ 500, 419 ],
-       [ 1000, 760 ],
-       [ 1500, 1117 ],
-       [ 2000, 1526 ] ] },
-  { label: 'suspend.js',
-    data:
-     [ [ 100, 75 ],
-       [ 500, 343 ],
-       [ 1000, 677 ],
-       [ 1500, 1032 ],
-       [ 2000, 1422 ] ] } ]
-
-.concat(
+data:
+[ [ 100, 78 ],
+[ 500, 351 ],
+[ 1000, 699 ],
+[ 1500, 1081 ],
+[ 2000, 1427 ] ] },
+{ label: 'co.js',
+data:
+[ [ 100, 98 ],
+[ 500, 424 ],
+[ 1000, 821 ],
+[ 1500, 1222 ],
+[ 2000, 1661 ] ] },
+{ label: 'dst-co-traceur.js',
+data:
+[ [ 100, 91 ],
+[ 500, 467 ],
+[ 1000, 922 ],
+[ 1500, 1347 ],
+[ 2000, 1744 ] ] },
+{ label: 'dst-genny-traceur.js',
+data:
+[ [ 100, 89 ],
+[ 500, 398 ],
+[ 1000, 778 ],
+[ 1500, 1205 ],
+[ 2000, 1533 ] ] },
+{ label: 'dst-qasync-traceur.js',
+data:
+[ [ 100, 113 ],
+[ 500, 495 ],
+[ 1000, 1125 ],
+[ 1500, 1757 ],
+[ 2000, 2301 ] ] },
+{ label: 'dst-stratifiedjs-014.js',
+data:
+[ [ 100, 117 ],
+[ 500, 437 ],
+[ 1000, 820 ],
+[ 1500, 1216 ],
+[ 2000, 1592 ] ] },
+{ label: 'dst-streamline.js',
+data:
+[ [ 100, 79 ],
+[ 500, 350 ],
+[ 1000, 699 ],
+[ 1500, 1070 ],
+[ 2000, 1444 ] ] },
+{ label: 'dst-suspend-traceur.js',
+data:
+[ [ 100, 82 ],
+[ 500, 352 ],
+[ 1000, 687 ],
+[ 1500, 1038 ],
+[ 2000, 1374 ] ] },
+{ label: 'flattened-class.js',
+data:
+[ [ 100, 79 ],
+[ 500, 337 ],
+[ 1000, 687 ],
+[ 1500, 1049 ],
+[ 2000, 1424 ] ] },
+{ label: 'flattened.js',
+data:
+[ [ 100, 76 ],
+[ 500, 346 ],
+[ 1000, 699 ],
+[ 1500, 1059 ],
+[ 2000, 1440 ] ] },
+{ label: 'flattened-noclosure.js',
+data:
+[ [ 100, 80 ],
+[ 500, 340 ],
+[ 1000, 697 ],
+[ 1500, 1060 ],
+[ 2000, 1425 ] ] },
+{ label: 'genny.js',
+data:
+[ [ 100, 77 ],
+[ 500, 357 ],
+[ 1000, 723 ],
+[ 1500, 1130 ],
+[ 2000, 1521 ] ] },
+{ label: 'gens.js',
+data:
+[ [ 100, 84 ],
+[ 500, 353 ],
+[ 1000, 719 ],
+[ 1500, 1100 ],
+[ 2000, 1471 ] ] },
+{ label: 'original.js',
+data:
+[ [ 100, 74 ],
+[ 500, 341 ],
+[ 1000, 695 ],
+[ 1500, 1060 ],
+[ 2000, 1431 ] ] },
+{ label: 'promiseish.js',
+data:
+[ [ 100, 90 ],
+[ 500, 504 ],
+[ 1000, 908 ],
+[ 1500, 1234 ],
+[ 2000, 1730 ] ] },
+{ label: 'promiseishQ.js',
+data:
+[ [ 100, 94 ],
+[ 500, 565 ],
+[ 1000, 1166 ],
+[ 1500, 1778 ],
+[ 2000, 2519 ] ] },
+{ label: 'promises.js',
+data:
+[ [ 100, 229 ],
+[ 500, 1233 ],
+[ 1000, 2284 ],
+[ 1500, 3860 ],
+[ 2000, 5919 ] ] },
+{ label: 'qasync.js',
+data:
+[ [ 100, 88 ],
+[ 500, 487 ],
+[ 1000, 950 ],
+[ 1500, 1604 ],
+[ 2000, 2155 ] ] },
+{ label: 'rx.js',
+data:
+[ [ 100, 102 ],
+[ 500, 419 ],
+[ 1000, 760 ],
+[ 1500, 1117 ],
+[ 2000, 1526 ] ] },
+{ label: 'suspend.js',
+data:
+[ [ 100, 75 ],
+[ 500, 343 ],
+[ 1000, 677 ],
+[ 1500, 1032 ],
+[ 2000, 1422 ] ] } ]</p>
+<p>.concat(
 [ { label: 'dst-streamline-fibers.js',
-    data:
-     [ [ 100, 94 ],
-       [ 500, 446 ],
-       [ 1000, 925 ],
-       [ 1500, 1353 ],
-       [ 2000, 2348 ] ] },
-  { label: 'fibrous.js',
-    data:
-     [ [ 100, 149 ],
-       [ 500, 534 ],
-       [ 1000, 1206 ],
-       [ 1500, 2280 ],
-       [ 2000, 4136 ] ] } ]
-
-       );
-window.addEventListener('load', function() {
-    $.plot('#perf-time-3', perfIOBound, {legend: { position: 'nw' }})
+data:
+[ [ 100, 94 ],
+[ 500, 446 ],
+[ 1000, 925 ],
+[ 1500, 1353 ],
+[ 2000, 2348 ] ] },
+{ label: 'fibrous.js',
+data:
+[ [ 100, 149 ],
+[ 500, 534 ],
+[ 1000, 1206 ],
+[ 1500, 2280 ],
+[ 2000, 4136 ] ] } ]</p>
+<pre><code>   );
+</code></pre>
+<p>window.addEventListener('load', function() {
+$.plot('#perf-time-3', perfIOBound, {legend: { position: 'nw' }})
 });
-</script>
-
+</script></p>
 <p><code>promises.js</code> and <code>fibrous.js</code> are still significantly slower. However all of
 the other solutions are quite comparable now. Lets remove the worst two:</p>
-<p><div id="perf-time-4" class="plot">
-</div></p>
+<div id="perf-time-4" class="plot">
+</div>
 <script type="text/javascript">
 window.addEventListener('load', function() {
     $.plot('#perf-time-4', perfIOBound.filter(function(item) {
@@ -964,198 +929,192 @@ window.addEventListener('load', function() {
     }), {legend: { position: 'nw' }});
 });
 </script>
-
-<p>Everything is about the same now. Great! So in practice, you won&#39;t notice
-the CPU overhead in I/O bound cases - even if you&#39;re using promises. And with
+<p>Everything is about the same now. Great! So in practice, you won't notice
+the CPU overhead in I/O bound cases - even if you're using promises. And with
 some of the generator libraries, the overhead becomes practically invisible.</p>
 <p>Excellent. But what about memory usage? Lets chart that too!</p>
 <p>Note: the y axis represents peak memory usage (in MB).</p>
-<p><div id="perf-mem-1" class="plot">
-</div></p>
+<div id="perf-mem-1" class="plot">
+</div>
 <script type="text/javascript">
-
-window.perfMEM =
-
-[ { label: 'async.js',
-    data:
-     [ [ 100, 0.75 ],
-       [ 500, 3.9140625 ],
-       [ 1000, 7.359375 ],
-       [ 1500, 10.93359375 ],
-       [ 2000, 12.71875 ] ] },
+<p>window.perfMEM =</p>
+<p>[ { label: 'async.js',
+data:
+[ [ 100, 0.75 ],
+[ 500, 3.9140625 ],
+[ 1000, 7.359375 ],
+[ 1500, 10.93359375 ],
+[ 2000, 12.71875 ] ] },
 { label: 'catcher.js',
-    data:
-     [ [ 100, 0.91015625 ],
-       [ 500, 3.34765625 ],
-       [ 1000, 6.46484375 ],
-       [ 1500, 9.1953125 ],
-       [ 2000, 11.01171875 ] ] },
-  { label: 'co.js',
-    data:
-     [ [ 100, 1.703125 ],
-       [ 500, 6.5390625 ],
-       [ 1000, 11.16796875 ],
-       [ 1500, 17.43359375 ],
-       [ 2000, 24.515625 ] ] },
-  { label: 'dst-co-traceur.js',
-    data:
-     [ [ 100, 0.09765625 ],
-       [ 500, 1.09765625 ],
-       [ 1000, 11.08984375 ],
-       [ 1500, 17.68359375 ],
-       [ 2000, 22.8203125 ] ] },
-  { label: 'dst-genny-traceur.js',
-    data:
-     [ [ 100, -0.43359375 ],
-       [ 500, 1.7265625 ],
-       [ 1000, 9.1484375 ],
-       [ 1500, 16.30859375 ],
-       [ 2000, 15.6796875 ] ] },
-  { label: 'dst-qasync-traceur.js',
-    data:
-     [ [ 100, 10.33203125 ],
-       [ 500, 59.55859375 ],
-       [ 1000, 101.76953125 ],
-       [ 1500, 135.78125 ],
-       [ 2000, 190.25 ] ] },
-  { label: 'dst-stratifiedjs-014.js',
-    data:
-     [ [ 100, 2.21875 ],
-       [ 500, 11.32421875 ],
-       [ 1000, 23.32421875 ],
-       [ 1500, 38.71875 ],
-       [ 2000, 48.015625 ] ] },
-  { label: 'dst-streamline.js',
-    data:
-     [ [ 100, 1.5078125 ],
-       [ 500, 3.76953125 ],
-       [ 1000, 8.3359375 ],
-       [ 1500, 10.25 ],
-       [ 2000, 15.890625 ] ] },
-  { label: 'dst-suspend-traceur.js',
-    data:
-     [ [ 100, -0.30078125 ],
-       [ 500, 2.234375 ],
-       [ 1000, 6.5390625 ],
-       [ 1500, 11.125 ],
-       [ 2000, 15.484375 ] ] },
-  { label: 'flattened-class.js',
-    data:
-     [ [ 100, 0.53125 ],
-       [ 500, 3.1171875 ],
-       [ 1000, 4.484375 ],
-       [ 1500, 7.96484375 ],
-       [ 2000, 8.58984375 ] ] },
-  { label: 'flattened.js',
-    data:
-     [ [ 100, 0.515625 ],
-       [ 500, 3.25390625 ],
-       [ 1000, 5.3203125 ],
-       [ 1500, 8.78515625 ],
-       [ 2000, 9.765625 ] ] },
-  { label: 'flattened-noclosure.js',
-    data:
-     [ [ 100, 0.51953125 ],
-       [ 500, 3.03515625 ],
-       [ 1000, 4.8984375 ],
-       [ 1500, 8.08203125 ],
-       [ 2000, 8.87890625 ] ] },
-  { label: 'genny.js',
-    data:
-     [ [ 100, 1.11328125 ],
-       [ 500, 5.48046875 ],
-       [ 1000, 11.6953125 ],
-       [ 1500, 16.7890625 ],
-       [ 2000, 21.2734375 ] ] },
-  { label: 'gens.js',
-    data:
-     [ [ 100, 0.65625 ],
-       [ 500, 3.91015625 ],
-       [ 1000, 8.40234375 ],
-       [ 1500, 11.921875 ],
-       [ 2000, 15.95703125 ] ] },
-  { label: 'original.js',
-    data:
-     [ [ 100, 0.63671875 ],
-       [ 500, 3.1640625 ],
-       [ 1000, 5.328125 ],
-       [ 1500, 8.69921875 ],
-       [ 2000, 9.54296875 ] ] },
-  { label: 'promiseish.js',
-    data:
-     [ [ 100, 17.9140625 ],
-       [ 500, 89.01171875 ],
-       [ 1000, 117.94921875 ],
-       [ 1500, 129.1640625 ],
-       [ 2000, 231.34765625 ] ] },
-  { label: 'promiseishQ.js',
-    data:
-     [ [ 100, 16.2421875 ],
-       [ 500, 77.6953125 ],
-       [ 1000, 98.296875 ],
-       [ 1500, 135.9609375 ],
-       [ 2000, 142.94140625 ] ] },
-  { label: 'promises.js',
-    data:
-     [ [ 100, 42.97265625 ],
-       [ 500, 121.71484375 ],
-       [ 1000, 240.53515625 ],
-       [ 1500, 359.94921875 ],
-       [ 2000, 481.65625 ] ] },
-  { label: 'qasync.js',
-    data:
-     [ [ 100, 11.796875 ],
-       [ 500, 57.00390625 ],
-       [ 1000, 97.4765625 ],
-       [ 1500, 149.5078125 ],
-       [ 2000, 163.91796875 ] ] },
-  { label: 'rx.js',
-    data:
-     [ [ 100, 3.9375 ],
-       [ 500, 21.34375 ],
-       [ 1000, 40.43359375 ],
-       [ 1500, 62.11328125 ],
-       [ 2000, 62.05859375 ] ] },
-  { label: 'suspend.js',
-    data:
-     [ [ 100, 0.71875 ],
-       [ 500, 4.09375 ],
-       [ 1000, 8.60546875 ],
-       [ 1500, 10.1171875 ],
-       [ 2000, 14.28125 ] ] } ]
-
-  .concat(
-  [ { label: 'dst-streamline-fibers.js',
-    data:
-     [ [ 100, 1.80078125 ],
-       [ 500, 8.53125 ],
-       [ 1000, 17.05859375 ],
-       [ 1500, 27.98828125 ],
-       [ 2000, 33.98671875 ] ] },
-  { label: 'fibrous.js',
-    data:
-     [ [ 100, 7.05078125 ],
-       [ 500, 28.5859375 ],
-       [ 1000, 56.75390625 ],
-       [ 1500, 84.2734375 ],
-       [ 2000, 63.140625 ] ] } ]
-
-       );
-
-window.addEventListener('load', function() {
-    $.plot('#perf-mem-1', perfMEM, {legend: { position: 'nw' },
+data:
+[ [ 100, 0.91015625 ],
+[ 500, 3.34765625 ],
+[ 1000, 6.46484375 ],
+[ 1500, 9.1953125 ],
+[ 2000, 11.01171875 ] ] },
+{ label: 'co.js',
+data:
+[ [ 100, 1.703125 ],
+[ 500, 6.5390625 ],
+[ 1000, 11.16796875 ],
+[ 1500, 17.43359375 ],
+[ 2000, 24.515625 ] ] },
+{ label: 'dst-co-traceur.js',
+data:
+[ [ 100, 0.09765625 ],
+[ 500, 1.09765625 ],
+[ 1000, 11.08984375 ],
+[ 1500, 17.68359375 ],
+[ 2000, 22.8203125 ] ] },
+{ label: 'dst-genny-traceur.js',
+data:
+[ [ 100, -0.43359375 ],
+[ 500, 1.7265625 ],
+[ 1000, 9.1484375 ],
+[ 1500, 16.30859375 ],
+[ 2000, 15.6796875 ] ] },
+{ label: 'dst-qasync-traceur.js',
+data:
+[ [ 100, 10.33203125 ],
+[ 500, 59.55859375 ],
+[ 1000, 101.76953125 ],
+[ 1500, 135.78125 ],
+[ 2000, 190.25 ] ] },
+{ label: 'dst-stratifiedjs-014.js',
+data:
+[ [ 100, 2.21875 ],
+[ 500, 11.32421875 ],
+[ 1000, 23.32421875 ],
+[ 1500, 38.71875 ],
+[ 2000, 48.015625 ] ] },
+{ label: 'dst-streamline.js',
+data:
+[ [ 100, 1.5078125 ],
+[ 500, 3.76953125 ],
+[ 1000, 8.3359375 ],
+[ 1500, 10.25 ],
+[ 2000, 15.890625 ] ] },
+{ label: 'dst-suspend-traceur.js',
+data:
+[ [ 100, -0.30078125 ],
+[ 500, 2.234375 ],
+[ 1000, 6.5390625 ],
+[ 1500, 11.125 ],
+[ 2000, 15.484375 ] ] },
+{ label: 'flattened-class.js',
+data:
+[ [ 100, 0.53125 ],
+[ 500, 3.1171875 ],
+[ 1000, 4.484375 ],
+[ 1500, 7.96484375 ],
+[ 2000, 8.58984375 ] ] },
+{ label: 'flattened.js',
+data:
+[ [ 100, 0.515625 ],
+[ 500, 3.25390625 ],
+[ 1000, 5.3203125 ],
+[ 1500, 8.78515625 ],
+[ 2000, 9.765625 ] ] },
+{ label: 'flattened-noclosure.js',
+data:
+[ [ 100, 0.51953125 ],
+[ 500, 3.03515625 ],
+[ 1000, 4.8984375 ],
+[ 1500, 8.08203125 ],
+[ 2000, 8.87890625 ] ] },
+{ label: 'genny.js',
+data:
+[ [ 100, 1.11328125 ],
+[ 500, 5.48046875 ],
+[ 1000, 11.6953125 ],
+[ 1500, 16.7890625 ],
+[ 2000, 21.2734375 ] ] },
+{ label: 'gens.js',
+data:
+[ [ 100, 0.65625 ],
+[ 500, 3.91015625 ],
+[ 1000, 8.40234375 ],
+[ 1500, 11.921875 ],
+[ 2000, 15.95703125 ] ] },
+{ label: 'original.js',
+data:
+[ [ 100, 0.63671875 ],
+[ 500, 3.1640625 ],
+[ 1000, 5.328125 ],
+[ 1500, 8.69921875 ],
+[ 2000, 9.54296875 ] ] },
+{ label: 'promiseish.js',
+data:
+[ [ 100, 17.9140625 ],
+[ 500, 89.01171875 ],
+[ 1000, 117.94921875 ],
+[ 1500, 129.1640625 ],
+[ 2000, 231.34765625 ] ] },
+{ label: 'promiseishQ.js',
+data:
+[ [ 100, 16.2421875 ],
+[ 500, 77.6953125 ],
+[ 1000, 98.296875 ],
+[ 1500, 135.9609375 ],
+[ 2000, 142.94140625 ] ] },
+{ label: 'promises.js',
+data:
+[ [ 100, 42.97265625 ],
+[ 500, 121.71484375 ],
+[ 1000, 240.53515625 ],
+[ 1500, 359.94921875 ],
+[ 2000, 481.65625 ] ] },
+{ label: 'qasync.js',
+data:
+[ [ 100, 11.796875 ],
+[ 500, 57.00390625 ],
+[ 1000, 97.4765625 ],
+[ 1500, 149.5078125 ],
+[ 2000, 163.91796875 ] ] },
+{ label: 'rx.js',
+data:
+[ [ 100, 3.9375 ],
+[ 500, 21.34375 ],
+[ 1000, 40.43359375 ],
+[ 1500, 62.11328125 ],
+[ 2000, 62.05859375 ] ] },
+{ label: 'suspend.js',
+data:
+[ [ 100, 0.71875 ],
+[ 500, 4.09375 ],
+[ 1000, 8.60546875 ],
+[ 1500, 10.1171875 ],
+[ 2000, 14.28125 ] ] } ]</p>
+<p>.concat(
+[ { label: 'dst-streamline-fibers.js',
+data:
+[ [ 100, 1.80078125 ],
+[ 500, 8.53125 ],
+[ 1000, 17.05859375 ],
+[ 1500, 27.98828125 ],
+[ 2000, 33.98671875 ] ] },
+{ label: 'fibrous.js',
+data:
+[ [ 100, 7.05078125 ],
+[ 500, 28.5859375 ],
+[ 1000, 56.75390625 ],
+[ 1500, 84.2734375 ],
+[ 2000, 63.140625 ] ] } ]</p>
+<pre><code>   );
+</code></pre>
+<p>window.addEventListener('load', function() {
+$.plot('#perf-mem-1', perfMEM, {legend: { position: 'nw' },
 yaxis: {min: 0}});
 });
-</script>
-
+</script></p>
 <p>Seems like promises also use a lot of memory, especially the extreme
 implementation <code>promises.js</code>. <code>promiseish.js</code> as well as <code>qasync.js</code> are not
 too far behind.</p>
 <p><code>fibrous.js</code>, <code>rx.js</code> and <code>stratifiedjs</code> are somewhat better than the above,
 however their memory usage is still over 5 times bigger than the original.</p>
 <p>Lets remove the hogs and see what remains underneath.</p>
-<p><div id="perf-mem-2" class="plot">
-</div></p>
+<div id="perf-mem-2" class="plot">
+</div>
 <script type="text/javascript">
 window.addEventListener('load', function() {
     $.plot('#perf-mem-2', perfMEM.filter(function(item) {
@@ -1164,8 +1123,7 @@ window.addEventListener('load', function() {
     }), {legend: { position: 'nw' }, yaxis: {min: 0}});
 });
 </script>
-
-<p>Streamline&#39;s fibers implementation uses 35MB while the rest use between
+<p>Streamline's fibers implementation uses 35MB while the rest use between
 10MB and 25MB.</p>
 <p>This is amazing. Generators (without promises) also have a low memory overhead,
 even when compiled with traceur.</p>
@@ -1303,72 +1261,81 @@ time for I/O operations (i.e. 100K IO / s)</p>
 </tbody>
 </table>
 <p><a name="debuggability"></a></p>
-<h3 id="debuggability">Debuggability</h3>
+<h3>Debuggability</h3>
 <p>Having good performance is important. However, all the performance is worth
-nothing if our code doesn&#39;t do what its supposed to. Debugging is therefore
+nothing if our code doesn't do what its supposed to. Debugging is therefore
 at least as important as performance.</p>
 <p>How can we measure debuggability? We can look at source maps support and
 the generated stack traces.</p>
 <p><a name="source-maps-support"></a></p>
-<h4 id="source-maps-support">Source maps support</h4>
+<h4>Source maps support</h4>
 <p>I split this category into 5 levels:</p>
 <ul>
-<li><p><strong>level 1</strong>: no source maps, but needs them (wacky stack trace line numbers)</p>
+<li>
+<p><strong>level 1</strong>: no source maps, but needs them (wacky stack trace line numbers)</p>
 </li>
-<li><p><strong>level 2</strong>: no source maps and needs them sometimes (to view the original
+<li>
+<p><strong>level 2</strong>: no source maps and needs them sometimes (to view the original
 code)</p>
 <p>Streamline used to be in this category but now it does have source maps
 support.</p>
 </li>
-<li><p><strong>level 3</strong>: has source maps and needs them always.</p>
+<li>
+<p><strong>level 3</strong>: has source maps and needs them always.</p>
 <p>Nothing is in this category.</p>
 </li>
-<li><p><strong>level 4</strong>: has source maps and needs them sometimes</p>
+<li>
+<p><strong>level 4</strong>: has source maps and needs them sometimes</p>
 <p>Generator libraries are in this category. When compiled with traceur (e.g.
 for the browser) source maps are required and needed. If ES6 is available,
 source maps are unnecessary.</p>
 <p>Streamline is also in this category for another reason. With streamline,
-you don&#39;t need source maps to get accurate stack traces. However, you will
+you don't need source maps to get accurate stack traces. However, you will
 need them if you want to read the original code (e.g. when debugging in
 the browser).</p>
 </li>
-<li><p><strong>level 5</strong>: doesn&#39;t need source maps</p>
-<p>Everything else is in this category. That&#39;s a bit unfair as fibers will never
+<li>
+<p><strong>level 5</strong>: doesn't need source maps</p>
+<p>Everything else is in this category. That's a bit unfair as fibers will never
 work in a browser.</p>
 </li>
 </ul>
 <p><a name="stack-trace-accuracy"></a></p>
-<h4 id="stack-trace-accuracy">Stack trace accuracy</h4>
+<h4>Stack trace accuracy</h4>
 <p>This category also has 5 levels:</p>
 <ul>
-<li><p><strong>level 1</strong>: stack traces are missing</p>
+<li>
+<p><strong>level 1</strong>: stack traces are missing</p>
 <p><code>suspend</code>, <code>co</code> and <code>gens</code> are in this category. When an error happens in one
 of the async functions, this is how the result looks like:</p>
 <pre><code>Error: Error happened
   at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
   at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
-</code></pre><p>No mention of the original file, <code>examples/suspend.js</code></p>
+</code></pre>
+<p>No mention of the original file, <code>examples/suspend.js</code></p>
 <p>Unfortunately, if you throw an error to a generator using
 <code>iterator.throw(error)</code>, the last yield point will not be present in the
 resulting stack trace. This means you will have no idea which line in your
 generator is the offending one.</p>
 <p>Regular exceptions that are not thrown using <code>iterator.throw</code> have complete
 stack traces, so only yield points will suffer.</p>
-<p>Some solutions that aren&#39;t generator based are also in this category, namely
+<p>Some solutions that aren't generator based are also in this category, namely
 <code>promiseish.js</code> and <code>async.js</code>. When a library handles errors for you, the
 callback stack trace will not be preserved unless special care is taken to
-preserve it. <code>async</code> and <code>when</code> don&#39;t do that.</p>
+preserve it. <code>async</code> and <code>when</code> don't do that.</p>
 </li>
-<li><p><strong>level 2</strong>: stack traces are correct with native modules</p>
-<p>Bruno Jouhier&#39;s generator based solution <a href="//github.com/bjouhier/galaxy">galaxy</a>
+<li>
+<p><strong>level 2</strong>: stack traces are correct with native modules</p>
+<p>Bruno Jouhier's generator based solution <a href="//github.com/bjouhier/galaxy">galaxy</a>
 is in this category. It has a native companion module called
 <a href="//github.com/bjouhier/galaxy-stack">galaxy-stack</a> that implements long stack
 traces without a performance penalty.</p>
-<p>Note that galaxy-stack doesn&#39;t work with node v0.11.5</p>
+<p>Note that galaxy-stack doesn't work with node v0.11.5</p>
 </li>
-<li><p><strong>level 3</strong>: stack traces are correct with a flag (adding a performance
+<li>
+<p><strong>level 3</strong>: stack traces are correct with a flag (adding a performance
 penalty).</p>
-<p>All Q-based solutions are here, even <code>qasync.js</code>, which uses generators. Q&#39;s
+<p>All Q-based solutions are here, even <code>qasync.js</code>, which uses generators. Q's
 support for stack traces via <code>Q.longStackSupport = true;</code> is good:</p>
 <pre><code>Error: Error happened
     at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
@@ -1376,7 +1343,8 @@ support for stack traces via <code>Q.longStackSupport = true;</code> is good:</p
 From previous event:
     at /home/spion/Documents/tests/async-compare/examples/qasync.js:41:18
     at GeneratorFunctionPrototype.next (native)
-</code></pre><p>So, does this mean that its possible to add long stack traces support to a
+</code></pre>
+<p>So, does this mean that its possible to add long stack traces support to a
 callbacks-based generator library the way that Q does it?</p>
 <p>Yes it does! Genny is in this category too:</p>
 <pre><code>Error: Error happened
@@ -1384,11 +1352,13 @@ callbacks-based generator library the way that Q does it?</p>
     at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
 From generator:
     at upload (/home/spion/Documents/tests/async-compare/examples/genny.js:38:35)
-</code></pre><p>However it incurs about 50-70% memory overhead and is about 6 times slower.</p>
+</code></pre>
+<p>However it incurs about 50-70% memory overhead and is about 6 times slower.</p>
 <p>Catcher is also in this category, with 100% memory overhead and about
 10 times slower.</p>
 </li>
-<li><p><strong>level 4</strong>: stack traces are correct but fragile</p>
+<li>
+<p><strong>level 4</strong>: stack traces are correct but fragile</p>
 <p>All the raw-callback solutions are in this category: original, flattened,
 flattened-class, etc. At the moment, rx.js is in this category too.</p>
 <p>As long as the callback functions are defined by your code everything will
@@ -1396,7 +1366,8 @@ be fine. However, the moment you introduce some wrapper that handles the
 errors for you, your stack traces will break and will show functions from the
 wrapper library instead.</p>
 </li>
-<li><p><strong>level 5</strong>: stack traces are always correct</p>
+<li>
+<p><strong>level 5</strong>: stack traces are always correct</p>
 <p>Streamline and fibers are in this category. Streamline compiles the file in a
 way that preserves line numbers, making stack traces correct in all cases.
 Fibers also preserve the full call stack.</p>
@@ -1505,13 +1476,13 @@ Fibers also preserve the full call stack.</p>
 </tr>
 </tbody>
 </table>
-<p>Generators are not exactly great. They&#39;re doing well enough thanks to qasync
+<p>Generators are not exactly great. They're doing well enough thanks to qasync
 and genny.</p>
 <p><a name="conclusion"></a></p>
-<h3 id="conclusion">Conclusion</h3>
-<p>If this analysis left you even more confused than before, you&#39;re not alone. It
+<h3>Conclusion</h3>
+<p>If this analysis left you even more confused than before, you're not alone. It
 seems hard to make a decision even with all the data available.</p>
-<p>My opinion is biased. I love generators, and I&#39;ve been
+<p>My opinion is biased. I love generators, and I've been
 <a href="https://code.google.com/p/v8/issues/detail?id=2355#c2">pushing</a>
 <a href="https://news.ycombinator.com/item?id=5419030">pretty hard</a> to direct the
 attention of V8 developers to them (maybe a bit too hard). And its obvious
@@ -1528,7 +1499,7 @@ performance) and galaxy (unobtrusive, but requires native modules).</p>
 <p>But there are things that cannot be measured. How will the community accept
 generators? Will people find it hard to decide whether to use them or not? Will
 they be frowned upon when used in code published to npm?</p>
-<p>I don&#39;t have the answers to these questions. I only have hunches. But they are
+<p>I don't have the answers to these questions. I only have hunches. But they are
 generally positive. Generators will play an important role in the future of
 node.</p>
 <hr>
@@ -1539,55 +1510,18 @@ node.</p>
 and <a href="//github.com/DamonOehlman">damonoehlman</a>
 for their input on the draft version of this analysis.</p>
 <p>Thanks to <a href="//github.com/jmar777">jmar777</a> for making suspend</p>
-</div><a name="_comments"></a>
-  <div class="social">
-    <script src="https://apis.google.com/js/plusone.js"></script><a href="https://twitter.com/share" data-via="spion" class="twitter-share-button">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-    <div class="g-plusone"></div><a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN            </a>
-    <script>
-      (function(d, t) {
-          var g = d.createElement(t),
-              s = d.getElementsByTagName(t)[0];
-          g.src = '//hnbutton.appspot.com/static/hn.min.js';
-          s.parentNode.insertBefore(g, s);
-      }(document, 'script'));    
-    </script>
-  </div>
-  <div id="disqus_thread"></div>
-  <script>
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
-    
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-  </script>
-  <!--
-  a.dsq-brink(href="http://disqus.com") comments powered by 
-    span.logo-disqus Disqus
-  -->
-</div></div>
-    </div>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="//google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
-    <script>
-      $('code').addClass('prettyprint');
-      prettyPrint();
-    </script>
-    <script src="/scripts/jquery.flot.js"></script>
-    <script src="/scripts/jquery.flot.highlightSeries.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      
-      ga('create', 'UA-42872676-1', 'spion.github.io');
-      ga('send', 'pageview');
-    </script>
-  </body>
-</html>
+</div><a name="_comments"></a><div class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a class="hn-share-button" href="http://news.ycombinator.com/submit">Vote on HN</a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></div><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
+  span.logo-disqus Disqus--></div></div></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');</script><script>ga('create', 'UA-42872676-1', 'spion.github.io');ga('send', 'pageview');</script></body></html>
