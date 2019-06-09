@@ -1,13 +1,13 @@
 extends base.pug
 
 block content
-  .post
+  article.post
       h1= title
       .date= date.toDateString()
       .content!= contents
       a(name="_comments")
       if (!hidden)
-        .social
+        aside.social
           script(src="https://apis.google.com/js/plusone.js")
           a(href="https://twitter.com/share",
               class="twitter-share-button",data-via="spion") Tweet
