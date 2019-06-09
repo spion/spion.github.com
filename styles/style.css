@@ -145,8 +145,8 @@ a:active {
   color: #666;
 }
 .post pre {
-  background-color: #f3ecdf;
-  box-shadow: 0 0 0.25rem #c9aa70;
+  background-color: #faf7f2;
+  box-shadow: 0 0 0.25rem #decba7;
   padding: 0.8rem;
   margin: 0 0.05rem 1.45rem 0.05rem;
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
