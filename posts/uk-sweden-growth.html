@@ -1,5 +1,6 @@
-<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Can you really compare the UK to Sweden?</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Can you really compare the UK to Sweden?</h1><div class="date">Tue Dec 19 2017</div><div class="content"><h1>A comparison between sweden and the UK</h1>
-<p>A lot of people are trying to compare Sweden with the UK. Lets see why this comparison is inadequate as the countries were behaving very differently before any lockdowns or mass measures were introduced.</p>
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Can you really compare the UK to Sweden?</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Can you really compare the UK to Sweden?</h1><div class="date">Tue Dec 19 2017</div><div class="content"><p>Sweden is a hot topic lately, with many people giving them as an example. A lot of people are trying
+to compare Sweden with the UK. Lets see why this comparison is inadequate as the countries were
+behaving very differently before any lockdown or mass measures were introduced.</p>
 <p>Lets load up both countries stats from ourworldindata</p>
 <pre><code class="language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
 <span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
@@ -7,8 +8,7 @@
 
 plt.rcParams[<span class="hljs-string">'figure.dpi'</span>] = <span class="hljs-number">150</span>
 plt.rcParams[<span class="hljs-string">'figure.figsize'</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
-</code></pre>
-<pre><code class="language-python">dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%Y-%m-%d'</span>)
+dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%Y-%m-%d'</span>)
 owid = pd.read_csv(<span class="hljs-string">'https://covid.ourworldindata.org/data/owid-covid-data.csv'</span>, parse_dates=[<span class="hljs-string">'date'</span>], date_parser=dateparse)
 </code></pre>
 <p>We can get the countries data by their ISO code</p>
@@ -24,7 +24,7 @@ swe1 = swemarch.reset_index().rename(columns={<span class="hljs-string">'new_dea
 
 plt = pd.concat([gbr1, swe1], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
 </code></pre>
-<p><img src="output_6_0.png" alt="png"></p>
+<p><img src="output_5_0.png" alt="png"></p>
 <p>Okay, so it looks like the deaths in the UK were growing faster than the deaths in Sweden from the very beginning! Lets look at the growth rate with period 5 days, that should track R_t closely:</p>
 <pre><code class="language-python">gbr1growth = gbr1.pct_change(periods=<span class="hljs-number">5</span>)
 gbr1growth = gbr1growth + <span class="hljs-number">1</span>
@@ -32,9 +32,9 @@ swe1growth = swe1.pct_change(periods=<span class="hljs-number">5</span>)
 swe1growth = swe1growth + <span class="hljs-number">1</span>
 plt = pd.concat([gbr1growth, swe1growth], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
 </code></pre>
-<p><img src="output_8_0.png" alt="png"></p>
+<p><img src="output_7_0.png" alt="png"></p>
 <p>It looks like the rate of growth was higher in the UK from the very start and remained higher throughout the first month. Now lets try and extrapolate what was going on in terms of cases that produced these deaths.</p>
-<p>The mean time from infection to death for patients with fatal outcomes is 23 days. This means that the dates where we observe these rates of growth begin on 22nd February in the UK, and around 1st of March in Sweden. Point 10 in the plot is therefore March 2nd in the UK, March 9th in Sweden.</p>
+<p>The mean time from infection to death for patients with fatal outcomes is 21 days. This means that the dates where we observe these rates of growth begin on 23rd February in the UK and around 1st of March in Sweden. Point 10 in the plot is therefore March 2nd in the UK, March 9th in Sweden.</p>
 <p>So what happened between March 2nd and March 8th in the UK, where the rate of growth seemed to have been between 3.0 and 4.0 ?</p>
 <p>And what happened in Sweden?</p>
 <h1>UK: Contact tracing</h1>
@@ -56,7 +56,7 @@ mobility = pd.read_csv(<span class="hljs-string">'https://drive.google.com/u/0/u
     swemob = mobility[mobility.Code.eq(<span class="hljs-string">"SWE"</span>)]
     gbrmob = mobility[mobility.Code.eq(<span class="hljs-string">"GBR"</span>)]
 
-    gbrmobmarch = gbrmob.loc[(mobility[<span class="hljs-string">'Date'</span>] &gt; <span class="hljs-string">'02-22-2020'</span>) &amp; (mobility[<span class="hljs-string">'Date'</span>] &lt;= <span class="hljs-string">'03-22-2020'</span>)];
+    gbrmobmarch = gbrmob.loc[(mobility[<span class="hljs-string">'Date'</span>] &gt; <span class="hljs-string">'02-23-2020'</span>) &amp; (mobility[<span class="hljs-string">'Date'</span>] &lt;= <span class="hljs-string">'03-23-2020'</span>)];
     swemobmarch = swemob.loc[(mobility[<span class="hljs-string">'Date'</span>] &gt; <span class="hljs-string">'03-01-2020'</span>) &amp; (mobility[<span class="hljs-string">'Date'</span>] &lt;= <span class="hljs-string">'04-01-2020'</span>)];
 
     gbrM1 = gbrmobmarch.reset_index().rename(columns={<span class="hljs-string">''</span>+name: <span class="hljs-string">'GBR '</span> + name})[<span class="hljs-string">'GBR '</span> + name]
@@ -67,10 +67,12 @@ mobility = pd.read_csv(<span class="hljs-string">'https://drive.google.com/u/0/u
 plot_item(<span class="hljs-string">'Residential (%)'</span>)
 plot_item(<span class="hljs-string">'Transit Stations (%)'</span>)
 </code></pre>
-<p><img src="output_12_0.png" alt="png"></p>
-<p><img src="output_12_1.png" alt="png"></p>
-<p><img src="output_12_2.png" alt="png"></p>
-<p>Swedish people simply reacted 10 days earlier. Thats how they curbed the spread.</p>
+<p><img src="output_11_0.png" alt="png"></p>
+<p><img src="output_11_1.png" alt="png"></p>
+<p><img src="output_11_2.png" alt="png"></p>
+<p>Sweden reacted to the pandemic 10 days earlier than the UK did. Thats how they curbed the spread.</p>
+<pre><code class="language-python">
+</code></pre>
 </div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a class="hn-share-button" href="http://news.ycombinator.com/submit">Vote on HN</a><script>(function(d, t) {
     var g = d.createElement(t),
         s = d.getElementsByTagName(t)[0];
