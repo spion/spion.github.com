@@ -6,7 +6,7 @@ behaving very differently before any lockdown or mass measures were introduced.<
 <span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
 <span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
 
-plt.rcParams[<span class="hljs-string">'figure.dpi'</span>] = <span class="hljs-number">150</span>
+plt.rcParams[<span class="hljs-string">'figure.dpi'</span>] = <span class="hljs-number">120</span>
 plt.rcParams[<span class="hljs-string">'figure.figsize'</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
 dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%Y-%m-%d'</span>)
 owid = pd.read_csv(<span class="hljs-string">'https://covid.ourworldindata.org/data/owid-covid-data.csv'</span>, parse_dates=[<span class="hljs-string">'date'</span>], date_parser=dateparse)
@@ -37,17 +37,17 @@ plt = pd.concat([gbr1growth, swe1growth], axis=<span class="hljs-number">1</span
 <p>The mean time from infection to death for patients with fatal outcomes is 21 days. This means that the dates where we observe these rates of growth begin on 23rd February in the UK and around 1st of March in Sweden. Point 10 in the plot is therefore March 2nd in the UK, March 9th in Sweden.</p>
 <p>So what happened between March 2nd and March 8th in the UK, where the rate of growth seemed to have been between 3.0 and 4.0 ?</p>
 <p>And what happened in Sweden?</p>
-<h3>UK: Contact tracing</h3>
+<h1>UK: Contact tracing</h1>
 <p>Contact tracing is a reasonably decent strategy. Assuming you have enough capacity, you should be able to find everyone in contact with the infected person, and also their contacts and so on. It should work reasonably well for most viruses, especially those that have mainly symptomatic spread.</p>
-<p>Unfortunately SARS-COV-2 seems to have had a symptomatic component</p>
-<p>PHE gave up on contact tracing due to being overwhelmed on March 11th. That would be somewhere afterpoint 20. Growth rate still very high, above 2.0</p>
-<h3>Sweden: Mass measures</h3>
+<p>Unfortunately SARS-COV-2 seems to have had an asymptomatic component. The virus quickly entered the community spread phase.</p>
+<p>PHE gave up on contact tracing due to being overwhelmed on March 11th. That would be somewhere afterpoint 20. Growth rate still very high, above 2.0. No measures were in place at that time</p>
+<h1>Sweden: Mass measures</h1>
 <ul>
 <li>Feb 27th: Almega, the largest organization of service companies in Sweden advised employees to stay at home if they visited high risk areas</li>
 <li>March 3rd: The Scandinavian airline SAS stopped all flights to northern Italy</li>
 <li>March 11: The government announced that the qualifying day of sickness ('karensdag') will be temporarily abolished in order to ensure that people feeling slightly ill will stay at home from work. This means that the state will pay sick pay allowance from the first day the employee is absent from work</li>
 </ul>
-<p>But this is all just decrees. Lets see what really happened by looking at google mobility trends</p>
+<p>But these areall just decrees. Lets see what really happened by looking at google mobility trends</p>
 <pre><code class="language-python">dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%b %d, %Y'</span>)
 mobility = pd.read_csv(<span class="hljs-string">'https://drive.google.com/u/0/uc?id=1M4GY_K4y6KZtkDtz7i12fhs8LeyUTyaK&amp;export=download'</span>, parse_dates=[<span class="hljs-string">'Date'</span>], date_parser=dateparse)
 </code></pre>
@@ -71,6 +71,7 @@ plot_item(<span class="hljs-string">'Transit Stations (%)'</span>)
 <p><img src="/posts/output_11_1.png" alt="png"></p>
 <p><img src="/posts/output_11_2.png" alt="png"></p>
 <p>Sweden reacted to the pandemic 10 days earlier than the UK did. Perhaps thats how they curbed the spread? Either way, the important point is that the rate of growth makes the biggest difference early on and any quick actions to reduce it are of much greater value than delayed ones.</p>
+<p>Even if Sweden reacting early didn't make any difference, its still wrong to compare UK with Sweden anyway. Clearly the rates of growth were very, very different for some reason. You would not compare the brake difference of two cars by the distance traveled if they were not going at the same speed when they started braking, would you? Similarly, you cannot compare the UK with Sweden - there appears to be a massive difference in the initial rate of growth before any measures were taken.</p>
 </div><div class="comments"><hr/><a href="posts/uk-sweden-growth.html#_comments">comment or share</a></div></article><article class="post"><h1><a href="posts/machine-learning-ethics.html">Machine learning ethics</a></h1><div class="date">Tue Dec 19 2017</div><div class="content"><p>Today I found and watched one of the most important videos on machine learning published this year</p>
 <blockquote>
 <p>We're building a dystopia just to make people click on ads
