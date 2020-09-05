@@ -32,16 +32,16 @@ swe1growth = swe1.pct_change(periods=<span class="hljs-number">5</span>)
 swe1growth = swe1growth + <span class="hljs-number">1</span>
 plt = pd.concat([gbr1growth, swe1growth], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
 </code></pre>
-<p><img src="output_7_0.png" alt="png"></p>
+<p><img src="/posts/output_7_0.png" alt="png"></p>
 <p>It looks like the rate of growth was higher in the UK from the very start and remained higher throughout the first month. Now lets try and extrapolate what was going on in terms of cases that produced these deaths.</p>
 <p>The mean time from infection to death for patients with fatal outcomes is 21 days. This means that the dates where we observe these rates of growth begin on 23rd February in the UK and around 1st of March in Sweden. Point 10 in the plot is therefore March 2nd in the UK, March 9th in Sweden.</p>
 <p>So what happened between March 2nd and March 8th in the UK, where the rate of growth seemed to have been between 3.0 and 4.0 ?</p>
 <p>And what happened in Sweden?</p>
-<h1>UK: Contact tracing</h1>
+<h3>UK: Contact tracing</h3>
 <p>Contact tracing is a reasonably decent strategy. Assuming you have enough capacity, you should be able to find everyone in contact with the infected person, and also their contacts and so on. It should work reasonably well for most viruses, especially those that have mainly symptomatic spread.</p>
 <p>Unfortunately SARS-COV-2 seems to have had a symptomatic component</p>
 <p>PHE gave up on contact tracing due to being overwhelmed on March 11th. That would be somewhere afterpoint 20. Growth rate still very high, above 2.0</p>
-<h1>Sweden: Mass measures</h1>
+<h3>Sweden: Mass measures</h3>
 <ul>
 <li>Feb 27th: Almega, the largest organization of service companies in Sweden advised employees to stay at home if they visited high risk areas</li>
 <li>March 3rd: The Scandinavian airline SAS stopped all flights to northern Italy</li>
@@ -67,12 +67,10 @@ mobility = pd.read_csv(<span class="hljs-string">'https://drive.google.com/u/0/u
 plot_item(<span class="hljs-string">'Residential (%)'</span>)
 plot_item(<span class="hljs-string">'Transit Stations (%)'</span>)
 </code></pre>
-<p><img src="output_11_0.png" alt="png"></p>
-<p><img src="output_11_1.png" alt="png"></p>
-<p><img src="output_11_2.png" alt="png"></p>
-<p>Sweden reacted to the pandemic 10 days earlier than the UK did. Thats how they curbed the spread.</p>
-<pre><code class="language-python">
-</code></pre>
+<p><img src="/posts/output_11_0.png" alt="png"></p>
+<p><img src="/posts/output_11_1.png" alt="png"></p>
+<p><img src="/posts/output_11_2.png" alt="png"></p>
+<p>Sweden reacted to the pandemic 10 days earlier than the UK did. Perhaps thats how they curbed the spread? Either way, the important point is that the rate of growth makes the biggest difference early on and any quick actions to reduce it are of much greater value than delayed ones.</p>
 </div><div class="comments"><hr/><a href="posts/uk-sweden-growth.html#_comments">comment or share</a></div></article><article class="post"><h1><a href="posts/machine-learning-ethics.html">Machine learning ethics</a></h1><div class="date">Tue Dec 19 2017</div><div class="content"><p>Today I found and watched one of the most important videos on machine learning published this year</p>
 <blockquote>
 <p>We're building a dystopia just to make people click on ads
