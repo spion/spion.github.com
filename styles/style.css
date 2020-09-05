@@ -157,6 +157,9 @@ a:active {
 .post pre code {
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
 }
+.post img {
+  max-width: 100%;
+}
 .post p code {
   color: #333;
   padding: 0.05rem 0.1rem;
