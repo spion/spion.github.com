@@ -24,7 +24,7 @@ swe1 = swemarch.reset_index().rename(columns={<span class="hljs-string">'new_dea
 
 plt = pd.concat([gbr1, swe1], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
 </code></pre>
-<p><img src="output_5_0.png" alt="png"></p>
+<p><img src="/posts/output_5_0.png" alt="png"></p>
 <p>Okay, so it looks like the deaths in the UK were growing faster than the deaths in Sweden from the very beginning! Lets look at the growth rate with period 5 days, that should track R_t closely:</p>
 <pre><code class="language-python">gbr1growth = gbr1.pct_change(periods=<span class="hljs-number">5</span>)
 gbr1growth = gbr1growth + <span class="hljs-number">1</span>
