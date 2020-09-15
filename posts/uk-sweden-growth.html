@@ -1,4 +1,5 @@
-<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Can you really compare the UK to Sweden?</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Can you really compare the UK to Sweden?</h1><div class="date">Sat Sep 05 2020</div><div class="content"><p>Sweden is a hot topic lately, with many people giving them as an example. A lot of people are trying
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Can you really compare the UK to Sweden?</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Can you really compare the UK to Sweden?</h1><div class="date">Sat Sep 05 2020</div><div class="content"><p><strong>EDIT: This article contained a mistake in the calculations. As a result, I had to rewrite the whole thing again, and the rewrite is available at <a href="/posts/uk-sweden-growth/">this link</a>. Some of the conclusions are different, but the gist should be largely the same.</strong></p>
+<p>Sweden is a hot topic lately, with many people giving them as an example. A lot of people are trying
 to compare Sweden with the UK. Lets see why this comparison is inadequate as the countries were
 behaving very differently before any lockdown or mass measures were introduced.</p>
 <p>Lets load up both countries stats from ourworldindata</p>
@@ -9,7 +10,8 @@ behaving very differently before any lockdown or mass measures were introduced.<
 plt.rcParams[<span class="hljs-string">'figure.dpi'</span>] = <span class="hljs-number">120</span>
 plt.rcParams[<span class="hljs-string">'figure.figsize'</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
 dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%Y-%m-%d'</span>)
-owid = pd.read_csv(<span class="hljs-string">'https://covid.ourworldindata.org/data/owid-covid-data.csv'</span>, parse_dates=[<span class="hljs-string">'date'</span>], date_parser=dateparse)
+owid_url = <span class="hljs-string">'https://covid.ourworldindata.org/data/owid-covid-data.csv'</span>
+owid = pd.read_csv(owid_url, parse_dates=[<span class="hljs-string">'date'</span>], date_parser=dateparse)
 </code></pre>
 <p>We can get the countries data by their ISO code</p>
 <pre><code class="language-python">uk = owid[owid.iso_code.eq(<span class="hljs-string">"GBR"</span>)]
@@ -71,7 +73,7 @@ plot_item(<span class="hljs-string">'Transit Stations (%)'</span>)
 <p><img src="/posts/output_11_1.png" alt="png"></p>
 <p><img src="/posts/output_11_2.png" alt="png"></p>
 <p>Looks like the people in Sweden reacted to the pandemic 10 days earlier than the UK did. Perhaps thats how they curbed the spread? Either way, the important point is that the rate of growth makes the biggest difference early on and any quick actions to reduce it are of much greater value than delayed ones.</p>
-<p>Even if Sweden reacting early didn't make any difference, its still wrong to compare UK with Sweden. Clearly the rates of growth were very, very different for some reason. To show why, I will use a car analogy</p>
+<p>Regardless, its still wrong to compare UK with Sweden when the rates of growth are different. To show why, I will use a car analogy</p>
 <h3>The car analogy</h3>
 <p>Lets say we have two car models from the same company, World Cars. World cars are a bit quirky, they like to name their cars by countries in the world. We would like to decide which one to buy and one of the factors we're interested in is safety. Specifically, we want to know how well the brakes work.</p>
 <p>To determine which car is better, we try to look up at some data on braking tests. We find the
@@ -150,12 +152,7 @@ needed.</p>
 <p>Note: with cases its probably even worse as exponential (and near-exponential) growth is far more
 dramatic than the quadratic growth caused by acceleration</p>
 </blockquote>
-</div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a class="hn-share-button" href="http://news.ycombinator.com/submit">Vote on HN</a><script>(function(d, t) {
-    var g = d.createElement(t),
-        s = d.getElementsByTagName(t)[0];
-    g.src = '//hnbutton.appspot.com/static/hn.min.js';
-    s.parentNode.insertBefore(g, s);
-}(document, 'script'));</script></aside><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+</div><a name="_comments"></a><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
 
 /* * * DON'T EDIT BELOW THIS LINE * * */
