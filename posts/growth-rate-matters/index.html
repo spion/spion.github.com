@@ -95,6 +95,16 @@ plot = esp_march_growth.plot(grid = <span class="hljs-literal">True</span>)
 </code></pre>
 <p><img src="/posts/growth-rate-matters/output_15_0.png" alt="png"></p>
 <p>The rate of growth is crazy high! We must do something about it!</p>
+<h4>It encompasses everything else we do or know</h4>
+<p>Antibody immunity, T-cell immunity, lockdowns and masks. Their common theme is that they all affect
+or try to affect the rate of growth:</p>
+<ul>
+<li>If a random half of the population magically became immune tomorrow, the growth rate will probably
+be halved as well</li>
+<li>If masks block half of the infections, the growth rate would also be halved.</li>
+<li>If 20% of the population stays at home, the number of potential interactions goes down to 64% - a
+one third reduction in the rate of growth (most likely)</li>
+</ul>
 <h4>Early growth dominates all other factors</h4>
 <p>With the following few examples lets demonstrate that getting an accurate estimate of the growth rate and its early control is the most important thing and other factors (absolute number of cases, exact CFR etc) are mostly irrelevant</p>
 <pre><code class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate_growth</span><span class="hljs-params">(pairs)</span>:</span>
