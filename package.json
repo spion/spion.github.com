@@ -5,7 +5,7 @@
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "gh-pages": "^2.0.1",
-    "highlight.js": "^9.15.6",
+    "highlight.js": "^10.4.1",
     "http-server": "^0.11.1",
     "jstransformer-pug": "^0.3.0",
     "katex": "^0.10.2",
