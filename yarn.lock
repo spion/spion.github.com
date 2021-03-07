@@ -1077,6 +1077,11 @@ longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
 
+markdown-it-charts@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/markdown-it-charts/-/markdown-it-charts-1.0.5.tgz#475243d7ee79652c139e9d84895f8fda0ceca945"
+  integrity sha512-dx7P+PfiFKFm4peUexs/C1Z0i++3TxcIDirhPSg4YGlui2Ao5+xRuXnlUtB6ztdVOOWP3Lllzry3cPCzkwPCSg==
+
 markdown-it-math@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/markdown-it-math/-/markdown-it-math-4.1.1.tgz#a63fac36d9ffe4362749749d966a84852f2ca137"

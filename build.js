@@ -11,6 +11,8 @@ var less        = require('metalsmith-less')
 var markdown = require("metalsmith-markdownit");
 var math = require("markdown-it-math");
 
+var mcharts = require('markdown-it-charts')
+
 var katex = require("katex");
 var hljs = require('highlight.js');
 
@@ -26,6 +28,8 @@ var md = markdown("default", {
     return ''; // use external default escaping
   }
 });
+
+md.parser.use(mcharts)
 
 md.parser.use(math, {
   inlineOpen: '$[',
