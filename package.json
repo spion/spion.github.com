@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "node build.js",
-    "deploy": "gh-pages -d build -b master",
+    "deploy": "gh-pages -d build",
     "serve": "http-server -c-1 build",
     "start": "run-s build serve"
   }
