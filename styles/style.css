@@ -3,10 +3,10 @@
 }
 body,
 html {
-  font-size: 20px;
+  font-size: 18px;
   font-family: Georgia;
   background-color: #fff;
-  color: #000;
+  color: #151515;
 }
 body {
   margin: 1ex;
@@ -38,14 +38,14 @@ h4 {
 h2,
 h3,
 h4 {
-  margin-top: 2rem;
+  margin-top: 2.66rem;
   margin-bottom: 0.5rem;
 }
 .main {
-  max-width: 71ex;
+  max-width: 76ex;
   margin: 2rem auto;
 }
-@media screen and (max-width: 1149px) {
+@media screen and (max-width: 1199px) {
   .info {
     display: none;
   }
@@ -53,7 +53,7 @@ h4 {
     margin-top: 2ex;
   }
 }
-@media screen and (min-width: 1150px) {
+@media screen and (min-width: 1200px) {
   .info-tiny {
     display: none;
   }
@@ -69,7 +69,7 @@ h4 {
   position: absolute;
   top: 4rem;
   left: 50%;
-  margin-left: -61ex;
+  margin-left: -65ex;
   width: 20ex;
   right: 2rem;
   text-align: right;
@@ -89,12 +89,13 @@ h4 {
 }
 .subtitle {
   font-style: italic;
-  color: #666666;
+  color: #666;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
 }
 p {
-  line-height: 1.45rem;
+  line-height: 1.5rem;
+  margin-bottom: 1.45rem;
 }
 p.subtitle {
   line-height: 1.2rem;
@@ -105,7 +106,7 @@ h4 + p {
   margin-top: 0;
 }
 li {
-  line-height: 1.45;
+  line-height: 1.4;
   margin-bottom: 0.25rem;
   margin-top: 0.25rem;
   margin-left: 1rem;
@@ -113,12 +114,12 @@ li {
 blockquote {
   border-left: solid 1ex #f3ecdf;
   padding-left: 1rem;
-  margin: 1rem 0.05rem;
+  margin: 0 0.05rem 1.45rem 0.05rem;
   font-style: italic;
-  color: #666666;
+  color: #666;
 }
 blockquote small {
-  color: #666666;
+  color: #666;
 }
 blockquote small:before {
   content: '\2014 \00A0';
@@ -132,22 +133,22 @@ a.img {
   border-bottom: none;
 }
 a:hover {
-  color: #3377cc;
+  color: #37c;
 }
 a:active {
-  color: #3377cc;
+  color: #37c;
 }
 .post .date {
   margin: 0.5rem 0 1.5rem 0;
   font-style: italic;
   font-size: 0.8em;
-  color: #666666;
+  color: #666;
 }
 .post pre {
-  background-color: #f3ecdf;
-  box-shadow: 0 0 0.25rem #e5d6ba;
+  background-color: #faf7f2;
+  box-shadow: 0 0 0.25rem #decba7;
   padding: 0.8rem;
-  margin: 1rem 0.05rem;
+  margin: 0 0.05rem 1.45rem 0.05rem;
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
   font-size: 13px;
   line-height: 1.5;
@@ -156,11 +157,14 @@ a:active {
 .post pre code {
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
 }
+.post img {
+  max-width: 100%;
+}
 .post p code {
   color: #333;
   padding: 0.05rem 0.1rem;
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
-  font-size: 16px;
+  font-size: 15px;
 }
 .post p code .pln {
   color: #333;
@@ -172,10 +176,11 @@ hr {
   margin: 2rem 0 4rem 0;
 }
 .content > table {
-  margin: 1rem 0;
+  margin: 0 0 1.45rem 0;
   border: solid 2px #f3ecdf;
   border-collapse: collapse;
   border-spacing: 0;
+  font-size: 1rem;
 }
 .content > table td,
 .content > table th {

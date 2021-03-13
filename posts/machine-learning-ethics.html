@@ -1,0 +1,111 @@
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Machine learning ethics</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>Machine learning ethics</h1><div class="date">Tue Dec 19 2017</div><div class="content"><p>Today I found and watched one of the most important videos on machine learning published this year</p>
+<blockquote>
+<p>We're building a dystopia just to make people click on ads
+https://www.youtube.com/watch?v=iFTWM7HV2UI&amp;app=desktop</p>
+</blockquote>
+<p>Go watch it first before reading ahead! I could not possibly summarise it without doing it a
+disservice.</p>
+<p>What struck me most was the following quote:</p>
+<blockquote>
+<p>Having interviewed people who worked at Facebook, I'm convinced that nobody there really
+understands how it [the machine learning system] works.</p>
+</blockquote>
+<p>The important question is, howcome nobody understands how a machine learning system works? You
+would think, its because the system is very complex, its hard for any one person to understand it
+fully. Thats not the problem.</p>
+<p>The problem is fundamental to machine learning systems.</p>
+<p>A machine learning system is a program that is given a target goal, a list of possible actions,
+a history of previous actions and how well they achieved the goal in a past context.
+The system should learn on the historical data and be able to predict what action it can select to
+best achieve the goal.</p>
+<p>Lets see what these parts would represent on say, YouTube, for a ML system that has to pick which
+videos to show on the sidebar right next to the video you're watching.</p>
+<p>The target goal could be e.g. to maximise the time the user stays on YouTube, watching videos.
+More generally, a <em>value function</em> is given by the ML system creator that measures the desireability
+of a certain outcome or behaviour (it could include multiple things like number of product bought,
+number of ads clicked or viewed, etc).</p>
+<p>The action the system can take is the choice of videos in the sidebar. Every different set of videos
+would be a different alternative action, and could cause the user to either stay on YouTube longer
+or perhaps leave the site.</p>
+<p>Finally, the history of actions includes all previous video lists shown in the sidebar to users,
+together with the value function outcome from them: the time the user spent on the website after
+being  presented that list. Additional context from that time is also included: which user was it,
+what was their personal information, their past watching history, the channels they're subscribed
+to, videos they liked, videos they disliked and so on.</p>
+<p>Based on this data, the system learns how to tailor its actions (the videos it shows) so that it
+achieves the goal by picking the right action for a given context.</p>
+<p>At the beginning it will try random things. After several iterations, it will find which things
+seem to maximize value in which context.</p>
+<p>Once trained with sufficient data, it will be able to do some calculations and conclude: &quot;well,
+when I encountered a situation like this other times, I tried these five options, and option two
+on average caused users like this one to stay the longest, so I'll do that&quot;.</p>
+<p>Sure, there are ways to ask some ML systems why they made a decision after the fact, and they can
+elaborate the variables that had the most effect. But before the algorithm gets the training data,
+you <em>don't</em> know what it will decide - nobody does! It learns from the history of its own actions
+and how the users reacted to them, so in essence, the users are programming its behaviour (through
+the lens of its value function).</p>
+<p>Lets say the system learnt that people who have cat videos in their watch history will stay a lot
+longer if they are given cat videos in their suggestion box. Nothing groundbreaking there.</p>
+<p>Now lets say it figures out the same action is appropriate when they are watching something
+unrelated, like academic lecture material, because past data suggests that people of that profile
+leave slightly earlier when given more lecture videos, while they stay for hours when given cat
+videos, giving up the lecture videos.</p>
+<p>This raises a very important question - is the system behaving in an ethical manner? Is it ethical
+to show cat videos to a person trying to study and nudge them towards wasting their time? Even that
+is a fairly benign example. There are far worse examples mentioned in the TED talk above.</p>
+<p>The root of the problem is the value function. Our systems are often blisfully unaware of any side
+effects their decision may cause and blatantly disregard basic rules of behaviour that we take for
+granted. They have no other values than the value function they're maximizing. For them, the end
+justifies the means. Whether the value function is maximized by manipulating people, preying on
+their insecurities, making them scared, angry or sad - all of that is unimportant. Here is a scary
+proposition: if a person is epileptic, it might learn that the best way to keep thenm &quot;on the website&quot;
+is to show them something that will render them unconscious. It wouldn't even know that it didn't
+really achieve the goal: as far as it knows, autoplay is on and they haven't stopped it in the past
+two hours, so it all must be &quot;good&quot;.</p>
+<p>So how do we make these systems ethical?</p>
+<p>The first challenge is technical, and its the easiest one. How do we come up with a value function
+that encodes additional basic values of of human ethics? Its easy as pie! You take a bunch of
+ethicists, give them various situations and ask them to rate actions as ethical/unethical. Then once
+you have enough data, you train a new value function so that the system can learn some basic humanity.
+You end up with a an ethics function, and you create a new value function that combines the old
+value function with the ethics function into the new value function. As a result the system starts
+picking more ethical actions. All done. (If only things were that easy!)</p>
+<p>The second challenge is a business one. How far are you willing to reduce your value maximisation
+to be ethical? What to do if your competitor doesn't do that? What are the ethics of putting a
+number on how much ethics you're willing to sacrifice for profits? (Spoiler alert: they're not
+great)</p>
+<p>One way to solve that is to have regulations for ethical behaviour of machine learning systems.
+Such systems could be held responsible for unethical actions. If those actions are reported by
+people, investigated by experts and found true in court, the company owning the ML system is held
+liable. Unethical behaviour of machine learning systems shouldn't be <em>too</em> difficult to spot,
+although getting evidence might prove difficult. Public pressure and exposure of companies seems
+to help too. Perhaps we could make a machine learning systems that detects unethical behaviour and
+call it the ML police. Citizens could agree to install the ML police add-on to help monitor
+and aggregate behaviour of online ML systems. (If these suggestions look silly, its because they
+are).</p>
+<p>Another way to deal with this is to mandate that all ML systems have a feedback feature.
+The user (or a responsible guardian of the user) should be able to log on to the system, see its
+past actions within a given context and rate them as ethical or unethical. The system must be
+designed to use this data and give it precedence when making decisions, such that actions that are
+computed to be more ethical are always picked over actions that are less ethical. In this scenario
+the users are the ethicists.</p>
+<p>The third challenge is philosophical. Until now, philosophers were content with &quot;there is no right
+answer, but there have been many thoughts on what exactly is ethical&quot;. They better get their act
+together, because we'll need them to come up with a definite, quantifiable answer real soon.</p>
+<p>On the more optimistic side, I hope that any generally agreed upon &quot;standard&quot; ethical system will
+be a better starting point than having none at all.</p>
+</div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a class="hn-share-button" href="http://news.ycombinator.com/submit">Vote on HN</a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></aside><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script><window class="dataLayer">= window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</window></script></body></html>
