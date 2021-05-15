@@ -24,9 +24,9 @@ Its actually not that difficult to find uncommon sense. It exists in all kinds a
 
 This is not without its pitfalls. You can't assume that any half-informed idea that you come up with is going to work. You'll have to do user research and product work to make it into something that can be used. But once you do a few of these, especially small ones, your product will start to somehow "feel" better.
 
-In some cases, your competitors won't really have an idea why your product feels better. Because the pains you've addressed are not common sense, it won't be so easy to tell what exactly about your product compels other users to use it. After all, both products check the same checkboxes, and their product checks even more checkboxes, so there is no reason why it should be worse. User will likely describe the benefits with vague terms such as as "the whole experience feels better".
+In some cases, your competitors won't really have an idea why your product feels better. Because the pains you've addressed are not common sense, it won't be so easy to tell what exactly about your product compels other users to use it. After all, both products check the same checkboxes, and their product checks even more checkboxes, so there is no reason why it should be worse. Users will likely describe the benefits with vague terms such as as "the whole experience feels better".
 
-In other cases, competitors will know whats going on and attempt to copy your idea. Some of them might succeed, but the overwhelming likelihood is that they
+In other cases, competitors will know whats going on and attempt to copy your idea. Some of them might succeed, but the overwhelming likelihood is that they won't fully see the smaller bits of uncommon sense that you thought through. And by that time, an inferior copy from another company will find it harder to compete, even if that company is relatively big and well established
 
 And yes, you will get things wrong sometimes as well. Its not always easy to tell uncommon sense from nonsense. But in the case of startups, the mind shift is necessary and the risk is worth the reward. The alternative is to neither succeed, nor fail.
 
