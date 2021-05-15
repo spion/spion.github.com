@@ -1,5 +1,6 @@
 {
   "name": "spion.github.io",
+  "private":"true",
   "version": "0.1.1",
   "description": "spion.github.io",
   "license": "AGPL-3.0-or-later",
