@@ -1,0 +1,164 @@
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Can you really compare the UK to Sweden?</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Can you really compare the UK to Sweden?</h1><div class="date">Sat Sep 05 2020</div><div class="content"><p><strong>EDIT: This article contained a mistake in the calculations. As a result, I had to rewrite the whole thing again, and the rewrite is available at <a href="/posts/uk-sweden-growth/">this link</a>. Some of the conclusions are different, but the gist should be largely the same.</strong></p>
+<p>Sweden is a hot topic lately, with many people giving them as an example. A lot of people are trying
+to compare Sweden with the UK. Lets see why this comparison is inadequate as the countries were
+behaving very differently before any lockdown or mass measures were introduced.</p>
+<p>Lets load up both countries stats from ourworldindata</p>
+<pre><code class="language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+<span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
+
+plt.rcParams[<span class="hljs-string">'figure.dpi'</span>] = <span class="hljs-number">120</span>
+plt.rcParams[<span class="hljs-string">'figure.figsize'</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
+dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%Y-%m-%d'</span>)
+owid_url = <span class="hljs-string">'https://covid.ourworldindata.org/data/owid-covid-data.csv'</span>
+owid = pd.read_csv(owid_url, parse_dates=[<span class="hljs-string">'date'</span>], date_parser=dateparse)
+</code></pre>
+<p>We can get the countries data by their ISO code</p>
+<pre><code class="language-python">uk = owid[owid.iso_code.eq(<span class="hljs-string">"GBR"</span>)]
+sweden = owid[owid.iso_code.eq(<span class="hljs-string">"SWE"</span>)]
+</code></pre>
+<p>Now lets compare deaths. To avoid problems with small data, we'll start the comparison when both countries deaths go above 5 per day. We're using the weekly moving average column from ourworldindata in order to get a better sense of the trend.</p>
+<pre><code class="language-python">gbrmarch = uk.loc[(owid[<span class="hljs-string">'date'</span>] &gt; <span class="hljs-string">'03-15-2020'</span>) &amp; (owid[<span class="hljs-string">'date'</span>] &lt;= <span class="hljs-string">'04-15-2020'</span>)];
+swemarch = sweden.loc[(owid[<span class="hljs-string">'date'</span>] &gt; <span class="hljs-string">'03-22-2020'</span>) &amp; (owid[<span class="hljs-string">'date'</span>] &lt;= <span class="hljs-string">'04-22-2020'</span>)];
+
+gbr1 = gbrmarch.reset_index().rename(columns={<span class="hljs-string">'new_deaths_smoothed'</span>: <span class="hljs-string">'UK Mar-Apr'</span>})[<span class="hljs-string">'UK Mar-Apr'</span>]
+swe1 = swemarch.reset_index().rename(columns={<span class="hljs-string">'new_deaths_smoothed'</span>: <span class="hljs-string">'Sweden Apr'</span>})[<span class="hljs-string">'Sweden Apr'</span>]
+
+plt = pd.concat([gbr1, swe1], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
+</code></pre>
+<p><img src="/posts/output_5_0.png" alt="png"></p>
+<p>Okay, so it looks like the deaths in the UK were growing faster than the deaths in Sweden from the very beginning! Lets look at the growth rate with period 5 days, that should track R_t closely:</p>
+<pre><code class="language-python">gbr1growth = gbr1.pct_change(periods=<span class="hljs-number">5</span>)
+gbr1growth = gbr1growth + <span class="hljs-number">1</span>
+swe1growth = swe1.pct_change(periods=<span class="hljs-number">5</span>)
+swe1growth = swe1growth + <span class="hljs-number">1</span>
+plt = pd.concat([gbr1growth, swe1growth], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
+</code></pre>
+<p><img src="/posts/output_7_0.png" alt="png"></p>
+<p>It looks like the rate of growth was higher in the UK from the very start and remained higher throughout the first month. Now lets try and extrapolate what was going on in terms of cases that produced these deaths.</p>
+<p>The mean time from infection to death for patients with fatal outcomes is 21 days. This means that the dates where we observe these rates of growth begin on 23rd February in the UK and around 1st of March in Sweden. Point 10 in the plot is therefore March 2nd in the UK, March 9th in Sweden.</p>
+<p>So what happened between March 2nd and March 8th in the UK, where the rate of growth seemed to have been between 3.0 and 4.0 ?</p>
+<p>And what happened in Sweden?</p>
+<h3>UK: Contact tracing</h3>
+<p>At the time, contact tracing seemed like a reasonably good strategy. It was thought that South Korea has been very successful due to this approach. Assuming you have enough capacity, you should be able to find everyone in contact with the infected person, and also their contacts and so on.</p>
+<p>Unfortunately this didn't pan out as planned. The virus quickly entered the community spread phase. PHE gave up on contact tracing due to being overwhelmed on March 11th - that would be somewhere after day 20 on the chart. Growth rate was still very high, above 2.0. No measures were in place at that time.</p>
+<h3>Sweden: Mass measures</h3>
+<p>It seems like Sweden did quite a few things early on:</p>
+<ul>
+<li>Feb 27th: Almega, the largest organization of service companies in Sweden advised employees to stay at home if they visited high risk areas</li>
+<li>March 3rd: The Scandinavian airline SAS stopped all flights to northern Italy</li>
+<li>March 11: The government announced that the qualifying day of sickness ('karensdag') will be temporarily abolished in order to ensure that people feeling slightly ill will stay at home from work. This means that the state will pay sick pay allowance from the first day the employee is absent from work</li>
+</ul>
+<p>These measures are what happened on paper. Its much better to look at how people really reacted by looking at google mobility trends</p>
+<pre><code class="language-python">dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%b %d, %Y'</span>)
+mobility = pd.read_csv(<span class="hljs-string">'https://drive.google.com/u/0/uc?id=1M4GY_K4y6KZtkDtz7i12fhs8LeyUTyaK&amp;export=download'</span>, parse_dates=[<span class="hljs-string">'Date'</span>], date_parser=dateparse)
+</code></pre>
+<pre><code class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_item</span><span class="hljs-params">(name)</span>:</span>
+
+    swemob = mobility[mobility.Code.eq(<span class="hljs-string">"SWE"</span>)]
+    gbrmob = mobility[mobility.Code.eq(<span class="hljs-string">"GBR"</span>)]
+
+    gbrmobmarch = gbrmob.loc[(mobility[<span class="hljs-string">'Date'</span>] &gt; <span class="hljs-string">'02-23-2020'</span>) &amp; (mobility[<span class="hljs-string">'Date'</span>] &lt;= <span class="hljs-string">'03-23-2020'</span>)];
+    swemobmarch = swemob.loc[(mobility[<span class="hljs-string">'Date'</span>] &gt; <span class="hljs-string">'03-01-2020'</span>) &amp; (mobility[<span class="hljs-string">'Date'</span>] &lt;= <span class="hljs-string">'04-01-2020'</span>)];
+
+    gbrM1 = gbrmobmarch.reset_index().rename(columns={<span class="hljs-string">''</span>+name: <span class="hljs-string">'GBR '</span> + name})[<span class="hljs-string">'GBR '</span> + name]
+    sweM1 = swemobmarch.reset_index().rename(columns={<span class="hljs-string">''</span>+name: <span class="hljs-string">'SWE '</span> + name})[<span class="hljs-string">'SWE '</span> + name]
+    plt = pd.concat([gbrM1, sweM1], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
+</code></pre>
+<pre><code class="language-python">plot_item(<span class="hljs-string">'Workplaces (%)'</span>)
+plot_item(<span class="hljs-string">'Residential (%)'</span>)
+plot_item(<span class="hljs-string">'Transit Stations (%)'</span>)
+</code></pre>
+<p><img src="/posts/output_11_0.png" alt="png"></p>
+<p><img src="/posts/output_11_1.png" alt="png"></p>
+<p><img src="/posts/output_11_2.png" alt="png"></p>
+<p>Looks like the people in Sweden reacted to the pandemic 10 days earlier than the UK did. Perhaps thats how they curbed the spread? Either way, the important point is that the rate of growth makes the biggest difference early on and any quick actions to reduce it are of much greater value than delayed ones.</p>
+<p>Regardless, its still wrong to compare UK with Sweden when the rates of growth are different. To show why, I will use a car analogy</p>
+<h3>The car analogy</h3>
+<p>Lets say we have two car models from the same company, World Cars. World cars are a bit quirky, they like to name their cars by countries in the world. We would like to decide which one to buy and one of the factors we're interested in is safety. Specifically, we want to know how well the brakes work.</p>
+<p>To determine which car is better, we try to look up at some data on braking tests. We find the
+following two datapoints for the cars:</p>
+<table>
+<thead>
+<tr>
+<th>Car name</th>
+<th>Brake distance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UK</td>
+<td>32 m</td>
+</tr>
+<tr>
+<td>Sweden</td>
+<td>30 m</td>
+</tr>
+</tbody>
+</table>
+<p>Oh, nice. It looks like the brakes are pretty similar, with Sweden's being slightly better.</p>
+<p>But then you notice something odd about these two tests. It looks like they were performed at
+different initial speeds!</p>
+<table>
+<thead>
+<tr>
+<th>Car name</th>
+<th>Brake distance</th>
+<th>Initial speed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UK</td>
+<td>32 m</td>
+<td>80 km/h</td>
+</tr>
+<tr>
+<td>Sweden</td>
+<td>30 m</td>
+<td>40 km/h</td>
+</tr>
+</tbody>
+</table>
+<p>Wait a minute. This comparison makes no sense now! In fact its quite likely that the UK car brakes are way more effective,  being able to stop in just 32m from a starting speed of 80 km/h. A little <a href="https://www.johannes-strommer.com/diverses/pages-in-english/stopping-distance-acceleration-speed/">back of the napkin</a> math shows that UK's brake distance for an initial speed of 40 km/h would be just 8 meters:</p>
+<table>
+<thead>
+<tr>
+<th>Car name</th>
+<th>Brake distance</th>
+<th>Initial speed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UK</td>
+<td>8 m</td>
+<td>40 km/h</td>
+</tr>
+<tr>
+<td>Sweden</td>
+<td>30 m</td>
+<td>40 km/h</td>
+</tr>
+</tbody>
+</table>
+<p>Now lets look at the rate of growth chart for daily deaths again:</p>
+<p><img src="/posts/output_7_0.png" alt="png"></p>
+<p>Just as we can't compare the effectiveness of brakes by the distance traveled if the initial speed
+is different, we can't compare the effectiveness of measures by the number of cases per million if
+the initial rate of growth was different. Different rate of growth means that different brakes are
+needed.</p>
+<blockquote>
+<p>Note: with cases its probably even worse as exponential (and near-exponential) growth is far more
+dramatic than the quadratic growth caused by acceleration</p>
+</blockquote>
+</div><a name="_comments"></a><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>

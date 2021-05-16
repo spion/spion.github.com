@@ -1,0 +1,1527 @@
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Analysis of generators and other async patterns in node</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>Analysis of generators and other async patterns in node</h1><div class="date">Fri Aug 09 2013</div><div class="content"><p>Table of contents:</p>
+<ul>
+<li><a href="#a-gentle-introduction-to-generators">A gentle introduction to generators</a></li>
+<li><a href="#the-analysis">The analysis</a></li>
+<li><a href="#the-examples">The examples</a></li>
+<li><a href="#complexity">Complexity</a></li>
+<li><a href="#performance-time-and-memory">Performance (time and memory)</a></li>
+<li><a href="#debuggability">Debuggability</a>
+<ul>
+<li><a href="#source-maps-support">Source maps support</a></li>
+<li><a href="#stack-trace-accuracy">Stack trace accuracy</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<p>Async coding patterns are the subject of never-ending debates for us node.js
+developers. Everyone has their own favorite method or pet library as well as
+strong feelings and opinions on all the other methods and libraries. Debates
+can be heated: sometimes social pariahs may be declared or grave rolling
+may be induced.</p>
+<p>The reason for this is that JavaScript never had any continuation
+mechanism to allow code to pause and resume across the event loop boundary.</p>
+<p>Until now.</p>
+<p><a name="a-gentle-introduction-to-generators"></a></p>
+<h3>A gentle introduction to generators</h3>
+<p><small>If you know how generators work, you can <a href="#skip">skip this</a>
+and continue to the analysis</small></p>
+<p>Generators are a new feature of ES6. Normally they would be used for iteration.
+Here is a generator that generates Fibonacci numbers. The example is taken from
+the <a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">ECMAScript harmony wiki</a>:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">fibonacci</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">let</span> [prev, curr] = [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">for</span> (;;) {
+        [prev, curr] = [curr, prev + curr];
+        <span class="hljs-keyword">yield</span> curr;
+    }
+}
+</code></pre>
+<p>And here is how we iterate through this generator:</p>
+<pre><code class="language-js"><span class="hljs-keyword">for</span> (n <span class="hljs-keyword">of</span> fibonacci()) {
+    <span class="hljs-comment">// truncate the sequence at 1000</span>
+    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">1000</span>) <span class="hljs-keyword">break</span>;
+    <span class="hljs-built_in">console</span>.log(n);
+}
+</code></pre>
+<p>What happens behind the scene?</p>
+<p>Generator functions are actually constructors of iterators. The returned
+iterator object has a <code>next()</code> method. We can invoke that method manually:</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> seq = fibonacci();
+<span class="hljs-built_in">console</span>.log(seq.next()); <span class="hljs-comment">// 1</span>
+<span class="hljs-built_in">console</span>.log(seq.next()); <span class="hljs-comment">// 2 etc.</span>
+</code></pre>
+<p>When <code>next</code> is invoked, it starts the execution of the generator. The generator
+runs until it encounters a <code>yield</code> expression. Then it pauses and the execution
+goes back to the code that called <code>next</code></p>
+<p>So in a way, <code>yield</code> works similarly to <code>return</code>. But there is a big difference.
+If we call <code>next</code> on the generator again, the generator will resume from the
+point where it left off - from the last <code>yield</code> line.</p>
+<p>In our example, the generator will resume to the top of the endless  <code>for</code> loop
+and calculate the next Fibonacci pair.</p>
+<p>So how would we use this to write async code?</p>
+<p>A great thing about the <code>next()</code> method is that it can also send values to the
+generator. Let's write a simple number generator that also collects the stuff
+it receives. When it gets two things it prints them using <code>console.log</code>:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">numbers</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> stuffIgot = [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">2</span>; ++k) {
+        <span class="hljs-keyword">var</span> itemReceived = <span class="hljs-keyword">yield</span> k;
+        stuffIgot.push(itemReceived);
+    }
+    <span class="hljs-built_in">console</span>.log(stuffIgot);
+}
+</code></pre>
+<p>This generator gives us 3 numbers using yield. Can we give something back?</p>
+<p>Let's give two things to this generator:</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> iterator = numbers();
+<span class="hljs-comment">// Cant give anything the first time: need to get to a yield first.</span>
+<span class="hljs-built_in">console</span>.log(iterator.next()); <span class="hljs-comment">// logs 0</span>
+<span class="hljs-built_in">console</span>.log(iterator.next(<span class="hljs-string">'present'</span>)); <span class="hljs-comment">// logs 1</span>
+fs.readFile(<span class="hljs-string">'file.txt'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, resultFromAnAsyncTask</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(iterator.next(resultFromAnAsyncTask)); <span class="hljs-comment">// logs 2</span>
+});
+</code></pre>
+<p>The generator will log the string <code>'present'</code> and the contents of <code>file.txt</code></p>
+<p>Uh-oh.</p>
+<p>Seems that we can keep the generator paused across the event loop boundary.</p>
+<p>What if instead of numbers, we yielded some files to be read?</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">files</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> results = [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> k = <span class="hljs-number">0</span>; k &lt; files.length; ++k)
+        results.push(<span class="hljs-keyword">yield</span> files[k]);
+    <span class="hljs-keyword">return</span> results;
+}
+</code></pre>
+<p>We could process those file reading tasks asynchronously.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> iterator = files();
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">process</span>(<span class="hljs-params">iterator, sendValue</span>) </span>{
+    <span class="hljs-keyword">var</span> fileTask = iterator.next(sendValue);
+    fs.readFile(fileTask, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) iterator.throw(err);
+        <span class="hljs-keyword">else</span> process(iterator, res);
+    });
+}
+process(iterator);
+</code></pre>
+<p>But from the generator's point of view, everything seems to be happening
+synchronously: it gives us the file using <code>yield</code>, then it waits to be resumed,
+then it receives the contents of the file and makes a push to the results
+array.</p>
+<p>And there is also <code>generator.throw()</code>. It causes an exception to be thrown
+from inside the generator. How cool is that?</p>
+<p>With <code>next</code> and <code>throw</code> combined together, we can easily run async code. Here
+is an example from one of the earliest ES6 async generators library
+<a href="http://taskjs.org/">task.js</a>.</p>
+<pre><code class="language-js">spawn(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">yield</span> $.ajax(url);
+    $(<span class="hljs-string">'#result'</span>).html(data);
+    <span class="hljs-keyword">var</span> status = $(<span class="hljs-string">'#status'</span>).html(<span class="hljs-string">'Download complete.'</span>);
+    <span class="hljs-keyword">yield</span> status.fadeIn().promise();
+    <span class="hljs-keyword">yield</span> sleep(<span class="hljs-number">2000</span>);
+    status.fadeOut();
+});
+</code></pre>
+<p>This generator yields promises, which causes it to suspend execution. The <code>spawn</code>
+function that runs the generator takes those promises and waits until they're
+fulfilled. Then it resumes the generator by sending it the resulting value.</p>
+<p>When used in this form, generators look a lot like classical threads. You spawn
+a thread, it issues blocking I/O calls using <code>yield</code>, then the code resumes
+execution from the point it left off.</p>
+<p>There is one very important difference though. While threads can be suspended
+involuntarily at any point by the operating systems, generators have to
+willingly suspend themselves using <code>yield</code>. This means that there is no danger
+of variables changing under our feet, except after a <code>yield</code>.</p>
+<p>Generators go a step further with this: it's impossible to suspend execution
+without using the <code>yield</code> keyword. In fact, if you want to call another
+generator you will have to write <code>yield* anotherGenerator(args)</code>. This means
+that suspend points are always visible in the code, just like they are when
+using callbacks.</p>
+<p>Amazing stuff! So what does this mean? What is the reduction of code complexity?
+What are the performance characteristics of code using generators? Is debugging
+easy? What about environments that don't have ES6 support?</p>
+<p>I decided to do a big comparison of all existing node async code patterns and
+find the answers to these questions.</p>
+<p><a name="skip"></a><a name="the-analysis"></a></p>
+<h3>The analysis</h3>
+<p>For the analysis, I took <code>file.upload</code>, a typical CRUD method extracted from
+<a href="http://doxbee.com">DoxBee</a> called when uploading files. It executes multiple
+queries to the database: a couple of selects, some inserts and one update.
+Lots of mixed sync / async action.</p>
+<p>It looks like this:</p>
+<pre><code>function upload(stream, idOrPath, tag, done) {
+    var blob = blobManager.create(account);
+    var tx = db.begin();
+    function backoff(err) {
+        tx.rollback();
+        return done(new Error(err));
+    }
+    blob.put(stream, function (err, blobId) {
+        if (err) return done(err);
+        self.byUuidOrPath(idOrPath).get(function (err, file) {
+            if (err) return done(err);
+            var previousId = file ? file.version : null;
+            var version = {
+                userAccountId: userAccount.id,
+                date: new Date(),
+                blobId: blobId,
+                creatorId: userAccount.id,
+                previousId: previousId
+            };
+            version.id = Version.createHash(version);
+            Version.insert(version).execWithin(tx, function (err) {
+                if (err) return backoff(err);
+                if (!file) {
+                    var splitPath = idOrPath.split('/');
+                    var fileName = splitPath[splitPath.length - 1];
+                    var newId = uuid.v1();
+                    self.createQuery(idOrPath, {
+                        id: newId,
+                        userAccountId: userAccount.id,
+                        name: fileName,
+                        version: version.id
+                    }, function (err, q) {
+                        if (err) return backoff(err);
+                        q.execWithin(tx, function (err) {
+                            afterFileExists(err, newId);
+                        });
+
+                    })
+                }
+                else return afterFileExists(null, file.id);
+            });
+            function afterFileExists(err, fileId) {
+                if (err) return backoff(err);
+                FileVersion.insert({fileId: fileId,versionId: version.id})
+                    .execWithin(tx, function (err) {
+                        if (err) return backoff(err);
+                        File.whereUpdate({id: fileId}, {
+                            version: version.id
+                        }).execWithin(tx, function (err) {
+                            if (err) return backoff(err);
+                            tx.commit(done);
+                        });
+                })
+            }
+        });
+    });
+}
+</code></pre>
+<p>Slightly pyramidal code full of callbacks.</p>
+<p>This is how it looks like when written with generators:</p>
+<pre><code>var genny = require('genny');
+module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
+    var blob = blobManager.create(account);
+    var tx = db.begin();
+    try {
+        var blobId = yield blob.put(stream, resume());
+        var file = yield self.byUuidOrPath(idOrPath).get(resume());
+        var previousId = file ? file.version : null;
+        var version = {
+            userAccountId: userAccount.id,
+            blobId: blobId,
+            creatorId: userAccount.id,
+            previousId: previousId
+        };
+        version.id = Version.createHash(version);
+        yield Version.insert(version).execWithin(tx, resume());
+        if (!file) {
+            var splitPath = idOrPath.split('/');
+            var fileName = splitPath[splitPath.length - 1];
+            var newId = uuid.v1();
+            var file = {
+                id: newId,
+                userAccountId: userAccount.id,
+                name: fileName,
+                version: version.id
+            }
+            var q = yield self.createQuery(idOrPath, file, resume());
+            yield q.execWithin(tx, resume());
+        }
+        yield FileVersion.insert({fileId: file.id, versionId: version.id})
+            .execWithin(tx, resume());
+        yield File.whereUpdate({id: file.id}, {version: version.id})
+            .execWithin(tx, resume());
+        yield tx.commit(resume());
+    } catch (e) {
+        tx.rollback();
+        throw e;
+    }
+});
+</code></pre>
+<p>Shorter, very straight-forward code and absolutely no nesting of callback
+functions. Awesome.</p>
+<p>Yet subjective adjectives are not very convincing. I want to have a measure of
+complexity, a number that tells me what I'm actually saving.</p>
+<p>I also want to know what the performance characteristics are - how much time
+and memory would it take to execute a thousand of parallel invocations of this
+method? What about 2000 or 3000?</p>
+<p>Also, what happens if an exception is thrown? Do I get a complete stack trace
+like in the original version?</p>
+<p>I also wanted to compare the results with other alternatives, such as fibers,
+streamlinejs and promises (without generators).</p>
+<p>So I wrote a lot of different versions of this method, and I will share my
+personal impressions before giving you the results of the analysis</p>
+<p><a name="the-examples"></a></p>
+<h3>The examples</h3>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/original.js">original.js</a></h4>
+<p>The original solution, presented above. Vanilla callbacks. Slightly pyramidal.
+I consider it acceptable, if a bit mediocre.</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/flattened.js">flattened.js</a></h4>
+<p>Flattened variant of the original via named functions. Taking the advice from
+<a href="http://callbackhell.com/">callback hell</a>, I flattened the pyramid a little
+bit. As I did that, I found that while the pyramid shrunk, the code actually
+grew.</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/catcher.js">catcher.js</a></h4>
+<p>I noticed that the first two vanilla solutions had a lot of common error
+handling code everywhere. So I wrote a tiny library called catcher.js which
+works very much like node's <code>domain.intercept</code>. This reduced the complexity
+and the number of lines further, but the pyramidal looks remained.</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/async.js">async.js</a></h4>
+<p>Uses the waterfall function from <a href="//github.com/caolan/async">caolan's async</a>.
+Very similar to flattened.js but without the need to handle errors at every
+step.</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class.js">flattened-class.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-noclosure.js">flattened-noclosure.js</a>, <a href="//github.com/spion/async-compare/blob/blog/examples/flattened-class-ctx.js">flattened-class-ctx.js</a></h4>
+<p>See <a href="/posts/closures-are-unavoidable-in-node.html">this post</a> for details</p>
+<p><a name="promises-failure"></a></p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">promises.js</a></h4>
+<p>I'll be honest. I've never written promise code in node before. Driven by
+<a href="//jeditoolkit.com/2012/04/26/code-logic-not-mechanics.html#post">Gozalla's excellent post</a>
+I concluded that everything should be a promise, and things that can't handle
+promises should also be rewritten.</p>
+<p>Take for example this particular line in the original:</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> previousId = file ? file.version : <span class="hljs-literal">null</span>;
+</code></pre>
+<p>If file is a promise, we can't use the ternary operator or the property
+getter. Instead we need to write two helpers: a ternary operator helper and a
+property getter helper:</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> previousIdP = p.ternary(fileP, p.get(fileP, <span class="hljs-string">'version'</span>), <span class="hljs-literal">null</span>);
+</code></pre>
+<p>Unfortunately this gets out of hand quickly:</p>
+<pre><code>var versionP = p.allObject({
+    userAccountId: userAccount.id,
+    blobId: blobIdP,
+    creatorId: userAccount.id,
+    previousId: previousIdP,
+    ...
+});
+versionP = p.set(versionP, p.allObject({
+    id: fn.call(Version.createHash, versionP)
+}));
+// Even if Version.insert has been lifted to take promise arguments, it returns
+// a promise and therefore we cannot call execWithinP. We have to wait for the
+// promise  to resolve to invoke the function.
+var versionInsert = p.eventuallyCall(
+    Version.insert(versionP), 'execWithinP', tx);
+var versionIdP = p.get(versionP, 'id');
+</code></pre>
+<p>So I decided to write a less aggressive version, <code>promiseish.js</code></p>
+<p>note: I used <a href="//github.com/cujojs/when">when</a> because i liked its function
+lifting API better than Q's</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/promiseish.js">promiseish.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/promiseishQ.js">promiseishQ.js</a></h4>
+<p>Nothing fancy here, just some <code>.then()</code> chaining. In fact it feels less complex
+than the <code>promise.js</code> version, where I felt like I was trying to fight the
+language all the time.</p>
+<p>The second file <code>promiseishQ.js</code> uses <a href="//github.com/kriskowal/q">Q</a> instead of
+<a href="//github.com/cujojs/when">when</a>. No big difference there.</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/fibrous.js">fibrous.js</a></h4>
+<p><a href="//github.com/goodeggs/fibrous">Fibrous</a> is a fibers library that creates
+&quot;sync&quot; methods out of your async ones, which you can then run in a fiber.</p>
+<p>So if for example you had:</p>
+<pre><code>fs.readFile(file, function(err, data){ ... });
+</code></pre>
+<p>Fibrous would generate a version that returns a future, suspends the running
+fiber and resumes execution when the value becomes available.</p>
+<pre><code>var data = fs.sync.readFile(file);
+</code></pre>
+<p>I also needed to wrap the entire upload function:</p>
+<pre><code>fibrous(function upload() { ... })
+</code></pre>
+<p>This felt very similar to the generators version above but with <code>sync</code> instead
+of <code>yield</code> to indicate the methods that will yield. The one benefit I can think
+of is that it feels more natural for chaining - less parenthesis are needed.</p>
+<pre><code>somefn.sync(arg).split('/')
+// vs
+(yield somefn(arg, resume)).split('/')
+</code></pre>
+<p>Major drawback: this will never be available outside of node.js or without
+native modules.</p>
+<p>Library: <a href="//github.com/goodeggs/fibrous">fibrous</a></p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/suspend.js">suspend.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples-extra/promises.js">genny.js</a></h4>
+<p><a href="https://github.com/jmar777/suspend">suspend</a> and
+<a href="http://github.com/spion/genny">genny</a> are generator-based solutions that can
+work directly with node-style functions.</p>
+<p>I'm biased here since I wrote genny. I still think that this is objectively the
+best way to use generators in node. Just replace the callback with a placeholder
+generator-resuming function, then yield that. Comes back to you with the value.</p>
+<p>Kudos to <a href="//github.com/jmar777">jmar777</a> for realizing that you don't need
+to actually yield anything and can resume the generator using the placeholder
+callback instead.</p>
+<p>Both suspend and genny use generators roughly the same way. The resulting code
+is very clean, very straightforward and completely devoid of callbacks.</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/qasync.js">qasync.js</a></h4>
+<p>Q provides two methods that allow you to use generators: <code>Q.spawn</code> and
+<code>Q.async</code>. In both cases the generator yields promises and in turn receives
+resolved values.</p>
+<p>The code didn't feel very different from genny and suspend. Its slightly less
+complicated: you can yield the promise instead of placing the provided resume
+function at every point where a callback is needed.</p>
+<p>Caveat: as always with promises you will need to wrap all callback-based
+functions.</p>
+<p>Library: <a href="//github.com/kriskowal/q">Q</a></p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/co.js">co.js</a> and <a href="//github.com/spion/async-compare/blob/blog/examples/gens.js">gens.js</a></h4>
+<p><a href="//github.com/Raynos/gens">Gens</a> and <a href="//github.com/visionmedia/co">co</a> are
+generator-based libraries. Both can work by yielding thunk-style functions:
+that is, functions that take a single argument which is a node style callback
+in the format <code>function (err, result)</code></p>
+<p>The code looks roughly the same as qasync.js</p>
+<p>The problem is, thunks still require wrapping. The recommended way to wrap node
+style functions is to use <code>co.wrap</code> for co and <code>fn.bind</code> for gens - so thats
+what I did.</p>
+<h4><a href="//github.com/spion/async-compare/blob/blog/examples/src-streamline._js">streamline.js</a></h4>
+<p>Uses <a href="http://github.com/Sage/streamlinejs">streamlinejs</a> CPS transformer and
+works very much like co and qasync, except without needing to write yield
+all the time.</p>
+<p>Caveat: you will need to compile the file in order to use it. Also, even
+though it looks like valid JavaScript, it isn't JavaScript. Superficially, it
+has the same syntax, but it has very different semantics, particularly when
+it comes to the <code>_</code> keyword, which acts like <code>yield</code> and <code>resume</code> combined in
+one.</p>
+<p>The code however is really simple and straightforward: infact it has the lowest
+complexity.</p>
+<p><a name="complexity"></a></p>
+<h3>Complexity</h3>
+<p>To measure complexity I took the number of tokens in the source code found by
+Esprima's lexer (comments excluded). The idea is taken from
+<a href="http://www.paulgraham.com/power.html">Paul Graham's essay <em>Succinctness is Power</em></a></p>
+<p>I decided to allow all callback wrapping to happen in a separate file: In a
+large system, the wrapped layer will probably be a small part of the code.</p>
+<p>Results:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">name</th>
+<th style="text-align:right">tokens</th>
+<th style="text-align:right">complexity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">src-streamline._js</td>
+<td style="text-align:right">302</td>
+<td style="text-align:right">1.00</td>
+</tr>
+<tr>
+<td style="text-align:left">co.js</td>
+<td style="text-align:right">304</td>
+<td style="text-align:right">1.01</td>
+</tr>
+<tr>
+<td style="text-align:left">qasync.js</td>
+<td style="text-align:right">314</td>
+<td style="text-align:right">1.04</td>
+</tr>
+<tr>
+<td style="text-align:left">fibrous.js</td>
+<td style="text-align:right">317</td>
+<td style="text-align:right">1.05</td>
+</tr>
+<tr>
+<td style="text-align:left">suspend.js</td>
+<td style="text-align:right">331</td>
+<td style="text-align:right">1.10</td>
+</tr>
+<tr>
+<td style="text-align:left">genny.js</td>
+<td style="text-align:right">339</td>
+<td style="text-align:right">1.12</td>
+</tr>
+<tr>
+<td style="text-align:left">gens.js</td>
+<td style="text-align:right">341</td>
+<td style="text-align:right">1.13</td>
+</tr>
+<tr>
+<td style="text-align:left">catcher.js</td>
+<td style="text-align:right">392</td>
+<td style="text-align:right">1.30</td>
+</tr>
+<tr>
+<td style="text-align:left">promiseishQ.js</td>
+<td style="text-align:right">396</td>
+<td style="text-align:right">1.31</td>
+</tr>
+<tr>
+<td style="text-align:left">promiseish.js</td>
+<td style="text-align:right">411</td>
+<td style="text-align:right">1.36</td>
+</tr>
+<tr>
+<td style="text-align:left">original.js</td>
+<td style="text-align:right">421</td>
+<td style="text-align:right">1.39</td>
+</tr>
+<tr>
+<td style="text-align:left">async.js</td>
+<td style="text-align:right">442</td>
+<td style="text-align:right">1.46</td>
+</tr>
+<tr>
+<td style="text-align:left">promises.js</td>
+<td style="text-align:right">461</td>
+<td style="text-align:right">1.53</td>
+</tr>
+<tr>
+<td style="text-align:left">flattened.js</td>
+<td style="text-align:right">473</td>
+<td style="text-align:right">1.57</td>
+</tr>
+<tr>
+<td style="text-align:left">flattened-noclosure.js</td>
+<td style="text-align:right">595</td>
+<td style="text-align:right">1.97</td>
+</tr>
+<tr>
+<td style="text-align:left">flattened-class-ctx.js</td>
+<td style="text-align:right">674</td>
+<td style="text-align:right">2.23</td>
+</tr>
+<tr>
+<td style="text-align:left">flattened-class.js</td>
+<td style="text-align:right">718</td>
+<td style="text-align:right">2.38</td>
+</tr>
+<tr>
+<td style="text-align:left">rx.js</td>
+<td style="text-align:right">935</td>
+<td style="text-align:right">3.10</td>
+</tr>
+</tbody>
+</table>
+<p>Streamline and co have the lowest complexity. Fibrous, qasync, suspend, genny
+and gens are roughly comparable.</p>
+<p>Catcher is comparable with the normal promise solutions. Both are roughly
+comparable to the original version with callbacks, but there is some
+improvement as the error handling is consolidated to one place.</p>
+<p>It seems that flattening the callback pyramid increases the complexity a little
+bit. However, arguably the readability of the flattened version is improved.</p>
+<p>Using caolan's async in this particular case doesn't seem to yield much
+improvement. Its complexity however is lower than the flattened version because
+it consolidates error handling.</p>
+<p>Going promises-all-the-way as Gozala suggests also increases the complexity
+because we're fighting the language all the time.</p>
+<p>The rx.js sample is still a work in progress - it can be made much better.</p>
+<p><a name="performance-time-and-memory"></a></p>
+<h3>Performance (time and memory)</h3>
+<p>All external methods are mocked using <code>setTimeout</code> to simulate waiting for I/O.</p>
+<p>There are two variables that control the test:</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> - the number of parallel &quot;upload requests&quot;</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span></span></span></span> - average wait time per async I/O operation</li>
+</ul>
+<p>For the first test, I set the time for every async operation to 1ms then
+ran every solution for $[n \in \lbrace 100, 500, 1000, 1500, 2000 \rbrace ]$.</p>
+<p>note: hover over the legend to highlight the item on the chart.</p>
+<div id="perf-time-1" class="plot">
+</div>
+<script type="text/javascript">
+<p>window.perfCPUBound =
+[
+{ label: 'async.js',
+data:
+[ [ 100, 17 ],
+[ 500, 39 ],
+[ 1000, 65 ],
+[ 1500, 95 ],
+[ 2000, 119 ] ] },
+{ label: 'catcher.js',
+data:
+[ [ 100, 17 ],
+[ 500, 29 ],
+[ 1000, 44 ],
+[ 1500, 58 ],
+[ 2000, 72 ] ] },
+{ label: 'co.js',
+data:
+[ [ 100, 24 ],
+[ 500, 62 ],
+[ 1000, 96 ],
+[ 1500, 157 ],
+[ 2000, 233 ] ] },
+{ label: 'dst-co-traceur.js',
+data:
+[ [ 100, 28 ],
+[ 500, 86 ],
+[ 1000, 200 ],
+[ 1500, 271 ],
+[ 2000, 324 ] ] },
+{ label: 'dst-genny-traceur.js',
+data:
+[ [ 100, 25 ],
+[ 500, 76 ],
+[ 1000, 157 ],
+[ 1500, 244 ],
+[ 2000, 286 ] ] },
+{ label: 'dst-qasync-traceur.js',
+data:
+[ [ 100, 112 ],
+[ 500, 510 ],
+[ 1000, 1108 ],
+[ 1500, 1713 ],
+[ 2000, 2316 ] ] },
+{ label: 'dst-stratifiedjs-014.js',
+data:
+[ [ 100, 40 ],
+[ 500, 131 ],
+[ 1000, 224 ],
+[ 1500, 280 ],
+[ 2000, 433 ] ] },
+{ label: 'dst-streamline.js',
+data:
+[ [ 100, 19 ],
+[ 500, 37 ],
+[ 1000, 54 ],
+[ 1500, 74 ],
+[ 2000, 97 ] ] },
+{ label: 'dst-suspend-traceur.js',
+data:
+[ [ 100, 21 ],
+[ 500, 56 ],
+[ 1000, 117 ],
+[ 1500, 217 ],
+[ 2000, 263 ] ] },
+{ label: 'flattened-class.js',
+data:
+[ [ 100, 16 ],
+[ 500, 29 ],
+[ 1000, 40 ],
+[ 1500, 47 ],
+[ 2000, 58 ] ] },
+{ label: 'flattened.js',
+data:
+[ [ 100, 15 ],
+[ 500, 31 ],
+[ 1000, 44 ],
+[ 1500, 55 ],
+[ 2000, 64 ] ] },
+{ label: 'flattened-noclosure.js',
+data:
+[ [ 100, 16 ],
+[ 500, 28 ],
+[ 1000, 42 ],
+[ 1500, 53 ],
+[ 2000, 64 ] ] },
+{ label: 'genny.js',
+data:
+[ [ 100, 19 ],
+[ 500, 48 ],
+[ 1000, 79 ],
+[ 1500, 147 ],
+[ 2000, 150 ] ] },
+{ label: 'gens.js',
+data:
+[ [ 100, 19 ],
+[ 500, 39 ],
+[ 1000, 63 ],
+[ 1500, 94 ],
+[ 2000, 119 ] ] },
+{ label: 'original.js',
+data:
+[ [ 100, 15 ],
+[ 500, 28 ],
+[ 1000, 43 ],
+[ 1500, 56 ],
+[ 2000, 65 ] ] },
+{ label: 'promiseish.js',
+data:
+[ [ 100, 97 ],
+[ 500, 463 ],
+[ 1000, 809 ],
+[ 1500, 1155 ],
+[ 2000, 1652 ] ] },
+{ label: 'promiseishQ.js',
+data:
+[ [ 100, 93 ],
+[ 500, 540 ],
+[ 1000, 1145 ],
+[ 1500, 1789 ],
+[ 2000, 2287 ] ] },
+{ label: 'promises.js',
+data:
+[ [ 100, 222 ],
+[ 500, 1241 ],
+[ 1000, 2284 ],
+[ 1500, 3836 ],
+[ 2000, 5861 ] ] },
+{ label: 'qasync.js',
+data:
+[ [ 100, 79 ],
+[ 500, 489 ],
+[ 1000, 962 ],
+[ 1500, 1587 ],
+[ 2000, 2104 ] ] },
+{ label: 'rx.js',
+data:
+[ [ 100, 37 ],
+[ 500, 147 ],
+[ 1000, 232 ],
+[ 1500, 329 ],
+[ 2000, 490 ] ] },
+{ label: 'suspend.js',
+data:
+[ [ 100, 16 ],
+[ 500, 28 ],
+[ 1000, 50 ],
+[ 1500, 66 ],
+[ 2000, 83 ] ] } ]</p>
+<p>.concat(</p>
+<p>[ { label: 'dst-streamline-fibers.js',
+data:
+[ [ 100, 25 ],
+[ 500, 147 ],
+[ 1000, 519 ],
+[ 1500, 1256 ],
+[ 2000, 2393 ] ] },
+{ label: 'fibrous.js',
+data:
+[ [ 100, 89 ],
+[ 500, 442 ],
+[ 1000, 1159 ],
+[ 1500, 2228 ],
+[ 2000, 3755 ] ] } ]</p>
+<pre><code>);
+</code></pre>
+<p>window.addEventListener('load', function() {
+$.plot('#perf-time-1', perfCPUBound, {legend: { position: 'nw' }});
+});
+</script></p>
+<p>Wow. Promises seem really, really slow. Fibers are also slow, with time
+complexity $[ O(n^2) ]$. Everything else seems to be much faster.</p>
+<p><strong>Update (Dec 20 2013)</strong>: Promises not slow anymore. PetkaAntonov wrote
+Bluebird, which is faster than almost everything else and very low on
+memory usage. For more info read <em><a href="/posts/why-i-am-switching-to-promises.html">Why I am switching to
+Promises</a></em></p>
+<p>Lets try removing all those promises and fibers to see whats down there.</p>
+<div id="perf-time-2" class="plot">
+</div>
+<script type="text/javascript">
+<p>window.addEventListener('load', function() {
+$.plot('#perf-time-2', perfCPUBound.filter(function(item) {
+return !/(promise|qasync|fibrous|fiber)/.test(item.label)
+}), {legend: { position: 'nw' }})
+});
+</script></p>
+<p>Ah, much better.</p>
+<p>The original and flattened solutions are the fastest, as they use vanilla
+callbacks, with the fastest flattened solution being flattened-class.js.</p>
+<p>suspend is the fastest generator based solution. It incurred minimal
+overhead of about 60% running time. Its also roughly comparable with
+streamlinejs (when in raw callbacks mode).</p>
+<p>caolan's async adds some measurable overhead (its about 2 times slower than
+the original versions). Its also somewhat slower than the fastest generator
+based solution.</p>
+<p>genny is about 3 times slower. This is because it adds some protection
+guarantees: it makes sure that callback-calling functions behave and call the
+callback only once. It also provides a mechanism to enable better stack traces
+when errors are encountered.</p>
+<p>The slowest of the generator bunch is co, but not by much. There is nothing
+intrinsically slow about it though: the slowness is probably caused by <code>co.wrap</code>
+which creates a new arguments array on every invocation of the wrapped function.</p>
+<p>All generator solutions become about 2 times slower when compiled with
+<a href="//github.com/google/traceur-compiler/">Google Traceur</a>, an ES6 to ES5 compiler
+which we need to run generators code without the <code>--harmony</code> switch or in
+browsers.</p>
+<p>Finally we have rx.js which is about 10 times slower than the original.</p>
+<p>However, this test is a bit unrealistic.</p>
+<p>Most async operations take much longer than 1 millisecond to complete,
+especially when the load is as high as thousands of requests per second.
+As a result, performance is I/O bound - why measure things as if it were
+CPU-bound?</p>
+<p>So lets make the average time needed for an async operation depend on the
+number of parallel calls to <code>upload()</code>.</p>
+<p>On my machine redis can be queried about 40 000 times per second; node's
+&quot;hello world&quot; http server can serve up to 10 000 requests per second;
+postgresql's pgbench can do 300 mixed or 15 000 select transactions per second.</p>
+<p>Given all that, I decided to go with 10 000 requests per second - it looks like
+a reasonable (rounded) mean.</p>
+<p>Each I/O operation will take 10 ms on average when there are 100 running in
+parallel and 1000 ms when there are 10 000 running in parallel. Makes much more
+sense.</p>
+<div id="perf-time-3" class="plot">
+</div>
+<script type="text/javascript">
+window.perfIOBound =
+<p>[ { label: 'async.js',
+data:
+[ [ 100, 92 ],
+[ 500, 388 ],
+[ 1000, 791 ],
+[ 1500, 1155 ],
+[ 2000, 1518 ] ] },
+{ label: 'catcher.js',
+data:
+[ [ 100, 78 ],
+[ 500, 351 ],
+[ 1000, 699 ],
+[ 1500, 1081 ],
+[ 2000, 1427 ] ] },
+{ label: 'co.js',
+data:
+[ [ 100, 98 ],
+[ 500, 424 ],
+[ 1000, 821 ],
+[ 1500, 1222 ],
+[ 2000, 1661 ] ] },
+{ label: 'dst-co-traceur.js',
+data:
+[ [ 100, 91 ],
+[ 500, 467 ],
+[ 1000, 922 ],
+[ 1500, 1347 ],
+[ 2000, 1744 ] ] },
+{ label: 'dst-genny-traceur.js',
+data:
+[ [ 100, 89 ],
+[ 500, 398 ],
+[ 1000, 778 ],
+[ 1500, 1205 ],
+[ 2000, 1533 ] ] },
+{ label: 'dst-qasync-traceur.js',
+data:
+[ [ 100, 113 ],
+[ 500, 495 ],
+[ 1000, 1125 ],
+[ 1500, 1757 ],
+[ 2000, 2301 ] ] },
+{ label: 'dst-stratifiedjs-014.js',
+data:
+[ [ 100, 117 ],
+[ 500, 437 ],
+[ 1000, 820 ],
+[ 1500, 1216 ],
+[ 2000, 1592 ] ] },
+{ label: 'dst-streamline.js',
+data:
+[ [ 100, 79 ],
+[ 500, 350 ],
+[ 1000, 699 ],
+[ 1500, 1070 ],
+[ 2000, 1444 ] ] },
+{ label: 'dst-suspend-traceur.js',
+data:
+[ [ 100, 82 ],
+[ 500, 352 ],
+[ 1000, 687 ],
+[ 1500, 1038 ],
+[ 2000, 1374 ] ] },
+{ label: 'flattened-class.js',
+data:
+[ [ 100, 79 ],
+[ 500, 337 ],
+[ 1000, 687 ],
+[ 1500, 1049 ],
+[ 2000, 1424 ] ] },
+{ label: 'flattened.js',
+data:
+[ [ 100, 76 ],
+[ 500, 346 ],
+[ 1000, 699 ],
+[ 1500, 1059 ],
+[ 2000, 1440 ] ] },
+{ label: 'flattened-noclosure.js',
+data:
+[ [ 100, 80 ],
+[ 500, 340 ],
+[ 1000, 697 ],
+[ 1500, 1060 ],
+[ 2000, 1425 ] ] },
+{ label: 'genny.js',
+data:
+[ [ 100, 77 ],
+[ 500, 357 ],
+[ 1000, 723 ],
+[ 1500, 1130 ],
+[ 2000, 1521 ] ] },
+{ label: 'gens.js',
+data:
+[ [ 100, 84 ],
+[ 500, 353 ],
+[ 1000, 719 ],
+[ 1500, 1100 ],
+[ 2000, 1471 ] ] },
+{ label: 'original.js',
+data:
+[ [ 100, 74 ],
+[ 500, 341 ],
+[ 1000, 695 ],
+[ 1500, 1060 ],
+[ 2000, 1431 ] ] },
+{ label: 'promiseish.js',
+data:
+[ [ 100, 90 ],
+[ 500, 504 ],
+[ 1000, 908 ],
+[ 1500, 1234 ],
+[ 2000, 1730 ] ] },
+{ label: 'promiseishQ.js',
+data:
+[ [ 100, 94 ],
+[ 500, 565 ],
+[ 1000, 1166 ],
+[ 1500, 1778 ],
+[ 2000, 2519 ] ] },
+{ label: 'promises.js',
+data:
+[ [ 100, 229 ],
+[ 500, 1233 ],
+[ 1000, 2284 ],
+[ 1500, 3860 ],
+[ 2000, 5919 ] ] },
+{ label: 'qasync.js',
+data:
+[ [ 100, 88 ],
+[ 500, 487 ],
+[ 1000, 950 ],
+[ 1500, 1604 ],
+[ 2000, 2155 ] ] },
+{ label: 'rx.js',
+data:
+[ [ 100, 102 ],
+[ 500, 419 ],
+[ 1000, 760 ],
+[ 1500, 1117 ],
+[ 2000, 1526 ] ] },
+{ label: 'suspend.js',
+data:
+[ [ 100, 75 ],
+[ 500, 343 ],
+[ 1000, 677 ],
+[ 1500, 1032 ],
+[ 2000, 1422 ] ] } ]</p>
+<p>.concat(
+[ { label: 'dst-streamline-fibers.js',
+data:
+[ [ 100, 94 ],
+[ 500, 446 ],
+[ 1000, 925 ],
+[ 1500, 1353 ],
+[ 2000, 2348 ] ] },
+{ label: 'fibrous.js',
+data:
+[ [ 100, 149 ],
+[ 500, 534 ],
+[ 1000, 1206 ],
+[ 1500, 2280 ],
+[ 2000, 4136 ] ] } ]</p>
+<pre><code>   );
+</code></pre>
+<p>window.addEventListener('load', function() {
+$.plot('#perf-time-3', perfIOBound, {legend: { position: 'nw' }})
+});
+</script></p>
+<p><code>promises.js</code> and <code>fibrous.js</code> are still significantly slower. However all of
+the other solutions are quite comparable now. Lets remove the worst two:</p>
+<div id="perf-time-4" class="plot">
+</div>
+<script type="text/javascript">
+window.addEventListener('load', function() {
+    $.plot('#perf-time-4', perfIOBound.filter(function(item) {
+        return !/(promises.js|fibrous.js)/.test(item.label)
+    }), {legend: { position: 'nw' }});
+});
+</script>
+<p>Everything is about the same now. Great! So in practice, you won't notice
+the CPU overhead in I/O bound cases - even if you're using promises. And with
+some of the generator libraries, the overhead becomes practically invisible.</p>
+<p>Excellent. But what about memory usage? Lets chart that too!</p>
+<p>Note: the y axis represents peak memory usage (in MB).</p>
+<div id="perf-mem-1" class="plot">
+</div>
+<script type="text/javascript">
+<p>window.perfMEM =</p>
+<p>[ { label: 'async.js',
+data:
+[ [ 100, 0.75 ],
+[ 500, 3.9140625 ],
+[ 1000, 7.359375 ],
+[ 1500, 10.93359375 ],
+[ 2000, 12.71875 ] ] },
+{ label: 'catcher.js',
+data:
+[ [ 100, 0.91015625 ],
+[ 500, 3.34765625 ],
+[ 1000, 6.46484375 ],
+[ 1500, 9.1953125 ],
+[ 2000, 11.01171875 ] ] },
+{ label: 'co.js',
+data:
+[ [ 100, 1.703125 ],
+[ 500, 6.5390625 ],
+[ 1000, 11.16796875 ],
+[ 1500, 17.43359375 ],
+[ 2000, 24.515625 ] ] },
+{ label: 'dst-co-traceur.js',
+data:
+[ [ 100, 0.09765625 ],
+[ 500, 1.09765625 ],
+[ 1000, 11.08984375 ],
+[ 1500, 17.68359375 ],
+[ 2000, 22.8203125 ] ] },
+{ label: 'dst-genny-traceur.js',
+data:
+[ [ 100, -0.43359375 ],
+[ 500, 1.7265625 ],
+[ 1000, 9.1484375 ],
+[ 1500, 16.30859375 ],
+[ 2000, 15.6796875 ] ] },
+{ label: 'dst-qasync-traceur.js',
+data:
+[ [ 100, 10.33203125 ],
+[ 500, 59.55859375 ],
+[ 1000, 101.76953125 ],
+[ 1500, 135.78125 ],
+[ 2000, 190.25 ] ] },
+{ label: 'dst-stratifiedjs-014.js',
+data:
+[ [ 100, 2.21875 ],
+[ 500, 11.32421875 ],
+[ 1000, 23.32421875 ],
+[ 1500, 38.71875 ],
+[ 2000, 48.015625 ] ] },
+{ label: 'dst-streamline.js',
+data:
+[ [ 100, 1.5078125 ],
+[ 500, 3.76953125 ],
+[ 1000, 8.3359375 ],
+[ 1500, 10.25 ],
+[ 2000, 15.890625 ] ] },
+{ label: 'dst-suspend-traceur.js',
+data:
+[ [ 100, -0.30078125 ],
+[ 500, 2.234375 ],
+[ 1000, 6.5390625 ],
+[ 1500, 11.125 ],
+[ 2000, 15.484375 ] ] },
+{ label: 'flattened-class.js',
+data:
+[ [ 100, 0.53125 ],
+[ 500, 3.1171875 ],
+[ 1000, 4.484375 ],
+[ 1500, 7.96484375 ],
+[ 2000, 8.58984375 ] ] },
+{ label: 'flattened.js',
+data:
+[ [ 100, 0.515625 ],
+[ 500, 3.25390625 ],
+[ 1000, 5.3203125 ],
+[ 1500, 8.78515625 ],
+[ 2000, 9.765625 ] ] },
+{ label: 'flattened-noclosure.js',
+data:
+[ [ 100, 0.51953125 ],
+[ 500, 3.03515625 ],
+[ 1000, 4.8984375 ],
+[ 1500, 8.08203125 ],
+[ 2000, 8.87890625 ] ] },
+{ label: 'genny.js',
+data:
+[ [ 100, 1.11328125 ],
+[ 500, 5.48046875 ],
+[ 1000, 11.6953125 ],
+[ 1500, 16.7890625 ],
+[ 2000, 21.2734375 ] ] },
+{ label: 'gens.js',
+data:
+[ [ 100, 0.65625 ],
+[ 500, 3.91015625 ],
+[ 1000, 8.40234375 ],
+[ 1500, 11.921875 ],
+[ 2000, 15.95703125 ] ] },
+{ label: 'original.js',
+data:
+[ [ 100, 0.63671875 ],
+[ 500, 3.1640625 ],
+[ 1000, 5.328125 ],
+[ 1500, 8.69921875 ],
+[ 2000, 9.54296875 ] ] },
+{ label: 'promiseish.js',
+data:
+[ [ 100, 17.9140625 ],
+[ 500, 89.01171875 ],
+[ 1000, 117.94921875 ],
+[ 1500, 129.1640625 ],
+[ 2000, 231.34765625 ] ] },
+{ label: 'promiseishQ.js',
+data:
+[ [ 100, 16.2421875 ],
+[ 500, 77.6953125 ],
+[ 1000, 98.296875 ],
+[ 1500, 135.9609375 ],
+[ 2000, 142.94140625 ] ] },
+{ label: 'promises.js',
+data:
+[ [ 100, 42.97265625 ],
+[ 500, 121.71484375 ],
+[ 1000, 240.53515625 ],
+[ 1500, 359.94921875 ],
+[ 2000, 481.65625 ] ] },
+{ label: 'qasync.js',
+data:
+[ [ 100, 11.796875 ],
+[ 500, 57.00390625 ],
+[ 1000, 97.4765625 ],
+[ 1500, 149.5078125 ],
+[ 2000, 163.91796875 ] ] },
+{ label: 'rx.js',
+data:
+[ [ 100, 3.9375 ],
+[ 500, 21.34375 ],
+[ 1000, 40.43359375 ],
+[ 1500, 62.11328125 ],
+[ 2000, 62.05859375 ] ] },
+{ label: 'suspend.js',
+data:
+[ [ 100, 0.71875 ],
+[ 500, 4.09375 ],
+[ 1000, 8.60546875 ],
+[ 1500, 10.1171875 ],
+[ 2000, 14.28125 ] ] } ]</p>
+<p>.concat(
+[ { label: 'dst-streamline-fibers.js',
+data:
+[ [ 100, 1.80078125 ],
+[ 500, 8.53125 ],
+[ 1000, 17.05859375 ],
+[ 1500, 27.98828125 ],
+[ 2000, 33.98671875 ] ] },
+{ label: 'fibrous.js',
+data:
+[ [ 100, 7.05078125 ],
+[ 500, 28.5859375 ],
+[ 1000, 56.75390625 ],
+[ 1500, 84.2734375 ],
+[ 2000, 63.140625 ] ] } ]</p>
+<pre><code>   );
+</code></pre>
+<p>window.addEventListener('load', function() {
+$.plot('#perf-mem-1', perfMEM, {legend: { position: 'nw' },
+yaxis: {min: 0}});
+});
+</script></p>
+<p>Seems like promises also use a lot of memory, especially the extreme
+implementation <code>promises.js</code>. <code>promiseish.js</code> as well as <code>qasync.js</code> are not
+too far behind.</p>
+<p><code>fibrous.js</code>, <code>rx.js</code> and <code>stratifiedjs</code> are somewhat better than the above,
+however their memory usage is still over 5 times bigger than the original.</p>
+<p>Lets remove the hogs and see what remains underneath.</p>
+<div id="perf-mem-2" class="plot">
+</div>
+<script type="text/javascript">
+window.addEventListener('load', function() {
+    $.plot('#perf-mem-2', perfMEM.filter(function(item) {
+        return !/(promises|promiseish|qasync|fibrous|rx.js|stratifiedjs)/
+            .test(item.label)
+    }), {legend: { position: 'nw' }, yaxis: {min: 0}});
+});
+</script>
+<p>Streamline's fibers implementation uses 35MB while the rest use between
+10MB and 25MB.</p>
+<p>This is amazing. Generators (without promises) also have a low memory overhead,
+even when compiled with traceur.</p>
+<p>Streamline is also quite good in this category. It has very low overhead, both
+in CPU and memory usage.</p>
+<p>Its important to note that the testing method that I use is not statistically
+sound. Its however good enough to be used to compare orders of magnitude, which
+is fine considering the narrowly defined benchmark.</p>
+<p>With that said, here is a table for 1000 parallel requests with 10 ms response
+time for I/O operations (i.e. 100K IO / s)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">file</th>
+<th style="text-align:right">time(ms)</th>
+<th style="text-align:right">memory(MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">suspend.js</td>
+<td style="text-align:right">101</td>
+<td style="text-align:right">8.62</td>
+</tr>
+<tr>
+<td style="text-align:left">flattened-class.js</td>
+<td style="text-align:right">111</td>
+<td style="text-align:right">4.48</td>
+</tr>
+<tr>
+<td style="text-align:left">flattened-noclosure.js</td>
+<td style="text-align:right">124</td>
+<td style="text-align:right">5.04</td>
+</tr>
+<tr>
+<td style="text-align:left">flattened.js</td>
+<td style="text-align:right">125</td>
+<td style="text-align:right">5.18</td>
+</tr>
+<tr>
+<td style="text-align:left">original.js</td>
+<td style="text-align:right">130</td>
+<td style="text-align:right">5.33</td>
+</tr>
+<tr>
+<td style="text-align:left">async.js</td>
+<td style="text-align:right">135</td>
+<td style="text-align:right">7.36</td>
+</tr>
+<tr>
+<td style="text-align:left">dst-streamline.js</td>
+<td style="text-align:right">139</td>
+<td style="text-align:right">8.34</td>
+</tr>
+<tr>
+<td style="text-align:left">catcher.js</td>
+<td style="text-align:right">140</td>
+<td style="text-align:right">6.45</td>
+</tr>
+<tr>
+<td style="text-align:left">dst-suspend-traceur.js</td>
+<td style="text-align:right">142</td>
+<td style="text-align:right">6.76</td>
+</tr>
+<tr>
+<td style="text-align:left">gens.js</td>
+<td style="text-align:right">149</td>
+<td style="text-align:right">8.40</td>
+</tr>
+<tr>
+<td style="text-align:left">genny.js</td>
+<td style="text-align:right">161</td>
+<td style="text-align:right">11.69</td>
+</tr>
+<tr>
+<td style="text-align:left">co.js</td>
+<td style="text-align:right">182</td>
+<td style="text-align:right">11.14</td>
+</tr>
+<tr>
+<td style="text-align:left">dst-genny-traceur.js</td>
+<td style="text-align:right">250</td>
+<td style="text-align:right">8.84</td>
+</tr>
+<tr>
+<td style="text-align:left">dst-stratifiedjs-014.js</td>
+<td style="text-align:right">267</td>
+<td style="text-align:right">23.55</td>
+</tr>
+<tr>
+<td style="text-align:left">dst-co-traceur.js</td>
+<td style="text-align:right">284</td>
+<td style="text-align:right">13.54</td>
+</tr>
+<tr>
+<td style="text-align:left">rx.js</td>
+<td style="text-align:right">295</td>
+<td style="text-align:right">40.43</td>
+</tr>
+<tr>
+<td style="text-align:left">dst-streamline-fibers.js</td>
+<td style="text-align:right">526</td>
+<td style="text-align:right">17.05</td>
+</tr>
+<tr>
+<td style="text-align:left">promiseish.js</td>
+<td style="text-align:right">825</td>
+<td style="text-align:right">117.88</td>
+</tr>
+<tr>
+<td style="text-align:left">qasync.js</td>
+<td style="text-align:right">971</td>
+<td style="text-align:right">98.39</td>
+</tr>
+<tr>
+<td style="text-align:left">fibrous.js</td>
+<td style="text-align:right">1159</td>
+<td style="text-align:right">57.48</td>
+</tr>
+<tr>
+<td style="text-align:left">promiseishQ.js</td>
+<td style="text-align:right">1161</td>
+<td style="text-align:right">96.47</td>
+</tr>
+<tr>
+<td style="text-align:left">dst-qasync-traceur.js</td>
+<td style="text-align:right">1195</td>
+<td style="text-align:right">112.10</td>
+</tr>
+<tr>
+<td style="text-align:left">promises.js</td>
+<td style="text-align:right">2315</td>
+<td style="text-align:right">240.39</td>
+</tr>
+</tbody>
+</table>
+<p><a name="debuggability"></a></p>
+<h3>Debuggability</h3>
+<p>Having good performance is important. However, all the performance is worth
+nothing if our code doesn't do what its supposed to. Debugging is therefore
+at least as important as performance.</p>
+<p>How can we measure debuggability? We can look at source maps support and
+the generated stack traces.</p>
+<p><a name="source-maps-support"></a></p>
+<h4>Source maps support</h4>
+<p>I split this category into 5 levels:</p>
+<ul>
+<li>
+<p><strong>level 1</strong>: no source maps, but needs them (wacky stack trace line numbers)</p>
+</li>
+<li>
+<p><strong>level 2</strong>: no source maps and needs them sometimes (to view the original
+code)</p>
+<p>Streamline used to be in this category but now it does have source maps
+support.</p>
+</li>
+<li>
+<p><strong>level 3</strong>: has source maps and needs them always.</p>
+<p>Nothing is in this category.</p>
+</li>
+<li>
+<p><strong>level 4</strong>: has source maps and needs them sometimes</p>
+<p>Generator libraries are in this category. When compiled with traceur (e.g.
+for the browser) source maps are required and needed. If ES6 is available,
+source maps are unnecessary.</p>
+<p>Streamline is also in this category for another reason. With streamline,
+you don't need source maps to get accurate stack traces. However, you will
+need them if you want to read the original code (e.g. when debugging in
+the browser).</p>
+</li>
+<li>
+<p><strong>level 5</strong>: doesn't need source maps</p>
+<p>Everything else is in this category. That's a bit unfair as fibers will never
+work in a browser.</p>
+</li>
+</ul>
+<p><a name="stack-trace-accuracy"></a></p>
+<h4>Stack trace accuracy</h4>
+<p>This category also has 5 levels:</p>
+<ul>
+<li>
+<p><strong>level 1</strong>: stack traces are missing</p>
+<p><code>suspend</code>, <code>co</code> and <code>gens</code> are in this category. When an error happens in one
+of the async functions, this is how the result looks like:</p>
+<pre><code>Error: Error happened
+  at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
+  at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
+</code></pre>
+<p>No mention of the original file, <code>examples/suspend.js</code></p>
+<p>Unfortunately, if you throw an error to a generator using
+<code>iterator.throw(error)</code>, the last yield point will not be present in the
+resulting stack trace. This means you will have no idea which line in your
+generator is the offending one.</p>
+<p>Regular exceptions that are not thrown using <code>iterator.throw</code> have complete
+stack traces, so only yield points will suffer.</p>
+<p>Some solutions that aren't generator based are also in this category, namely
+<code>promiseish.js</code> and <code>async.js</code>. When a library handles errors for you, the
+callback stack trace will not be preserved unless special care is taken to
+preserve it. <code>async</code> and <code>when</code> don't do that.</p>
+</li>
+<li>
+<p><strong>level 2</strong>: stack traces are correct with native modules</p>
+<p>Bruno Jouhier's generator based solution <a href="//github.com/bjouhier/galaxy">galaxy</a>
+is in this category. It has a native companion module called
+<a href="//github.com/bjouhier/galaxy-stack">galaxy-stack</a> that implements long stack
+traces without a performance penalty.</p>
+<p>Note that galaxy-stack doesn't work with node v0.11.5</p>
+</li>
+<li>
+<p><strong>level 3</strong>: stack traces are correct with a flag (adding a performance
+penalty).</p>
+<p>All Q-based solutions are here, even <code>qasync.js</code>, which uses generators. Q's
+support for stack traces via <code>Q.longStackSupport = true;</code> is good:</p>
+<pre><code>Error: Error happened
+    at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
+    at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
+From previous event:
+    at /home/spion/Documents/tests/async-compare/examples/qasync.js:41:18
+    at GeneratorFunctionPrototype.next (native)
+</code></pre>
+<p>So, does this mean that its possible to add long stack traces support to a
+callbacks-based generator library the way that Q does it?</p>
+<p>Yes it does! Genny is in this category too:</p>
+<pre><code>Error: Error happened
+    at null._onTimeout (/home/spion/Documents/tests/async-compare/lib/fakes.js:27:27)
+    at Timer.listOnTimeout [as ontimeout] (timers.js:105:15)
+From generator:
+    at upload (/home/spion/Documents/tests/async-compare/examples/genny.js:38:35)
+</code></pre>
+<p>However it incurs about 50-70% memory overhead and is about 6 times slower.</p>
+<p>Catcher is also in this category, with 100% memory overhead and about
+10 times slower.</p>
+</li>
+<li>
+<p><strong>level 4</strong>: stack traces are correct but fragile</p>
+<p>All the raw-callback solutions are in this category: original, flattened,
+flattened-class, etc. At the moment, rx.js is in this category too.</p>
+<p>As long as the callback functions are defined by your code everything will
+be fine. However, the moment you introduce some wrapper that handles the
+errors for you, your stack traces will break and will show functions from the
+wrapper library instead.</p>
+</li>
+<li>
+<p><strong>level 5</strong>: stack traces are always correct</p>
+<p>Streamline and fibers are in this category. Streamline compiles the file in a
+way that preserves line numbers, making stack traces correct in all cases.
+Fibers also preserve the full call stack.</p>
+</li>
+</ul>
+<p>Ah yes. A table.</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th style="text-align:right">source maps</th>
+<th style="text-align:right">stack traces</th>
+<th style="text-align:right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fibrous.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">10</td>
+</tr>
+<tr>
+<td>src-streamline._js</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td>original.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td>flattened*.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td>rx.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td>catcher.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">8</td>
+</tr>
+<tr>
+<td>promiseishQ.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">8</td>
+</tr>
+<tr>
+<td>qasync.js</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">7</td>
+</tr>
+<tr>
+<td>genny.js</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">7</td>
+</tr>
+<tr>
+<td>async.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">6</td>
+</tr>
+<tr>
+<td>promiseish.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">6</td>
+</tr>
+<tr>
+<td>promises.js</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">6</td>
+</tr>
+<tr>
+<td>suspend.js</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td>gens.js</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td>co.js</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">5</td>
+</tr>
+</tbody>
+</table>
+<p>Generators are not exactly great. They're doing well enough thanks to qasync
+and genny.</p>
+<p><a name="conclusion"></a></p>
+<h3>Conclusion</h3>
+<p>If this analysis left you even more confused than before, you're not alone. It
+seems hard to make a decision even with all the data available.</p>
+<p>My opinion is biased. I love generators, and I've been
+<a href="https://code.google.com/p/v8/issues/detail?id=2355#c2">pushing</a>
+<a href="https://news.ycombinator.com/item?id=5419030">pretty hard</a> to direct the
+attention of V8 developers to them (maybe a bit too hard). And its obvious
+from the analysis above that they have good characteristics: low code
+complexity, good performance.</p>
+<p>More importantly, they will eventually become a part of everyday JavaScript
+with no compilation (except for older browsers) or native modules required,
+and the yield keyword is in principle as good indicator of async code as
+callbacks are.</p>
+<p>Unfortunately, the debugging story for generators is somewhat bad, especially
+because of the missing stack traces for thrown errors. Fortunately, there are
+solutions and workarounds, like those implemented by genny (obtrusive, reduces
+performance) and galaxy (unobtrusive, but requires native modules).</p>
+<p>But there are things that cannot be measured. How will the community accept
+generators? Will people find it hard to decide whether to use them or not? Will
+they be frowned upon when used in code published to npm?</p>
+<p>I don't have the answers to these questions. I only have hunches. But they are
+generally positive. Generators will play an important role in the future of
+node.</p>
+<hr>
+<p>Special thanks to
+<a href="//github.com/Raynos">Raynos</a>,
+<a href="//github.com/maxogden">maxogden</a>,
+<a href="//github.com/mikeal">mikeal</a>
+and <a href="//github.com/DamonOehlman">damonoehlman</a>
+for their input on the draft version of this analysis.</p>
+<p>Thanks to <a href="//github.com/jmar777">jmar777</a> for making suspend</p>
+</div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a class="hn-share-button" href="http://news.ycombinator.com/submit">Vote on HN</a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></aside><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>
