@@ -1,0 +1,81 @@
+<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Lockdowns do work</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Lockdowns do work</h1><div class="date">Sat May 29 2021</div><div class="content"><p>Lockdowns work.</p>
+<p>You may have heard that they don't.</p>
+<p>Most studies that come to this conclusion make one or more of the following mistakes</p>
+<h3>Usage case counts instead of growth rate</h3>
+<p>Most studies that look whether NPIs work tend to look at absolute case numbers (adjusted for
+population size) and try to correlate them with NPIs like stingency measures.</p>
+<p>The core mathematical error made in this case is that NPIs don't affect the case numbers directly.
+Instead, they affect $[R_t], or the rate of spread of the virus. If you think about it, it makes a
+lot of sense: a person with COVID staying at home doesn't affect the current number of cases. They
+are still sick. What they do affect is how many people they are going to infect. By minimizing the
+amount of time and number of people they spend in contact with, they minimize the chances of
+transmitting the virus.</p>
+<p>Why is this important? Lets say the following happens:</p>
+<ul>
+<li>A country starts with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">R_t=2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>. Their cases are growing</li>
+<li>They apply some interventions (lockdown). This gets them to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">R_t = 1.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">5</span></span></span></span></li>
+</ul>
+<p>Now if we look at cases vs rate of growth, we get the following:</p>
+<ul>
+<li>The case graphs look about the same. Cases are still growing, so the measures applied &quot;don't work&quot;</li>
+<li>If we look at the rate of growth, we'll actually see that they work, but they're not enough to
+reverse the exponential process from growing to shrinking (For that we need <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R_t &lt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>).</li>
+</ul>
+<p>So we can't see whether measures are actually working until they're good enough to get <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R_t &lt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></p>
+<p>The situation is even worse if we look at case number totals. Then, the timing of the lockdowns also
+affects the outcome. A country that spends the same total amount of time in lockdowns but starts 3
+weeks earlier could have vastly different outcomes than if they started later, because they let the
+&quot;base&quot; of the exponent accumulate:</p>
+<p><img src="https://pbs.twimg.com/media/EtgQd4EXEAIWghL?format=jpg&amp;name=medium" alt="img"></p>
+<p>Still, you might object - if that worked, we would still see a lot less virus in countries that have
+more stringent measures? The answer is no, but to figure out why, we need to get to the second
+problem, which is:</p>
+<h3>Comparing countries (multivariate problems as univariate)</h3>
+<p>As someone who has lived in 2 and visited (for an extended period of time) 3 countries in their
+life, we tend to underestimate just how different countries are, and how different the typical life
+of a person in those countries is. Variables include public transport vs cars, large supermarkets
+versus tiny shops, building ventilation codes, bar/pub ventilation codes, outdoors vs indoors
+venues, average household size, population density, climate and so on.</p>
+<p>Comparing between countries is statistically futile. Its much better to compare the exact same place
+before and after the introduction (or release) of NPIs (non-pharmaceutical interventions). That way,
+you can see what kind of difference that particular intervention makes.</p>
+<p>And we're down to the last problem, which is</p>
+<h3>Looking at stringency measures vs population behavior</h3>
+<p>A lot of studies measure various &quot;stringency index&quot; as the input variables. This is unfortunately
+also flawed. How effective a measure is will depend on a lot of things, including how much people
+believe in it. Convincing people that lockdowns don't work makes lockdowns less effective, for
+example. The fact that its Christmas or another religious holiday will also make people more likely
+to ignore decrees. Cultural factors could also be in play. Inability to stay at home due to lack of
+support from work might also play a role, and so on.</p>
+<p>Its much better to measure real behavior. Google provides us with a variable called &quot;percentage
+increase in stay at home time&quot;. The way they calculate this is by getting the baseline amount of
+time people spent at home daily around February 2020, then letting us know (for each country and
+each region) how much that time has increased or decreased relative to the baseline.</p>
+<p>For example, if people in the UK stayed at home 14h/day at home on average in February 2020, and
+they now spend 20h/day at home, that is around 40% increase relative to the baseline.</p>
+<p>This measure is not perfect. For one, outdoor activities are much safer than indoor ones but not
+counted as staying at home. For another, people in a country that have the habit of visiting each
+other a lot would completely skew the results. But its far less flawed then things like the
+stringency index.</p>
+<h3>Combining all corrections</h3>
+<p>If we combine all corrections, we get the following result for the UK.</p>
+<p><img src="https://pbs.twimg.com/media/E2lQJkvWEAYewr6?format=jpg&amp;name=large" alt="end result"></p>
+<p>Rate of growth (percentage change) of cases, hospitalizations and deaths is almost perfectly
+inversely proportional to the increase of time spent at home</p>
+<p><a href="https://colab.research.google.com/drive/1j6-oU5Ro1Gv_sfJGJLRauBM7r2y91WwK#scrollTo=68PgZVFh1P79">Stats for more countries available at this link</a></p>
+<p><a href="https://colab.research.google.com/drive/1OUDtnrac_seDldbT18tyJbh9PBItu0rP#scrollTo=68PgZVFh1P79">Stats for USA states available at this link</a></p>
+</div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a class="hn-share-button" href="http://news.ycombinator.com/submit">Vote on HN</a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></aside><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>
