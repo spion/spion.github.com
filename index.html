@@ -4,12 +4,12 @@
 <h3>Use of case counts instead of growth rate</h3>
 <p>Most studies that look whether NPIs work tend to look at absolute case numbers (adjusted for
 population size) and try to correlate them with NPIs like stringency measures.</p>
-<p>The core mathematical error made in this case is that NPIs don't affect the case numbers directly.
-Instead, they affect <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">R_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, or the rate of spread of the virus. If you think about it, it makes a
-lot of sense: a person with COVID staying at home doesn't affect the current number of cases. They
-are still sick. What they do affect is how many people they are going to infect. By minimizing the
-amount of time and number of people they spend in contact with, they minimize the chances of
-transmitting the virus.</p>
+<p>The core error made in this case is that NPIs don't affect the case numbers directly. Instead, they
+affect <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">R_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, or the rate of spread of the virus. If you think about it, it makes a lot of sense:
+a person with COVID staying at home doesn't affect the current number of cases. They are still sick.
+What they do affect is how many people they are going to infect. By minimizing the amount of time
+and number of people they spend in contact with, they minimize the chances of transmitting the
+virus.</p>
 <p>Why is this important? Lets say the following happens:</p>
 <ul>
 <li>A country starts with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">R_t=2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>. Their cases are growing</li>
@@ -74,10 +74,10 @@ misleading:</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/u1wEruG4jys" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <p>ARR and number needed to treat are a staple for doctors. So why is it not applicable to these COVID
 vaccine trials?</p>
-<p>To understand why, lets first briefly review how vaccine trials work.</p>
-<p>In a vaccine trial, people are randomly chosen to be placed into two groups: a control group and a
-treatment group. The treatment group is given the actual vaccine, whereas the control group is given
-some placebo (saline water or an unrelated vaccine).</p>
+<p>To understand why, lets first briefly review how the COVID vaccine trials work.</p>
+<p>In the COVID vaccine trial, people are randomly chosen to be placed into two groups: a control group
+and a treatment group. The treatment group is given the actual vaccine, whereas the control group is
+given some placebo (saline water or an unrelated vaccine).</p>
 <p>Importantly, in the next step participants are told to observe all precautions that non-vaccinated
 people are advised to observe: to mask, to socially distance and in general to avoid situations
 where they may be exposed to the virus.</p>
@@ -86,10 +86,12 @@ orders, masks, periodic rapid antigen tests and any other tools at our disposal.
 <p>Despite precautions, a percentage of participants will be unfortunate enough to be exposed to
 someone infectious. When that happens, a further sub-percentage of them in both groups will become
 infected, and symptomatic.</p>
-<p>When that happens, we can measure the relative risk reduction by comparing the number of symptomatic
-infected in the control group and in the intervention group. For example, if we had 100 people
-infected in the control group but only 10 in the intervention, the relative risk reduction of that
-vaccine would be 90%</p>
+<p>The trials for Pfizer and Moderna were designed to stop at a fixed number of infections. Moderna had
+30,000 participants, with 15,000 in the control and intervention group each. Pfizer had around</p>
+<p>We can measure the relative risk reduction by comparing the number of symptomatic infected in the
+control group and in the intervention group. For example, if we had 100 people infected in the
+control group but only 10 in the intervention, the relative risk reduction of that vaccine would be
+90%</p>
 <p>But what about absolute risk reduction?</p>
 <p>We can't measure that.</p>
 <p>&quot;Why not?&quot; you might wonder. If we have the size of the control group - e.g. 10 000 people, and the
