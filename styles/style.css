@@ -4,46 +4,52 @@
 body,
 html {
   font-size: 18px;
-  font-family: Georgia;
+  font-family: Georgia, serif;
   background-color: #fff;
   color: #151515;
+  line-height: 1.5;
 }
 body {
-  margin: 1ex;
+  margin: 1rem;
   overflow-x: hidden;
 }
 .post:first-child > h1 {
-  margin-top: 4rem;
+  margin-top: 40.5px;
 }
 h1 {
-  font-size: 2.3636rem;
-  line-height: 2.6969rem;
-  margin-top: 5rem;
-  margin-bottom: 0.5rem;
+  font-size: 42.63467467px;
+  line-height: 1.2;
+  margin-top: 48.6px;
+  margin-bottom: 13.5px;
+  font-weight: 700;
 }
 h1.first {
-  margin-top: 1rem;
+  margin-top: 13.5px;
 }
 h2 {
-  font-size: 1.77314329rem;
-  line-height: 2.10614329rem;
+  font-size: 31.984002px;
+  line-height: 1.25;
+  margin-top: 40.5px;
+  margin-bottom: 13.5px;
+  font-weight: 700;
 }
 h3 {
-  font-size: 1.33019001rem;
-  line-height: 1.66319001rem;
+  font-size: 23.994px;
+  line-height: 1.3;
+  margin-top: 32.4px;
+  margin-bottom: 10.8px;
+  font-weight: 700;
 }
 h4 {
-  font-size: 1rem;
-}
-h2,
-h3,
-h4 {
-  margin-top: 2.66rem;
-  margin-bottom: 0.5rem;
+  font-size: 18px;
+  line-height: 1.5;
+  margin-top: 20.25px;
+  margin-bottom: 8.1px;
+  font-weight: 700;
 }
 .main {
   max-width: 76ex;
-  margin: 2rem auto;
+  margin: 40.5px auto;
 }
 @media screen and (max-width: 1199px) {
   .info {
@@ -94,29 +100,55 @@ h4 {
   margin-bottom: 0.25rem;
 }
 p {
-  line-height: 1.5rem;
-  margin-bottom: 1.45rem;
+  line-height: 1.5;
+  margin-top: 0;
+  margin-bottom: 20.25px;
 }
 p.subtitle {
-  line-height: 1.2rem;
+  line-height: 1.3;
 }
+h1 + p,
 h2 + p,
 h3 + p,
 h4 + p {
   margin-top: 0;
 }
+p + ul,
+p + ol,
+p + blockquote,
+p + pre,
+ul + p,
+ol + p,
+blockquote + p,
+pre + p {
+  margin-top: 20.25px;
+}
+ul,
+ol {
+  margin-top: 20.25px;
+  margin-bottom: 20.25px;
+  padding-left: 0;
+}
 li {
-  line-height: 1.4;
-  margin-bottom: 0.25rem;
-  margin-top: 0.25rem;
-  margin-left: 1rem;
+  line-height: 1.5;
+  margin-bottom: 5.4px;
+  margin-top: 0;
+  margin-left: 2rem;
+}
+li ul,
+li ol {
+  margin-top: 5.4px;
+  margin-bottom: 5.4px;
 }
 blockquote {
-  border-left: solid 1ex #f3ecdf;
-  padding-left: 1rem;
-  margin: 0 0.05rem 1.45rem 0.05rem;
+  border-left: solid 4px #f3ecdf;
+  padding-left: 13.5px;
+  margin: 20.25px 0;
   font-style: italic;
   color: #666;
+}
+blockquote p:last-child {
+  margin-bottom: 0;
 }
 blockquote small {
   color: #666;
@@ -139,16 +171,17 @@ a:active {
   color: #37c;
 }
 .post .date {
-  margin: 0.5rem 0 1.5rem 0;
+  margin: 6.75px 0 20.25px 0;
   font-style: italic;
-  font-size: 0.8em;
+  font-size: 0.875rem;
   color: #666;
+  line-height: 1.5;
 }
 .post pre {
   background-color: #faf7f2;
   box-shadow: 0 0 0.25rem #decba7;
-  padding: 0.8rem;
-  margin: 0 0.05rem 1.45rem 0.05rem;
+  padding: 13.5px;
+  margin: 20.25px 0;
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
   font-size: 13px;
   line-height: 1.5;
@@ -162,30 +195,35 @@ a:active {
 }
 .post p code {
   color: #333;
-  padding: 0.05rem 0.1rem;
+  padding: 0.1em 0.3em;
   font-family: Monaco, "Liberation Mono", Courier, monospace !important;
   font-size: 15px;
+  background-color: #fdfbf9;
+  border-radius: 3px;
 }
 .post p code .pln {
   color: #333;
 }
 hr {
-  border: solid 1px #f3ecdf;
+  border: none;
+  border-top: solid 1px #f3ecdf;
+  margin: 40.5px 0;
 }
 .social {
-  margin: 2rem 0 4rem 0;
+  margin: 40.5px 0 60.75px 0;
 }
 .content > table {
-  margin: 0 0 1.45rem 0;
+  margin: 20.25px 0;
   border: solid 2px #f3ecdf;
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 1rem;
+  line-height: 1.5;
 }
 .content > table td,
 .content > table th {
   margin: 0;
-  padding: 0.5rem 0.75rem;
+  padding: 6.75px 10.125px;
   border: none;
 }
 .content > table tr {

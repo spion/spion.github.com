@@ -1,56 +1,79 @@
 @mainColor: #f3ecdf;
 @grayColor: #666;
 @linkColor: #37c;
-@h1size: 2.3636rem;
 
-@paraMargin: 1.45rem;
+// Typography scale using perfect fourth (1.333)
+@scale: 1.333;
+@baseSize: 18px;
+@baseLine: 1.5; // Keep original line height
+
+// Vertical rhythm unit (base line height)
+@rhythm: @baseSize * @baseLine;
+
+// Heading sizes using modular scale
+@h1size: @baseSize * @scale * @scale * @scale; // ~42px
+@h2size: @baseSize * @scale * @scale;          // ~32px
+@h3size: @baseSize * @scale;                   // ~24px
+@h4size: @baseSize;                            // 18px
+
+// Consistent spacing based on rhythm
+@spaceUnit: @rhythm / 2;        // 13.5px
+@paraMargin: @spaceUnit * 1.5;  // ~20px
+@sectionSpace: @spaceUnit * 3;  // ~40px
 
 * { box-sizing: border-box; }
 
 body, html {
-    font-size: 18px;
-    font-family: Georgia;
+    font-size: @baseSize;
+    font-family: Georgia, serif;
     background-color: #fff;
     color: #151515;
+    line-height: @baseLine;
 }
 
-body { margin:1ex; overflow-x:hidden; }
+body { margin: 1rem; overflow-x: hidden; }
 
+.post:first-child > h1 { margin-top: @sectionSpace; }
 
-
-.post:first-child > h1 { margin-top: 4rem; }
-
-
-
+// Typography with proper line heights and spacing
 h1 {
     font-size: @h1size;
-    line-height: @h1size + 0.3333rem;
-    margin-top: 5rem;
-    margin-bottom: 0.5rem;
+    line-height: 1.2; // Tighter for large headings
+    margin-top: @sectionSpace * 1.2;
+    margin-bottom: @spaceUnit;
+    font-weight: 700;
 }
 h1.first {
-    margin-top: 1rem;
+    margin-top: @spaceUnit;
 }
 
 h2 {
-    font-size: @h1size / 1.333;
-    line-height: @h1size / 1.333 + 0.333rem;
+    font-size: @h2size;
+    line-height: 1.25;
+    margin-top: @sectionSpace;
+    margin-bottom: @spaceUnit;
+    font-weight: 700;
 }
+
 h3 {
-    font-size: @h1size / 1.333 / 1.333;
-    line-height: @h1size / 1.333 / 1.333 + 0.333rem;
+    font-size: @h3size;
+    line-height: 1.3;
+    margin-top: @sectionSpace * 0.8;
+    margin-bottom: @spaceUnit * 0.8;
+    font-weight: 700;
 }
 
-h4 { font-size: 1rem; }
-
-h2, h3, h4 {
-    margin-top: 2.66rem;
-    margin-bottom: 0.5rem;
+h4 {
+    font-size: @h4size;
+    line-height: @baseLine;
+    margin-top: @paraMargin;
+    margin-bottom: @spaceUnit * 0.6;
+    font-weight: 700;
 }
 
 .main {
     max-width: 76ex;
-    margin:2rem auto;
+    margin: @sectionSpace auto;
 }
 
 @media screen and (max-width: 1199px) {
@@ -106,31 +129,56 @@ h2, h3, h4 {
 }
 
 p {
-    line-height:1.5rem;
+    line-height: @baseLine;
+    margin-top: 0;
     margin-bottom: @paraMargin;
 }
 p.subtitle {
-    line-height: 1.2rem;
+    line-height: 1.3;
 }
 
-h2 + p, h3 + p, h4 + p {
-    margin-top:0;
+// Remove extra space after headings
+h1 + p, h2 + p, h3 + p, h4 + p {
+    margin-top: 0;
+}
+
+// Add breathing room between different content types
+p + ul, p + ol, p + blockquote, p + pre,
+ul + p, ol + p, blockquote + p, pre + p {
+    margin-top: @paraMargin;
+}
+
+// Lists with better spacing
+ul, ol {
+    margin-top: @paraMargin;
+    margin-bottom: @paraMargin;
+    padding-left: 0;
 }
 
 li {
-    line-height: 1.4;
-    margin-bottom: 0.25rem;
-    margin-top: 0.25rem;
-    margin-left: 1rem;
+    line-height: @baseLine;
+    margin-bottom: @spaceUnit * 0.4;
+    margin-top: 0;
+    margin-left: 2rem;
+}
+
+// Nested lists with reduced spacing
+li ul, li ol {
+    margin-top: @spaceUnit * 0.4;
+    margin-bottom: @spaceUnit * 0.4;
 }
 
 
 blockquote {
-    border-left: solid 1ex @mainColor;
-    padding-left: 1rem;
-    margin: 0 0.05rem @paraMargin 0.05rem;
+    border-left: solid 4px @mainColor;
+    padding-left: @spaceUnit;
+    margin: @paraMargin 0;
     font-style: italic;
     color: @grayColor;
+    
+    p:last-child {
+        margin-bottom: 0;
+    }
 }
 blockquote small {
     color: @grayColor;
@@ -152,10 +200,11 @@ a:hover { color: @linkColor; }
 a:active { color: @linkColor; }
 
 .post .date {
-    margin: 0.5rem 0 1.5rem 0;
+    margin: @spaceUnit * 0.5 0 @paraMargin 0;
     font-style: italic;
-    font-size: 0.8em;
+    font-size: 0.875rem;
     color: @grayColor;
+    line-height: @baseLine;
 }
 
 .codecolors(@shadow) {
@@ -165,12 +214,11 @@ a:active { color: @linkColor; }
 
 .post pre {
     .codecolors(0.5rem);
-    padding: 0.8rem;
-    margin: 0 0.05rem @paraMargin 0.05rem;
+    padding: @spaceUnit;
+    margin: @paraMargin 0;
     font-family: Monaco, "Liberation Mono", Courier, monospace !important;
-    font-size: 13px;
+    font-size: 13px; // Keep original size
     line-height: 1.5;
-
     overflow: auto;
 }
 
@@ -183,33 +231,36 @@ a:active { color: @linkColor; }
 }
 
 .post p code {
-    //.codecolors(0.2rem);
     color: #333;
     .pln { color: #333; }
-    padding: 0.05rem 0.1rem;
+    padding: 0.1em 0.3em;
     font-family: Monaco, "Liberation Mono", Courier, monospace !important;
-    font-size: 15px;
+    font-size: 15px; // Keep closer to original
+    background-color: lighten(@mainColor, 7%);
+    border-radius: 3px;
 }
 
 hr {
-    border: solid 1px @mainColor;
+    border: none;
+    border-top: solid 1px @mainColor;
+    margin: @sectionSpace 0;
 }
 
 .social {
-    margin: 2rem 0 4rem 0;
+    margin: @sectionSpace 0 @sectionSpace * 1.5 0;
 }
 
 .content > table {
-
-    margin: 0 0 @paraMargin 0;
+    margin: @paraMargin 0;
     border: solid 2px @mainColor;
     border-collapse: collapse;
     border-spacing: 0;
     font-size: 1rem;
+    line-height: @baseLine;
 
     td, th {
         margin: 0;
-        padding: 0.5rem 0.75rem;
+        padding: @spaceUnit * 0.5 @spaceUnit * 0.75;
         border: none;
     }
     tr {
