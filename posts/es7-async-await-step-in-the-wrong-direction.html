@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>ES7 async functions - a step in the wrong direction</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>ES7 async functions - a step in the wrong direction</h1><div class="date">Sun Aug 23 2015</div><div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>ES7 async functions - a step in the wrong direction</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>ES7 async functions - a step in the wrong direction</h1><div class="date">Sun Aug 23 2015</div><div class="content"><p>Async functions are a new feature scheduled to become a part of ES7. They build
 on top of previous capabilities made available by ES6 (promises), letting you
 write async code as though it were synchronous. At the moment, they're a
 <a href="https://github.com/lukehoban/ecmascript-asyncawait">stage 1 proposal for ES7</a> and supported by babel /
@@ -25,7 +25,7 @@ limitation isn't too hard to get around: we can write a function <code>guard</co
 image</p>
 <pre><code class="language-js"><span class="hljs-keyword">try</span> {
     <span class="hljs-keyword">await</span> downloadImage(url);
-} <span class="hljs-keyword">catch</span> (e) { guard(e, e =&gt; e.code == <span class="hljs-number">404</span>);
+} <span class="hljs-keyword">catch</span> (e) { guard(e, <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.code == <span class="hljs-number">404</span>);
     handle404(...);
 }
 </code></pre>
@@ -48,16 +48,16 @@ rethrow the error at the end</p>
 apply. We can write our own promise implementation that demands the use of a
 predicate filter:</p>
 <pre><code class="language-js">downloadImage(url)
-.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.code == <span class="hljs-number">404</span>, e =&gt; {
+.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.code == <span class="hljs-number">404</span>, <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
     handle404(...);
 })
-.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.code == <span class="hljs-number">401</span>, e =&gt; {
+.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.code == <span class="hljs-number">401</span>, <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
     handle401(...)
 })
 </code></pre>
 <p>Now if we want all errors to be caught, we have to say it explicitly:</p>
 <pre><code class="language-js">asyncOperation()
-.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-literal">true</span>, e =&gt; {
+.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-literal">true</span>, <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
     handleAllErrors(...)
 });
 </code></pre>
@@ -110,7 +110,7 @@ functions. Lets take the motivating example from the async-await proposal</p>
 <p>With bluebird's <code>Promise.reduce</code>, this becomes</p>
 <pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">chainAnimationsPromise</span>(<span class="hljs-params">elem, animations</span>) </span>{
   <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reduce(animations,
-      (lastVal, anim) =&gt; anim(elem).catch(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">Promise</span>.reject(lastVal)),
+      <span class="hljs-function">(<span class="hljs-params">lastVal, anim</span>) =&gt;</span> anim(elem).catch(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">Promise</span>.reject(lastVal)),
       <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">null</span>))
   .catch(<span class="hljs-function"><span class="hljs-params">lastVal</span> =&gt;</span> lastVal);
 }
@@ -138,11 +138,11 @@ as any other issues that are blocking the solution of the newly entered issue.</
 }
 
 Issues.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
-    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT ... VALUES"</span>, data).execWithin(db.pool);
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">&quot;INSERT ... VALUES&quot;</span>, data).execWithin(db.pool);
 }
 
 BlockerIssue.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
-    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT .... VALUES"</span>, data).execWithin(db.pool);
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">&quot;INSERT .... VALUES&quot;</span>, data).execWithin(db.pool);
 }
 </code></pre>
 <p><code>Issue</code> and <code>BlockerIssues</code> are references to the corresponding tables in an
@@ -162,11 +162,11 @@ change our code:</p>
 }
 
 Issues.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx, data</span>) </span>{
-    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT ... VALUES"</span>, data).execWithin(tx);
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">&quot;INSERT ... VALUES&quot;</span>, data).execWithin(tx);
 }
 
 BlockerIssue.insert = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx, data</span>) </span>{
-    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT .... VALUES"</span>, data).execWithin(tx);
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">&quot;INSERT .... VALUES&quot;</span>, data).execWithin(tx);
 }
 </code></pre>
 <p>Here, we changed the code in two ways. Firstly, we created a transaction within
@@ -182,14 +182,14 @@ automatically initializes a transaction if one is not passed via the
 constructor, and then have <code>Issues</code>, <code>BlockerIssue</code> etc inherit from this
 class.</p>
 <pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Transactionable</span> </span>{
-    <span class="hljs-keyword">constructor</span>(tx) {
-        <span class="hljs-keyword">this</span>.transaction = tx || db.beginTransaction();
+    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">tx</span>)</span> {
+        <span class="hljs-built_in">this</span>.transaction = tx || db.beginTransaction();
     }
 }
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IssueService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Transactionable</span> </span>{
-    <span class="hljs-keyword">async</span> saveIssue(data, blockers) {
-        issues = <span class="hljs-keyword">new</span> Issues(<span class="hljs-keyword">this</span>.transaction);
-        blockerIssues = <span class="hljs-keyword">new</span> BlockerIssues(<span class="hljs-keyword">this</span>.transaction);
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">saveIssue</span>(<span class="hljs-params">data, blockers</span>)</span> {
+        issues = <span class="hljs-keyword">new</span> Issues(<span class="hljs-built_in">this</span>.transaction);
+        blockerIssues = <span class="hljs-keyword">new</span> BlockerIssues(<span class="hljs-built_in">this</span>.transaction);
         ...
     }
 }
@@ -221,17 +221,17 @@ options</li>
 }
 
 Issues.insert = <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params">data</span>) </span>{
-    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT ... VALUES"</span>, data)
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">&quot;INSERT ... VALUES&quot;</span>, data)
 }
 
 BlockerIssue.insert = <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params">data</span>) </span>{
-    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">"INSERT .... VALUES"</span>, data)
+    <span class="hljs-keyword">return</span> db.query(<span class="hljs-string">&quot;INSERT .... VALUES&quot;</span>, data)
 }
 </code></pre>
 <p>From our http handler, we can now write</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myengine = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./my-engine'</span>);
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myengine = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./my-engine&#x27;</span>);
 
-app.post(<span class="hljs-string">'/issues/save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+app.post(<span class="hljs-string">&#x27;/issues/save&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
   myengine.run(saveIssue(data, blockers), {<span class="hljs-attr">tx</span>: db.beginTransaction()})
 });
 </code></pre>
@@ -282,12 +282,12 @@ parallel when an issue is resolved:</p>
 </code></pre>
 <p>Instead of returning an SQL based query, we can have <code>getOwner()</code> return data
 about the query:</p>
-<pre><code class="language-js">{<span class="hljs-attr">table</span>: <span class="hljs-string">'users'</span>, <span class="hljs-attr">id</span>: issue.user_id}
+<pre><code class="language-js">{<span class="hljs-attr">table</span>: <span class="hljs-string">&#x27;users&#x27;</span>, <span class="hljs-attr">id</span>: issue.user_id}
 </code></pre>
 <p>and have <code>engine</code> optimize the execution of parallel queries, by sending
 a single query per table rather then per item.</p>
 <pre><code class="language-js"><span class="hljs-keyword">if</span> (isParallelQuery(query)) {
-    <span class="hljs-keyword">var</span> results = _(query.items).groupBy(<span class="hljs-string">'table'</span>)
+    <span class="hljs-keyword">var</span> results = _(query.items).groupBy(<span class="hljs-string">&#x27;table&#x27;</span>)
       .map(<span class="hljs-function">(<span class="hljs-params">items, t</span>) =&gt;</span> db.query(<span class="hljs-string">`select * from <span class="hljs-subst">${t}</span> where id in ?`</span>,
                                   items.map(<span class="hljs-function"><span class="hljs-params">it</span> =&gt;</span> it.id))
                 .execWithin(options.tx)).toArray();
@@ -333,4 +333,4 @@ var disqus_shortname = 'ahintofchaos'; // required: replace example with your fo
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 })();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
-  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Can you really compare the UK to Sweden?</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Can you really compare the UK to Sweden?</h1><div class="date">Sat Sep 05 2020</div><div class="content"><p><strong>EDIT: This article contained a mistake in the calculations. As a result, I had to rewrite the whole thing again, and the rewrite is available at <a href="/posts/uk-sweden-growth/">this link</a>. Some of the conclusions are different, but the gist should be largely the same.</strong></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Can you really compare the UK to Sweden?</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Can you really compare the UK to Sweden?</h1><div class="date">Sat Sep 05 2020</div><div class="content"><p><strong>EDIT: This article contained a mistake in the calculations. As a result, I had to rewrite the whole thing again, and the rewrite is available at <a href="/posts/uk-sweden-growth/">this link</a>. Some of the conclusions are different, but the gist should be largely the same.</strong></p>
 <p>Sweden is a hot topic lately, with many people giving them as an example. A lot of people are trying
 to compare Sweden with the UK. Lets see why this comparison is inadequate as the countries were
 behaving very differently before any lockdown or mass measures were introduced.</p>
@@ -7,22 +7,22 @@ behaving very differently before any lockdown or mass measures were introduced.<
 <span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
 <span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
 
-plt.rcParams[<span class="hljs-string">'figure.dpi'</span>] = <span class="hljs-number">120</span>
-plt.rcParams[<span class="hljs-string">'figure.figsize'</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
-dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%Y-%m-%d'</span>)
-owid_url = <span class="hljs-string">'https://covid.ourworldindata.org/data/owid-covid-data.csv'</span>
-owid = pd.read_csv(owid_url, parse_dates=[<span class="hljs-string">'date'</span>], date_parser=dateparse)
+plt.rcParams[<span class="hljs-string">&#x27;figure.dpi&#x27;</span>] = <span class="hljs-number">120</span>
+plt.rcParams[<span class="hljs-string">&#x27;figure.figsize&#x27;</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
+dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">&#x27;%Y-%m-%d&#x27;</span>)
+owid_url = <span class="hljs-string">&#x27;https://covid.ourworldindata.org/data/owid-covid-data.csv&#x27;</span>
+owid = pd.read_csv(owid_url, parse_dates=[<span class="hljs-string">&#x27;date&#x27;</span>], date_parser=dateparse)
 </code></pre>
 <p>We can get the countries data by their ISO code</p>
-<pre><code class="language-python">uk = owid[owid.iso_code.eq(<span class="hljs-string">"GBR"</span>)]
-sweden = owid[owid.iso_code.eq(<span class="hljs-string">"SWE"</span>)]
+<pre><code class="language-python">uk = owid[owid.iso_code.eq(<span class="hljs-string">&quot;GBR&quot;</span>)]
+sweden = owid[owid.iso_code.eq(<span class="hljs-string">&quot;SWE&quot;</span>)]
 </code></pre>
 <p>Now lets compare deaths. To avoid problems with small data, we'll start the comparison when both countries deaths go above 5 per day. We're using the weekly moving average column from ourworldindata in order to get a better sense of the trend.</p>
-<pre><code class="language-python">gbrmarch = uk.loc[(owid[<span class="hljs-string">'date'</span>] &gt; <span class="hljs-string">'03-15-2020'</span>) &amp; (owid[<span class="hljs-string">'date'</span>] &lt;= <span class="hljs-string">'04-15-2020'</span>)];
-swemarch = sweden.loc[(owid[<span class="hljs-string">'date'</span>] &gt; <span class="hljs-string">'03-22-2020'</span>) &amp; (owid[<span class="hljs-string">'date'</span>] &lt;= <span class="hljs-string">'04-22-2020'</span>)];
+<pre><code class="language-python">gbrmarch = uk.loc[(owid[<span class="hljs-string">&#x27;date&#x27;</span>] &gt; <span class="hljs-string">&#x27;03-15-2020&#x27;</span>) &amp; (owid[<span class="hljs-string">&#x27;date&#x27;</span>] &lt;= <span class="hljs-string">&#x27;04-15-2020&#x27;</span>)];
+swemarch = sweden.loc[(owid[<span class="hljs-string">&#x27;date&#x27;</span>] &gt; <span class="hljs-string">&#x27;03-22-2020&#x27;</span>) &amp; (owid[<span class="hljs-string">&#x27;date&#x27;</span>] &lt;= <span class="hljs-string">&#x27;04-22-2020&#x27;</span>)];
 
-gbr1 = gbrmarch.reset_index().rename(columns={<span class="hljs-string">'new_deaths_smoothed'</span>: <span class="hljs-string">'UK Mar-Apr'</span>})[<span class="hljs-string">'UK Mar-Apr'</span>]
-swe1 = swemarch.reset_index().rename(columns={<span class="hljs-string">'new_deaths_smoothed'</span>: <span class="hljs-string">'Sweden Apr'</span>})[<span class="hljs-string">'Sweden Apr'</span>]
+gbr1 = gbrmarch.reset_index().rename(columns={<span class="hljs-string">&#x27;new_deaths_smoothed&#x27;</span>: <span class="hljs-string">&#x27;UK Mar-Apr&#x27;</span>})[<span class="hljs-string">&#x27;UK Mar-Apr&#x27;</span>]
+swe1 = swemarch.reset_index().rename(columns={<span class="hljs-string">&#x27;new_deaths_smoothed&#x27;</span>: <span class="hljs-string">&#x27;Sweden Apr&#x27;</span>})[<span class="hljs-string">&#x27;Sweden Apr&#x27;</span>]
 
 plt = pd.concat([gbr1, swe1], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
 </code></pre>
@@ -50,24 +50,24 @@ plt = pd.concat([gbr1growth, swe1growth], axis=<span class="hljs-number">1</span
 <li>March 11: The government announced that the qualifying day of sickness ('karensdag') will be temporarily abolished in order to ensure that people feeling slightly ill will stay at home from work. This means that the state will pay sick pay allowance from the first day the employee is absent from work</li>
 </ul>
 <p>These measures are what happened on paper. Its much better to look at how people really reacted by looking at google mobility trends</p>
-<pre><code class="language-python">dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%b %d, %Y'</span>)
-mobility = pd.read_csv(<span class="hljs-string">'https://drive.google.com/u/0/uc?id=1M4GY_K4y6KZtkDtz7i12fhs8LeyUTyaK&amp;export=download'</span>, parse_dates=[<span class="hljs-string">'Date'</span>], date_parser=dateparse)
+<pre><code class="language-python">dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">&#x27;%b %d, %Y&#x27;</span>)
+mobility = pd.read_csv(<span class="hljs-string">&#x27;https://drive.google.com/u/0/uc?id=1M4GY_K4y6KZtkDtz7i12fhs8LeyUTyaK&amp;export=download&#x27;</span>, parse_dates=[<span class="hljs-string">&#x27;Date&#x27;</span>], date_parser=dateparse)
 </code></pre>
-<pre><code class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_item</span><span class="hljs-params">(name)</span>:</span>
+<pre><code class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_item</span>(<span class="hljs-params">name</span>):</span>
 
-    swemob = mobility[mobility.Code.eq(<span class="hljs-string">"SWE"</span>)]
-    gbrmob = mobility[mobility.Code.eq(<span class="hljs-string">"GBR"</span>)]
+    swemob = mobility[mobility.Code.eq(<span class="hljs-string">&quot;SWE&quot;</span>)]
+    gbrmob = mobility[mobility.Code.eq(<span class="hljs-string">&quot;GBR&quot;</span>)]
 
-    gbrmobmarch = gbrmob.loc[(mobility[<span class="hljs-string">'Date'</span>] &gt; <span class="hljs-string">'02-23-2020'</span>) &amp; (mobility[<span class="hljs-string">'Date'</span>] &lt;= <span class="hljs-string">'03-23-2020'</span>)];
-    swemobmarch = swemob.loc[(mobility[<span class="hljs-string">'Date'</span>] &gt; <span class="hljs-string">'03-01-2020'</span>) &amp; (mobility[<span class="hljs-string">'Date'</span>] &lt;= <span class="hljs-string">'04-01-2020'</span>)];
+    gbrmobmarch = gbrmob.loc[(mobility[<span class="hljs-string">&#x27;Date&#x27;</span>] &gt; <span class="hljs-string">&#x27;02-23-2020&#x27;</span>) &amp; (mobility[<span class="hljs-string">&#x27;Date&#x27;</span>] &lt;= <span class="hljs-string">&#x27;03-23-2020&#x27;</span>)];
+    swemobmarch = swemob.loc[(mobility[<span class="hljs-string">&#x27;Date&#x27;</span>] &gt; <span class="hljs-string">&#x27;03-01-2020&#x27;</span>) &amp; (mobility[<span class="hljs-string">&#x27;Date&#x27;</span>] &lt;= <span class="hljs-string">&#x27;04-01-2020&#x27;</span>)];
 
-    gbrM1 = gbrmobmarch.reset_index().rename(columns={<span class="hljs-string">''</span>+name: <span class="hljs-string">'GBR '</span> + name})[<span class="hljs-string">'GBR '</span> + name]
-    sweM1 = swemobmarch.reset_index().rename(columns={<span class="hljs-string">''</span>+name: <span class="hljs-string">'SWE '</span> + name})[<span class="hljs-string">'SWE '</span> + name]
+    gbrM1 = gbrmobmarch.reset_index().rename(columns={<span class="hljs-string">&#x27;&#x27;</span>+name: <span class="hljs-string">&#x27;GBR &#x27;</span> + name})[<span class="hljs-string">&#x27;GBR &#x27;</span> + name]
+    sweM1 = swemobmarch.reset_index().rename(columns={<span class="hljs-string">&#x27;&#x27;</span>+name: <span class="hljs-string">&#x27;SWE &#x27;</span> + name})[<span class="hljs-string">&#x27;SWE &#x27;</span> + name]
     plt = pd.concat([gbrM1, sweM1], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
 </code></pre>
-<pre><code class="language-python">plot_item(<span class="hljs-string">'Workplaces (%)'</span>)
-plot_item(<span class="hljs-string">'Residential (%)'</span>)
-plot_item(<span class="hljs-string">'Transit Stations (%)'</span>)
+<pre><code class="language-python">plot_item(<span class="hljs-string">&#x27;Workplaces (%)&#x27;</span>)
+plot_item(<span class="hljs-string">&#x27;Residential (%)&#x27;</span>)
+plot_item(<span class="hljs-string">&#x27;Transit Stations (%)&#x27;</span>)
 </code></pre>
 <p><img src="/posts/output_11_0.png" alt="png"></p>
 <p><img src="/posts/output_11_1.png" alt="png"></p>
@@ -161,4 +161,4 @@ var disqus_shortname = 'ahintofchaos'; // required: replace example with your fo
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 })();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
-  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>

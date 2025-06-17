@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Why I am switching to promises</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>Why I am switching to promises</h1><div class="date">Mon Oct 07 2013</div><div class="content"><p>I'm switching my node code from callbacks to promises. The reasons aren't
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Why I am switching to promises</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>Why I am switching to promises</h1><div class="date">Mon Oct 07 2013</div><div class="content"><p>I'm switching my node code from callbacks to promises. The reasons aren't
 merely aesthetical, they're rather practical:</p>
 <p><a name="throw-crash"></a></p>
 <h3>Throw-catch vs throw-crash</h3>
@@ -388,9 +388,9 @@ we can't return the file content. But we can still return something: we can
 return the reading operation itself. And that operation is represented with a
 promise.</p>
 <p>This is sort of like a single-value stream:</p>
-<pre><code class="language-js">net.connect(port).on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+<pre><code class="language-js">net.connect(port).on(<span class="hljs-string">&#x27;data&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
 	doStuffWith(res);
-}).on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+}).on(<span class="hljs-string">&#x27;error&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
 	hadnleError();
 });
 </code></pre>
@@ -422,7 +422,7 @@ line instead:</p>
 <span class="hljs-keyword">var</span> filePromise = fs.readFile(file)
 
 <span class="hljs-keyword">var</span> linePromise = filePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
-    <span class="hljs-keyword">return</span> data.toString().split(<span class="hljs-string">'\n'</span>)[line];
+    <span class="hljs-keyword">return</span> data.toString().split(<span class="hljs-string">&#x27;\n&#x27;</span>)[line];
 });
 
 <span class="hljs-keyword">var</span> beginsWithHelloPromise = linePromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">line</span>) </span>{
@@ -446,15 +446,15 @@ you just get the same promise!</p>
 	<span class="hljs-keyword">var</span> writeFilePromise = transformedPromise.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transformed</span>) </span>{
 		<span class="hljs-keyword">return</span> fs.writeFile(otherPath, transformed)
 	});
-	<span class="hljs-comment">// return a promise that "succeeds" when the file is saved.</span>
+	<span class="hljs-comment">// return a promise that &quot;succeeds&quot; when the file is saved.</span>
 	<span class="hljs-keyword">return</span> writeFilePromise;
 }
 readProcessAndSave(file, url, otherPath).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Success!"</span>);
+	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Success!&quot;</span>);
 }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
 	<span class="hljs-comment">// This function will catch *ALL* errors from the above</span>
 	<span class="hljs-comment">// operations including any exceptions thrown inside .then</span>
-	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Oops, it failed."</span>, err);
+	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Oops, it failed.&quot;</span>, err);
 });
 </code></pre>
 <p>Now its easier to understand chaining: at the end of every function passed
@@ -475,10 +475,10 @@ automatically get passed with the returned promise.</p>
     <span class="hljs-keyword">return</span> fs.readFile(file)
     .then(service.transform)
     .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">vContent</span>)
-        <span class="hljs-title">content</span> = <span class="hljs-title">vContent</span>;
-        // <span class="hljs-title">then</span> <span class="hljs-title">upload</span> <span class="hljs-title">it</span>
-        <span class="hljs-title">return</span> <span class="hljs-title">uploadData</span>(<span class="hljs-params">url, content</span>);
-    }).<span class="hljs-title">then</span>(<span class="hljs-params">function(</span>) </span>{ <span class="hljs-comment">// after its uploaded</span>
+        <span class="hljs-title">content</span> = <span class="hljs-title">vContent</span></span>;
+        <span class="hljs-comment">// then upload it</span>
+        <span class="hljs-keyword">return</span> uploadData(url, content);
+    }).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-comment">// after its uploaded</span>
         <span class="hljs-comment">// save it</span>
         <span class="hljs-keyword">return</span> fs.writeFile(otherPath, content);
     });
@@ -490,10 +490,10 @@ automatically get passed with the returned promise.</p>
     <span class="hljs-keyword">return</span> fs.readFile(file)
     	.then(service.transform)
     	.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content</span>)
-        	<span class="hljs-title">return</span> <span class="hljs-title">uploadData</span>(<span class="hljs-params">url, content</span>).<span class="hljs-title">then</span>(<span class="hljs-params">function(</span>) </span>{
-        		<span class="hljs-comment">// after its uploaded, save it</span>
+        	<span class="hljs-title">return</span> <span class="hljs-title">uploadData</span>(<span class="hljs-params">url, content</span>).<span class="hljs-title">then</span>(<span class="hljs-params"><span class="hljs-keyword">function</span>() {
+        		<span class="hljs-regexp">//</span> after its uploaded, save it
         		<span class="hljs-keyword">return</span> fs.writeFile(otherPath, content);
-        	});
+        	}</span>)</span>;
     	});
 }
 </code></pre>
@@ -602,7 +602,7 @@ chaining:</p>
 <code>async.mapSeries</code> and <code>async.series</code>)? Thats also pretty straightforward: just
 wait for the current download to complete, then start the next download, then
 extract the item name, and thats exactly what you say in the code:</p>
-<pre><code class="language-js"><span class="hljs-comment">// start with current being an "empty" already-fulfilled promise</span>
+<pre><code class="language-js"><span class="hljs-comment">// start with current being an &quot;empty&quot; already-fulfilled promise</span>
 <span class="hljs-keyword">var</span> current = <span class="hljs-built_in">Promise</span>.fulfilled();
 <span class="hljs-keyword">var</span> namePromises = ids.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
     <span class="hljs-comment">// wait for the current download to complete, then get the next</span>
@@ -631,7 +631,7 @@ still not that hard:</p>
             queued.push(download);
         	<span class="hljs-keyword">return</span> download;
         }).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{
-            <span class="hljs-comment">// after that new download completes, get the item's name.</span>
+            <span class="hljs-comment">// after that new download completes, get the item&#x27;s name.</span>
         	<span class="hljs-keyword">return</span> item.name;
         });
   });
@@ -742,4 +742,4 @@ var disqus_shortname = 'ahintofchaos'; // required: replace example with your fo
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 })();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
-  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>

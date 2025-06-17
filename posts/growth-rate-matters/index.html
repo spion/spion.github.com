@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><script>var host = ".github.io"; if (/\.github.io/.test(window.location.host) && window.location.protocol != "https:") window.location.protocol = "https";</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Case counts don't matter. Growth does</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Case counts don't matter. Growth does</h1><div class="date">Thu Sep 10 2020</div><div class="content"><p>The growth of cases is another hot and controversial COVID-19 topic. On one hand, the number of
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>COVID-19: Case counts don't matter. Growth does</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>COVID-19: Case counts don't matter. Growth does</h1><div class="date">Thu Sep 10 2020</div><div class="content"><p>The growth of cases is another hot and controversial COVID-19 topic. On one hand, the number of
 daily is getting to be very large in many European countries. On the other, it doesn't look like
 this rise in cases is having the same impact as it had before. There is a theory that proposes there
 might be a lot of dead virus being detected, as well as that the increased amount of testing is the
@@ -13,22 +13,22 @@ the case counts, no matter how flawed can provide a great early warning system.<
 in data&quot; dataset and compare the two waves to see how they look like.</p>
 <pre><code class="language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
 <span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
-plt.rcParams[<span class="hljs-string">'figure.dpi'</span>] = <span class="hljs-number">150</span>
-plt.rcParams[<span class="hljs-string">'figure.figsize'</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
+plt.rcParams[<span class="hljs-string">&#x27;figure.dpi&#x27;</span>] = <span class="hljs-number">150</span>
+plt.rcParams[<span class="hljs-string">&#x27;figure.figsize&#x27;</span>] = [<span class="hljs-number">6.0</span>, <span class="hljs-number">4.0</span>]
 <span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
-dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">'%Y-%m-%d'</span>)
-owid = pd.read_csv(<span class="hljs-string">'https://covid.ourworldindata.org/data/owid-covid-data.csv'</span>, parse_dates=[<span class="hljs-string">'date'</span>], date_parser=dateparse)
+dateparse = <span class="hljs-keyword">lambda</span> x: datetime.strptime(x, <span class="hljs-string">&#x27;%Y-%m-%d&#x27;</span>)
+owid = pd.read_csv(<span class="hljs-string">&#x27;https://covid.ourworldindata.org/data/owid-covid-data.csv&#x27;</span>, parse_dates=[<span class="hljs-string">&#x27;date&#x27;</span>], date_parser=dateparse)
 
 </code></pre>
 <p>Spain's first wave started at the beginning of March, while the second wave is still ongoing in
 August. Lets plot those on the same chart:</p>
-<pre><code class="language-python">esp = owid[owid.iso_code.eq(<span class="hljs-string">"ESP"</span>)]
+<pre><code class="language-python">esp = owid[owid.iso_code.eq(<span class="hljs-string">&quot;ESP&quot;</span>)]
 
-wave1 = esp.loc[(owid[<span class="hljs-string">'date'</span>] &gt; <span class="hljs-string">'03-01-2020'</span>) &amp; (owid[<span class="hljs-string">'date'</span>] &lt;= <span class="hljs-string">'03-29-2020'</span>)];
-wave2 = esp.loc[(owid[<span class="hljs-string">'date'</span>] &gt; <span class="hljs-string">'08-01-2020'</span>) &amp; (owid[<span class="hljs-string">'date'</span>] &lt;= <span class="hljs-string">'08-29-2020'</span>)];
+wave1 = esp.loc[(owid[<span class="hljs-string">&#x27;date&#x27;</span>] &gt; <span class="hljs-string">&#x27;03-01-2020&#x27;</span>) &amp; (owid[<span class="hljs-string">&#x27;date&#x27;</span>] &lt;= <span class="hljs-string">&#x27;03-29-2020&#x27;</span>)];
+wave2 = esp.loc[(owid[<span class="hljs-string">&#x27;date&#x27;</span>] &gt; <span class="hljs-string">&#x27;08-01-2020&#x27;</span>) &amp; (owid[<span class="hljs-string">&#x27;date&#x27;</span>] &lt;= <span class="hljs-string">&#x27;08-29-2020&#x27;</span>)];
 
-wave1 = wave1.reset_index().rename(columns={<span class="hljs-string">'new_cases_smoothed'</span>: <span class="hljs-string">'Spain March'</span>})[<span class="hljs-string">'Spain March'</span>]
-wave2 = wave2.reset_index().rename(columns={<span class="hljs-string">'new_cases_smoothed'</span>: <span class="hljs-string">'Spain August'</span>})[<span class="hljs-string">'Spain August'</span>]
+wave1 = wave1.reset_index().rename(columns={<span class="hljs-string">&#x27;new_cases_smoothed&#x27;</span>: <span class="hljs-string">&#x27;Spain March&#x27;</span>})[<span class="hljs-string">&#x27;Spain March&#x27;</span>]
+wave2 = wave2.reset_index().rename(columns={<span class="hljs-string">&#x27;new_cases_smoothed&#x27;</span>: <span class="hljs-string">&#x27;Spain August&#x27;</span>})[<span class="hljs-string">&#x27;Spain August&#x27;</span>]
 </code></pre>
 <pre><code class="language-python">plot = pd.concat([wave1, wave2], axis=<span class="hljs-number">1</span>).plot(grid=<span class="hljs-literal">True</span>)
 </code></pre>
@@ -110,12 +110,12 @@ earlier rather than later, as the number of active cases would be declining at t
 <h4>Better picture than absolute numbers</h4>
 <p>Its best not to look at absolute numbers at all. Hindsight is 20:20, so lets see what the world
 looked like in Spain from the perspective of March 11th:</p>
-<pre><code class="language-python">esp_march = esp.loc[(owid[<span class="hljs-string">'date'</span>] &gt; <span class="hljs-string">'03-01-2020'</span>) &amp; (owid[<span class="hljs-string">'date'</span>] &lt;= <span class="hljs-string">'03-11-2020'</span>)];
-plot = esp_march.plot(grid=<span class="hljs-literal">True</span>, x=<span class="hljs-string">'date'</span>, y=<span class="hljs-string">'new_cases_smoothed'</span>)
+<pre><code class="language-python">esp_march = esp.loc[(owid[<span class="hljs-string">&#x27;date&#x27;</span>] &gt; <span class="hljs-string">&#x27;03-01-2020&#x27;</span>) &amp; (owid[<span class="hljs-string">&#x27;date&#x27;</span>] &lt;= <span class="hljs-string">&#x27;03-11-2020&#x27;</span>)];
+plot = esp_march.plot(grid=<span class="hljs-literal">True</span>, x=<span class="hljs-string">&#x27;date&#x27;</span>, y=<span class="hljs-string">&#x27;new_cases_smoothed&#x27;</span>)
 </code></pre>
 <p><img src="/posts/growth-rate-matters/output_13_0.png" alt="png"></p>
 <p>Only 400 cases, nothing to worry about. But if we look at <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">R_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> instead</p>
-<pre><code class="language-python">esp_march_growth = esp_march.reset_index()[<span class="hljs-string">'new_cases_smoothed'</span>].pct_change(periods=<span class="hljs-number">5</span>)
+<pre><code class="language-python">esp_march_growth = esp_march.reset_index()[<span class="hljs-string">&#x27;new_cases_smoothed&#x27;</span>].pct_change(periods=<span class="hljs-number">5</span>)
 plot = esp_march_growth.plot(grid = <span class="hljs-literal">True</span>)
 </code></pre>
 <p><img src="/posts/growth-rate-matters/output_15_0.png" alt="png"></p>
@@ -134,7 +134,7 @@ one third reduction in the rate of growth (most likely)</li>
 <p>With the following few examples lets demonstrate that getting an accurate estimate of the growth
 rate and its early control is the most important thing and other factors (absolute number of cases,
 exact CFR etc) are mostly irrelevant</p>
-<pre><code class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate_growth</span><span class="hljs-params">(pairs)</span>:</span>
+<pre><code class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate_growth</span>(<span class="hljs-params">pairs</span>):</span>
     result = [<span class="hljs-number">1</span>]
     num = <span class="hljs-number">1</span>
     <span class="hljs-keyword">for</span> days, growth <span class="hljs-keyword">in</span> pairs:
@@ -148,7 +148,7 @@ exact CFR etc) are mostly irrelevant</p>
 big_growth = generate_growth([(<span class="hljs-number">14</span>, <span class="hljs-number">1.5</span>), (<span class="hljs-number">21</span>, <span class="hljs-number">1.05</span>)])
 small_growth = generate_growth([(<span class="hljs-number">42</span>, <span class="hljs-number">1.2</span>)])
 
-df = pd.DataFrame(list(zip(big_growth, small_growth)), columns=[<span class="hljs-string">'big_growth'</span>, <span class="hljs-string">'small_growth'</span>])
+df = pd.DataFrame(<span class="hljs-built_in">list</span>(<span class="hljs-built_in">zip</span>(big_growth, small_growth)), columns=[<span class="hljs-string">&#x27;big_growth&#x27;</span>, <span class="hljs-string">&#x27;small_growth&#x27;</span>])
 
 df.plot()
 </code></pre>
@@ -175,4 +175,4 @@ var disqus_shortname = 'ahintofchaos'; // required: replace example with your fo
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 })();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
-  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/scripts/jquery.flot.js"></script><script src="/scripts/jquery.flot.highlightSeries.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Thoughts on LLMs for programming</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>Thoughts on LLMs for programming</h1><div class="date">Tue Jun 17 2025</div><div class="content"><p>I thought it might be a good idea to record my current thoughts on where LLMs are at when it comes
+to writing code.</p>
+<h3>Code completion</h3>
+<p>I absolutely love this feature. The speedup is noticeable with most popular languages, but the
+noticeable drop-off in capability with niche languages continues to persist. I use a lot of
+<a href="https://www.nushell.sh/">nushell</a> for scripting lately and both Copilot and Cursor get the syntax
+wrong a lot.</p>
+<p>Staying in the flow can be a bit difficult sometimes, but for those of us used to LSPs it shouldn't
+be too bad. Cursor's keybinding implementation is a bit better at getting out of the way at moments
+when I'd like to ignore it compared to Copilot.</p>
+<h3>Asking questions and analyzing code</h3>
+<p>Chat models make exploring large codebases much easier. However, they seem to have limited ability
+to dive deep enough into dependency links in the code. At certain level of complexity they tend to
+give up and reach a conclusion prematurely. Typically I'll jump in and look where the model got to
+at that point, then nudge it to explore a bit further. After a few more iterations we usually get to
+the bottom of it.</p>
+<p>Anecdotally, analysis seems to be more reliable for niche languages compared to code completion -
+there is less of a drop-off in quality.</p>
+<h3>Doing well documented common tasks</h3>
+<p>This is really excellent. Adding a documentation bundle to Cursor in particular works extremely
+well: The LLM will find the relevant documentation and be immediately able to suggest the correct
+change.</p>
+<p>On the flip side, many of these cases can simply utilize a script instead, and its unclear how much
+you gain compared to, say, having a search box to find the relevant script in the docs. However,
+since in practice most documentation isn't very neatly organized, and automation can be somewhat
+spotty, I think this is a net win.</p>
+<h3>Writing new code in an existing codebase</h3>
+<p>This is where things can be hit or miss. If I let the model jump in straight into writing code, it
+will often make poor decisions - sometimes due to lacking context, other times because its biased
+towards action instead of thinking about the best approach.</p>
+<p>What I've found extremely useful is Cline's plan / act separation. By default, the chat starts out
+in plan mode, where I go back-and-forth with the LLM outlining the task and figuring out exactly
+what needs to be done. Once we get to a good understanding, I switch to act mode and let the LLM
+write the code.</p>
+<p>You can simulate this in Cursor too by using &quot;ask&quot; mode and then switching to &quot;agent&quot;. Claude code
+recently added &quot;plan&quot; mode as well.</p>
+<p>I've not experimented sufficiently with Cursor rules or CLAUDE.md memories. Should try those out.</p>
+<h4>Writing new code when you are not familiar with the technology</h4>
+<p>This is typically a bad idea. Instead, I recommend asking the LLM and doing something which I
+suspect many find tedious: re-typing the code it provides. I know, it sounds like a waste of time,
+but it does wonders for helping me take things in slowly. I always have the LSP on as well and pause
+to read the documentation as I go. I keep asking an endless amount of clarifying questions. I ask
+for documentation references (whenever possible) to ensure I dive deeper into the concepts.</p>
+<h3>Reasoning about complex bugs and behavior</h3>
+<p>Reasoning is hit-and-miss. In well-trodden areas (e.g. web development) they do really well. In
+other more niche areas (Rust code) there is some struggle. With stuff that has very little
+real-world training material (like predicting terraform plan behaviour) its quite bad.</p>
+<h3>Hands-off automation</h3>
+<p>Surprisingly enough, LLMs also tend to fail here. Even when its possible to explain the exact steps
+to take, the error rate in some domains is too high to be able to do something reliably dozens to
+hundreds of times without supervision.</p>
+<p>Other than the obvious (using temperature=0) I suspect that there are couple of interesting things
+that can be done here:</p>
+<ul>
+<li>Providing a constrained set of tools specific to the problem at hand. The idea is to allow the
+user to maximize the percentage of the task that is fully deterministic and prevent it from doing
+something disastrous while unsupervised.</li>
+<li>Providing a pen-and-paper equivalent tools (checklists, tables, etc). This should help the model
+keep track of the steps more reliably.</li>
+</ul>
+<p>Unfortunately current cli tools have a few issues:</p>
+<ul>
+<li>they seem to be geared more towards interactive use,</li>
+<li>they have somewhat tedious way of defining new tools (MCP)</li>
+<li>they tend to include very powerful tools by default (e.g. shell execution).</li>
+</ul>
+<p>I'm working on an easy to use cli tool that solves this -
+<a href="https://github.com/spion/llmcli/">llmcli</a>.</p>
+<p>If done right, I suspect this could be a huge multiplier in productivity. Right now most of the time
+using chat tools is spent on interactively micromanaging and checking on the LLM, which limits the
+maximum potential.</p>
+<h3>Things to explore</h3>
+<h4>Updating documentation</h4>
+<p>Keeping documentation up-to-date is a common problem. In theory, LLMs should be able to help with
+this by helping finding relevant documentation and suggesting updates.</p>
+<h4>Updating dependencies</h4>
+<p>Another huge problem. LLMs could potentially help here a bit by analyzing the changed parts of the
+dependency and suggesting updates. In concert with tests this could work incredibly well.</p>
+<h4>Self-updating hierarchical memories.</h4>
+<p>LLMs should be able to learn from their interactions and continuously update their memories.
+Memories should follow a hierarchy, where the top-level memories are concepts found to generalize
+with the user across different projects and tasks, while the lower-level memories are more specific
+to the current project. The hierarchy could also extend over time, with weeks and months having
+their own memories and compaction process - possibly with bias towards recent memories.</p>
+<h3>Conclusion</h3>
+<p>While there's been a lot of progress, LLMs still leave a lot to be desired. I suspect that most of
+the incoming innovation will focus on managing memory and context. Repeatable reliability, as well
+as capabilities that are not covered well by the training data will likely continue to be a
+challenge. To address reliability, I suspect we'll compensate with more comprehensive documentation
+and tools that provide stronger guardrails for the LLMs. Out-of-distribution capabilities continue
+to be elusive and would likely require radical innovation.</p>
+</div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><div class="g-plusone"></div><a class="hn-share-button" href="http://news.ycombinator.com/submit">Vote on HN</a><script>(function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//hnbutton.appspot.com/static/hn.min.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));</script></aside><div id="disqus_thread"></div><script>/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'ahintofchaos'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><!--a.dsq-brink(href="http://disqus.com") comments powered by
+  span.logo-disqus Disqus--></article></main></div><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.css"><script async src="https://www.googletagmanager.com/gtag/js?id=G-1803JM8K3L"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-1803JM8K3L');</script></body></html>
