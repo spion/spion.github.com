@@ -1,10 +1,9 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Thoughts on LLMs for programming</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>Thoughts on LLMs for programming</h1><div class="date">Tue Jun 17 2025</div><div class="content"><p>I thought it might be a good idea to record my current views on where LLMs are at when it comes
-to writing code.</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densityDpi=medium-dpi"><meta content="True" name="HandheldFriendly"><title>Thoughts on LLMs for programming</title><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="stylesheet" href="/styles/style.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css"><link rel="alternate" type="application/rss+xml" title="spion.github.io" href="/rss.xml"></head><body><div class="main"><aside class="info-tiny"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p></aside><div class="info"><a class="img" href="/"><img src="https://secure.gravatar.com/avatar/d924ad2ac22af6216aadd2e9184616de?s=144"></a><h1 class="first"><a href="/">Gorgi Kosev</a></h1><p class="subtitle">code, music, math</p><p class="subtitle margin"><a href="http://twitter.com/spion">@spion</a></p></div><main class="rest"><article class="post"><h1>Thoughts on LLMs for programming</h1><div class="date">Tue Jun 17 2025</div><div class="content"><p>I thought it might be a good idea to record my current views on where LLMs currently are at when it
+comes to writing code.</p>
 <h3>Code completion</h3>
-<p>I absolutely love this feature. The speedup is noticeable with most popular languages, but the
-noticeable drop-off in capability with niche languages continues to persist. I use a lot of
-<a href="https://www.nushell.sh/">nushell</a> for scripting lately and both Copilot and Cursor get the syntax
-wrong a lot.</p>
+<p>I absolutely love this. The speedup is excellent with most popular languages, but the noticeable
+drop-off in capability with niche languages continues to persist. My scripting language of choice
+lately is <a href="https://www.nushell.sh/">nushell</a> and both Copilot and Cursor get the syntax wrong a lot.</p>
 <p>Staying in the flow can be a bit difficult sometimes, but for those of us used to LSPs it shouldn't
 be too bad. Cursor's keybinding implementation is a bit better at getting out of the way at moments
 when I'd like to ignore it compared to Copilot. Windsurf's neovim plugin is also quite good.</p>
@@ -21,9 +20,9 @@ there is less of a drop-off in quality.</p>
 well: The LLM will find the relevant documentation and be immediately able to suggest the correct
 change.</p>
 <p>On the flip side, many of these cases can simply utilize a script instead, and its unclear how much
-you gain compared to, say, having a search box to find the relevant script in the docs. However,
-since in practice most documentation isn't very neatly organized, and automation can be somewhat
-spotty, I think this is a net win.</p>
+you gain compared to, say, having a search box in your editor instead to find the relevant script in
+the docs. However, since in practice most documentation isn't very neatly organized, and automation
+can be somewhat spotty, I think this is a net win.</p>
 <h3>Writing new code in an existing codebase</h3>
 <p>This is where things can be hit or miss. If I let the model jump in straight into writing code, it
 will often make poor decisions - sometimes due to lacking context, other times because its biased
@@ -36,15 +35,16 @@ write the code.</p>
 recently added &quot;plan&quot; mode as well.</p>
 <p>I've not experimented sufficiently with Cursor rules or CLAUDE.md memories. Should try those out.</p>
 <h4>Writing new code when you are not familiar with the technology</h4>
-<p>This is typically a bad idea. Instead, I recommend asking the LLM and doing something which I
-suspect many find tedious: re-typing the code it provides. I know, it sounds like a waste of time,
-but it does wonders for helping me take things in slowly. I always have the LSP on as well and pause
-to read the documentation as I go. I keep asking an endless amount of clarifying questions. I ask
-for documentation references (whenever possible) to ensure I dive deeper into the concepts.</p>
+<p>This is typically a bad idea. Instead, I tend to ask the LLM and then proceed to do something which
+I suspect many would find tedious: re-typing the code it provides. I know, it sounds like a waste of
+time, but it does wonders to help me take things in slowly. I always have the LSP on as well and
+pause to read the documentation as I go. I keep asking an endless amount of clarifying questions. I
+ask for documentation references (whenever possible) to ensure I dive deeper into the concepts and
+keep a healthy dose of skepticism in case of hallucinations.</p>
 <h3>Reasoning about complex bugs and behavior</h3>
 <p>Reasoning is hit-and-miss. In well-trodden areas (e.g. web development) they do really well. In
-other more niche areas (Rust code) there is some struggle. With stuff that has very little
-real-world training material (like predicting terraform plan behaviour) its quite bad.</p>
+other more niche areas (Rust code) there is some struggle. With technologies that have very little
+real-world training material (e.g. predicting terraform plan behaviour) its quite bad.</p>
 <h3>Hands-off automation</h3>
 <p>Surprisingly enough, LLMs also tend to fail here. Even when its possible to explain the exact steps
 to take, the error rate in some domains is too high to be able to do something reliably dozens to
@@ -89,7 +89,7 @@ as capabilities that are not covered well by the training data will likely conti
 challenge. To address reliability, I suspect we'll compensate with more comprehensive documentation
 and tools that provide stronger guardrails for the LLMs. Out-of-distribution capabilities continue
 to be elusive and would likely require radical innovation.</p>
-</div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><a class="hn-share-button" href="https://news.ycombinator.com/submitlink?u=undefined&amp;t=Thoughts%20on%20LLMs%20for%20programming">Vote on HN</a><script>(function(d, t) {
+</div><a name="_comments"></a><aside class="social"><script src="https://apis.google.com/js/plusone.js"></script><a class="twitter-share-button" href="https://twitter.com/share" data-via="spion">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script><a class="hn-share-button" href="https://news.ycombinator.com/submitlink?u=undefined&amp;t=Thoughts%20on%20LLMs%20for%20programming">Submit to HN</a><script>(function(d, t) {
     var g = d.createElement(t),
         s = d.getElementsByTagName(t)[0];
     g.src = '//hnbutton.appspot.com/static/hn.min.js';
